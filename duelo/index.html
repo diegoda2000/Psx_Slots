@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DUELO · SlotPSX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@500;700&display=swap" />
+</head>
+<body class="duelo">
+  <div class="app">
+    <header class="top">
+      <h1 class="logo">DUELO<span>PSX</span></h1>
+      <span class="tag">6x5 · 15.625 formas · duelos VS</span>
+    </header>
+    <div id="fsInfo" class="fs-info" hidden></div>
+    <main id="stage" class="stage"></main>
+    <section class="controls">
+      <div class="stat"><span>SALDO</span><b id="balance">-</b></div>
+      <div class="stat"><span>PREMIO</span><b id="win">0.00 €</b></div>
+      <div class="bet">
+        <button id="betDown" aria-label="Bajar apuesta">−</button>
+        <div class="stat"><span>APUESTA</span><b id="bet">-</b></div>
+        <button id="betUp" aria-label="Subir apuesta">+</button>
+      </div>
+      <button id="spin" class="spin">GIRAR</button>
+      <button id="turbo" class="turbo">TURBO</button>
+    </section>
+    <section class="buy">
+      <span class="buy-label">COMPRAR BONUS</span>
+      <button data-tier="1">BONUS<small>3 scatters</small><span>-</span></button>
+      <button data-tier="2">SEMITOCHO<small>4 scatters</small><span>-</span></button>
+      <button data-tier="3">TOCHO<small>5 scatters</small><span>-</span></button>
+    </section>
+    <footer class="foot">
+      <button id="rulesBtn" class="link">Reglas y pagos</button>
+      <span>Demo con saldo ficticio · arte provisional · espacio = girar</span>
+    </footer>
+  </div>
+  <dialog id="rules"><div id="rulesBody"></div><button id="rulesClose" class="spin small">CERRAR</button></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script type="module" src="../src/games/duelo/main.ts"></script>
+</body>
+</html>
