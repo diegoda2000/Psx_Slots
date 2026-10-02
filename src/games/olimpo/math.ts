@@ -4,11 +4,16 @@
  */
 import { MAX_WIN, tierFromScatters, type BonusTier } from '../../shared/lore';
 import { weightedPick, type Rng } from '../../shared/rng';
-import { COLS, PAY_SYMBOLS, ROWS, type Cell, type Grid, type PaySymbol } from '../../shared/symbols';
+import { COLS, ROWS, type Cell, type Grid, type Low, type Premium } from '../../shared/symbols';
+
+/** En Olimpo pagan los botones y los personajes. */
+export type OlimpoPay = Low | Premium;
+/** Símbolos que pagan, de menos a más premio. */
+export const OLIMPO_PAYS: OlimpoPay[] = ['CUA', 'CRZ', 'CIR', 'TRI', 'MAC', 'ELE', 'IBE', 'AND'];
 import type { BonusState } from '../../shared/game/types';
 
 export const OLIMPO = {
-  weights: { CUA: 22, CRZ: 21, CIR: 20, TRI: 19, MAC: 17, ELE: 15, IBE: 13, AND: 11 } as Record<PaySymbol, number>,
+  weights: { CUA: 22, CRZ: 21, CIR: 20, TRI: 19, MAC: 17, ELE: 15, IBE: 13, AND: 11 } as Record<OlimpoPay, number>,
   scatterChance: 0.0105,
   orbChance: 0.004,
   /** Pago en veces la apuesta para 8-9 / 10-11 / 12+ símbolos. */
@@ -21,7 +26,7 @@ export const OLIMPO = {
     ELE: [1.6, 4, 12],
     IBE: [2, 8, 20],
     AND: [8, 20, 40],
-  } as Record<PaySymbol, number[]>,
+  } as Record<OlimpoPay, number[]>,
   minCount: 8,
   /** [multiplicador, peso] de los orbes. */
   orbs: [
@@ -43,7 +48,7 @@ interface CellOpts {
 }
 
 export interface ClusterWin {
-  sym: PaySymbol;
+  sym: OlimpoPay;
   count: number;
   amount: number;
   cells: [number, number][];
@@ -64,7 +69,7 @@ export interface OlimpoSpin {
   tier: BonusTier | 0;
 }
 
-const SYMS = Object.entries(OLIMPO.weights) as [PaySymbol, number][];
+const SYMS = Object.entries(OLIMPO.weights) as [OlimpoPay, number][];
 
 function randomCell(rng: Rng, o: CellOpts): Cell {
   const r = rng();
@@ -105,7 +110,7 @@ export function spinOlimpo(rng: Rng, o: CellOpts): OlimpoSpin {
 /** Paga con 8 o más iguales en cualquier posición. */
 export function evaluateClusters(grid: Grid): ClusterWin[] {
   const wins: ClusterWin[] = [];
-  for (const sym of PAY_SYMBOLS) {
+  for (const sym of OLIMPO_PAYS) {
     const cells: [number, number][] = [];
     grid.forEach((col, c) => col.forEach((cell, r) => cell.sym === sym && cells.push([c, r])));
     if (cells.length < OLIMPO.minCount) continue;

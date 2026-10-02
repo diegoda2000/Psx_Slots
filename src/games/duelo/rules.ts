@@ -1,6 +1,6 @@
 import { BONUS_NAMES, MAX_WIN, type BonusTier } from '../../shared/lore';
-import { PAY_SYMBOLS, PREMIUMS, SYMBOLS } from '../../shared/symbols';
-import { CHAR_REEL, DUELO, LINES } from './math';
+import { PREMIUMS, SYMBOLS } from '../../shared/symbols';
+import { CHAR_REEL, DUELO, DUELO_PAYS, LINES } from './math';
 
 const x = (v: number) => `${+(v * DUELO.payScale).toFixed(4)}x`;
 
@@ -11,7 +11,7 @@ export const PITCH: Record<BonusTier, string> = {
 };
 
 export function rulesHtml() {
-  const rows = [...PAY_SYMBOLS].reverse();
+  const rows = [...DUELO_PAYS].reverse();
   const tiers: BonusTier[] = [1, 2, 3];
   const what: Record<BonusTier, string> = {
     1: `${DUELO.tiers[1].spins} tiradas, más wilds`,
@@ -22,9 +22,10 @@ export function rulesHtml() {
   return `
   <h3>DUELO</h3>
   <p>Tablero 6x5 con <b>${LINES.length} líneas</b>: 3 o más iguales seguidos desde la izquierda.</p>
-  <p><b>Wilds de personaje</b>: cada personaje tiene su rodillo central. Si su wild cae en su rodillo se
-  <b>expande</b> a toda la columna (siempre que así entre en algún premio). En otro rodillo hace de wild normal.
-  Si una línea pasa por varios wilds, sus multiplicadores se suman.</p>
+  <p><b>Andy, Iberru, Elena y Macaco no pagan como símbolos: son los wilds multiplicadores.</b> Como mucho sale uno
+  de cada en pantalla y pueden caer en cualquier rodillo del 2 al 5. Cada uno tiene su rodillo: si cae en él se
+  <b>expande</b> a toda la columna (siempre que así entre en algún premio). En otro rodillo hace de wild normal con su
+  multiplicador. Si una línea pasa por varios wilds, sus multiplicadores se suman.</p>
   <table><tr><th>Personaje</th><th>Rodillo</th><th>Multiplicador</th></tr>
   ${chars
     .map((c) => {

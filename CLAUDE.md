@@ -6,11 +6,14 @@ Responde siempre en español, con respuestas cortas y directas.
 Dos slots de casino online (demo para navegador, sin dinero real) basadas en el canal de AndyPSX, streamer español de
 slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separadas**, no una con selector de modo.
 
-1. **Duelo** (`duelo/`, `src/games/duelo/`): inspirada en "Life and Death" (Hacksaw). 19 líneas, 3 o más iguales
-   seguidos desde la izquierda. Los 4 personajes hacen de los 4 jinetes: cada uno tiene su rodillo central (Macaco 2,
-   Elena 3, Iberru 4, Andy 5) y su wild multiplicador (x2-4, x5-9, x10-25, x30-200). Si su wild cae en su rodillo se
-   expande a toda la columna (si así entra en premio). Los multiplicadores de una línea se suman.
-   (Antes era estilo "Wanted" con duelos VS; el usuario lo cambió.)
+1. **Duelo** (`duelo/`, `src/games/duelo/`): copia la mecánica de "Life and Death" (Hacksaw). 19 líneas, 3 o más
+   iguales seguidos desde la izquierda. Los 4 personajes son los 4 jinetes y **NO son símbolos de pago, solo wilds
+   multiplicadores**: como mucho uno de cada en pantalla. Pueden caer en cualquier rodillo del 2 al 5; cada uno tiene su
+   rodillo (Macaco 2, Elena 3, Iberru 4, Andy 5) y su rango (x2-4, x5-9, x10-25, x30-200). Si cae en su rodillo se
+   expande a toda la columna (si así entra en premio); en otro rodillo es un wild normal con su multiplicador. Los
+   multiplicadores de una línea se suman. Pagan los botones PlayStation (bajos) y, de momento, objetos de PlayStation
+   como altos provisionales (disco, memory card, mando, consola).
+   (Antes era estilo "Wanted" con duelos VS; el usuario lo cambió. Ser fiel a Life and Death.)
 2. **Olimpo** (`olimpo/`, `src/games/olimpo/`): inspirada en "Gates of Olympus" (Pragmatic). Paga con 8 o más iguales en
    cualquier posición, con cascadas y orbes multiplicadores.
 
@@ -22,7 +25,8 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 
 ## Lore
 - Frases míticas para ganancias grandes: "¡Apaga la puta radio!", "¡Iberru gordofóbico!", "¡Majaria es dictador!".
-- Premium, de más a menos: Andy ("el sacarino"), Iberru, Elena, Macaco (hermano pequeño de Andy, "un mantenido del pelado").
+- Personajes, de más a menos: Andy ("el sacarino"), Iberru, Elena, Macaco (hermano pequeño de Andy, "un mantenido del
+  pelado"). En Olimpo son los símbolos premium; en Duelo son solo los wilds.
 - Bajos provisionales: botones de PlayStation. Los definitivos los decide el usuario.
 - Gesto de Andy pidiendo "los bolos": el usuario ya tiene pensado cómo meterlo. **Preguntarle antes de inventarlo.**
 - Investiga el lore por tu cuenta antes de preguntar cosas que se pueden buscar.

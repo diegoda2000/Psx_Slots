@@ -1,6 +1,6 @@
 import { BONUS_NAMES, MAX_WIN, type BonusTier } from '../../shared/lore';
-import { PAY_SYMBOLS, SYMBOLS } from '../../shared/symbols';
-import { OLIMPO } from './math';
+import { SYMBOLS } from '../../shared/symbols';
+import { OLIMPO, OLIMPO_PAYS } from './math';
 
 const x = (v: number) => `${+v.toFixed(4)}x`;
 
@@ -11,7 +11,7 @@ export const PITCH: Record<BonusTier, string> = {
 };
 
 export function rulesHtml() {
-  const rows = [...PAY_SYMBOLS].reverse();
+  const rows = [...OLIMPO_PAYS].reverse();
   const tiers: BonusTier[] = [1, 2, 3];
   const what: Record<BonusTier, string> = {
     1: `${OLIMPO.tiers[1].spins} tiradas, multiplicador acumulado`,

@@ -2,24 +2,30 @@
  * Matemáticas de la slot DUELO (estilo "Life and Death" de Hacksaw).
  * Sin dependencias de PixiJS: lo usan el juego y el simulador (sim/rtp.ts).
  *
- * Los 4 personajes premium hacen de "jinetes": cada uno tiene un rodillo central y su
- * wild multiplicador. Si su wild cae en su rodillo, se expande a toda la columna
- * (solo si así entra en algún premio). Varios multiplicadores en un premio se suman.
+ * Los 4 personajes hacen de "jinetes": NO son símbolos de pago, solo wilds multiplicadores.
+ * Como mucho hay uno de cada en pantalla. Pueden caer en cualquier rodillo central (2-5);
+ * si caen en el suyo se expanden a toda la columna (solo si así entran en algún premio).
+ * En otro rodillo hacen de wild normal con su multiplicador. Varios multiplicadores se suman.
  */
 import { MAX_WIN, tierFromScatters, type BonusTier } from '../../shared/lore';
 import { randInt, weightedPick, type Rng } from '../../shared/rng';
 import {
   COLS,
-  PAY_SYMBOLS,
   PREMIUMS,
   ROWS,
   wildOf,
   type Cell,
   type CharWild,
   type Grid,
-  type PaySymbol,
+  type Item,
+  type Low,
   type Premium,
 } from '../../shared/symbols';
+
+/** En Duelo pagan los botones (bajos) y los objetos de PlayStation (altos, provisionales). */
+export type DueloPay = Low | Item;
+/** Símbolos que pagan, de menos a más premio. */
+export const DUELO_PAYS: DueloPay[] = ['CUA', 'CRZ', 'CIR', 'TRI', 'DISCO', 'MEMO', 'MANDO', 'CONSOLA'];
 import type { BonusState } from '../../shared/game/types';
 
 /** Rodillo de cada personaje (0-index): Macaco 2, Elena 3, Iberru 4, Andy 5. */
@@ -50,10 +56,10 @@ export const LINES: number[][] = [
 ];
 
 export const DUELO = {
-  weights: { CUA: 24, CRZ: 24, CIR: 22, TRI: 22, MAC: 12, ELE: 10, IBE: 8, AND: 6 } as Record<PaySymbol, number>,
+  weights: { CUA: 24, CRZ: 24, CIR: 22, TRI: 22, DISCO: 12, MEMO: 10, MANDO: 8, CONSOLA: 6 } as Record<DueloPay, number>,
   /** Probabilidad de wild en cada rodillo central (juego base). */
   wildChance: 0.042,
-  /** Probabilidad de que el wild que cae sea el del dueño del rodillo. */
+  /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
   ownChance: 0.6,
   /** [multiplicador, peso] de cada personaje. Andy, "el sacarino", el más bestia. */
   wildMults: {
@@ -65,22 +71,22 @@ export const DUELO = {
   scatterPerReel: 0.062,
   /** Pago por línea, en veces la apuesta total, para 3/4/5/6 seguidos. */
   pays: {
-    CUA: [0.1, 0.25, 0.5, 1],
-    CRZ: [0.1, 0.25, 0.5, 1],
-    CIR: [0.15, 0.3, 0.75, 1.5],
-    TRI: [0.15, 0.3, 0.75, 1.5],
-    MAC: [0.25, 0.5, 1.25, 2.5],
-    ELE: [0.3, 0.75, 1.5, 3],
-    IBE: [0.5, 1, 2.5, 5],
-    AND: [1, 2, 5, 10],
-  } as Record<PaySymbol, number[]>,
+    CUA: [0.1, 0.3, 1, 3],
+    CRZ: [0.1, 0.3, 1, 4],
+    CIR: [0.15, 0.4, 1.5, 6],
+    TRI: [0.2, 0.5, 2, 10],
+    DISCO: [0.3, 1, 4, 15],
+    MEMO: [0.4, 1.5, 5, 20],
+    MANDO: [0.5, 2, 8, 30],
+    CONSOLA: [1, 3, 12, 50],
+  } as Record<DueloPay, number[]>,
   /** Escala global de la tabla de pagos (para afinar el RTP). */
-  payScale: 1,
+  payScale: 0.52,
   tiers: {
     // BONUS (como Devastation): más wilds.
-    1: { spins: 10, wildChance: 0.245, deathReels: false, sticky: false },
+    1: { spins: 10, wildChance: 0.235, deathReels: false, sticky: false },
     // SEMITOCHO (como Reckoning): rodillos de la muerte.
-    2: { spins: 10, wildChance: 0.252, deathReels: true, sticky: false },
+    2: { spins: 10, wildChance: 0.246, deathReels: true, sticky: false },
     // TOCHO: rodillos de la muerte y los wilds expandidos se quedan fijos.
     3: { spins: 10, wildChance: 0.1, deathReels: true, sticky: true },
   } as Record<BonusTier, { spins: number; wildChance: number; deathReels: boolean; sticky: boolean }>,
@@ -100,7 +106,7 @@ export interface WildReel {
 
 export interface LineWin {
   line: number;
-  sym: PaySymbol;
+  sym: DueloPay;
   length: number;
   mult: number;
   amount: number;
@@ -127,7 +133,7 @@ interface SpinOpts {
   sticky: WildReel[];
 }
 
-const SYMS = Object.entries(DUELO.weights) as [PaySymbol, number][];
+const SYMS = Object.entries(DUELO.weights) as [DueloPay, number][];
 const isWild = (c: Cell): c is Cell & { sym: CharWild } => c.sym.startsWith('W_');
 
 export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
@@ -147,15 +153,20 @@ export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
       scatters++;
     }
 
-  // Como mucho un wild de personaje por rodillo central.
+  // Como mucho un wild por rodillo central y uno de cada personaje en pantalla.
   const candidates: WildReel[] = [];
   const newDeath: Premium[] = [];
   const death = new Set(opts.death ?? []);
+  const available = PREMIUMS.filter((p) => !opts.sticky.some((s) => s.char === p));
   for (let c = 1; c <= 4; c++) {
-    if (stickyCols.has(c) || rng() >= opts.wildChance) continue;
+    if (stickyCols.has(c) || available.length === 0 || rng() >= opts.wildChance) continue;
     const own = REEL_CHAR[c]!;
-    const others = PREMIUMS.filter((p) => p !== own);
-    const char = rng() < DUELO.ownChance ? own : others[randInt(rng, others.length)];
+    const others = available.filter((p) => p !== own);
+    const char =
+      available.includes(own) && (others.length === 0 || rng() < DUELO.ownChance)
+        ? own
+        : others[randInt(rng, others.length)];
+    available.splice(available.indexOf(char), 1);
     const mult = weightedPick(rng, DUELO.wildMults[char]);
     const free = grid[c].map((cell, r) => (cell.sym === 'BONUS' ? -1 : r)).filter((r) => r >= 0);
     const row = free[randInt(rng, free.length)];
@@ -193,8 +204,8 @@ export function evaluateLines(grid: Grid, wildReels: WildReel[]): LineWin[] {
   const wins: LineWin[] = [];
   LINES.forEach((line, li) => {
     const first = at(0, line[0]);
-    if (!PAY_SYMBOLS.includes(first.sym as PaySymbol)) return;
-    const sym = first.sym as PaySymbol;
+    if (!DUELO_PAYS.includes(first.sym as DueloPay)) return;
+    const sym = first.sym as DueloPay;
     let length = 0;
     let mult = 0;
     for (let c = 0; c < COLS; c++) {
