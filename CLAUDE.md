@@ -6,14 +6,19 @@ Responde siempre en español, con respuestas cortas y directas.
 Dos slots de casino online (demo para navegador, sin dinero real) basadas en el canal de AndyPSX, streamer español de
 slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separadas**, no una con selector de modo.
 
-1. **Duelo** (`duelo/`, `src/games/duelo/`): inspirada en "Wanted Dead or a Wild" (Hacksaw). 3 o más iguales seguidos
-   desde la izquierda (15.625 formas). Símbolos VS obligatorios: ocupan la columna, se pegan dos personajes y el ganador
-   deja la columna como WILD con multiplicador de x2 a x100.
+1. **Duelo** (`duelo/`, `src/games/duelo/`): inspirada en "Life and Death" (Hacksaw). 19 líneas, 3 o más iguales
+   seguidos desde la izquierda. Los 4 personajes hacen de los 4 jinetes: cada uno tiene su rodillo central (Macaco 2,
+   Elena 3, Iberru 4, Andy 5) y su wild multiplicador (x2-4, x5-9, x10-25, x30-200). Si su wild cae en su rodillo se
+   expande a toda la columna (si así entra en premio). Los multiplicadores de una línea se suman.
+   (Antes era estilo "Wanted" con duelos VS; el usuario lo cambió.)
 2. **Olimpo** (`olimpo/`, `src/games/olimpo/`): inspirada en "Gates of Olympus" (Pragmatic). Paga con 8 o más iguales en
    cualquier posición, con cascadas y orbes multiplicadores.
 
-Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". En Duelo el tocho deja los VS fijos todo el bonus;
-en Olimpo el multiplicador se acumula. Los tres se pueden comprar (bonus buy).
+Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se pueden comprar (bonus buy).
+- Duelo: bonus = más wilds (Devastation); semitocho = rodillos de la muerte (Reckoning: el personaje que cae en su
+  rodillo lo activa y desde entonces se expande en cualquier rodillo central); tocho = rodillos de la muerte y los
+  rodillos expandidos se quedan fijos todo el bonus. Retrigger: 2 BONUS +2, 3 BONUS +4.
+- Olimpo: el multiplicador se va acumulando.
 
 ## Lore
 - Frases míticas para ganancias grandes: "¡Apaga la puta radio!", "¡Iberru gordofóbico!", "¡Majaria es dictador!".

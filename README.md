@@ -2,7 +2,7 @@
 
 Dos slots demo (saldo ficticio) basadas en el canal de AndyPSX:
 
-- **Duelo**: estilo *Wanted Dead or a Wild*, 6x5, 15.625 formas y duelos VS que dejan WILDs con multiplicador.
+- **Duelo**: estilo *Life and Death*, 6x5, 19 líneas; Andy, Iberru, Elena y Macaco son wilds multiplicadores que se expanden en su rodillo.
 - **Olimpo**: estilo *Gates of Olympus*, 6x5, paga en cualquier sitio, cascadas y orbes multiplicadores.
 
 Bonus, semitocho y tocho (3, 4 y 5 scatters), comprables desde el juego.

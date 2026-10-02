@@ -162,7 +162,8 @@ export class SlotShell<B extends BonusState> {
       const before = fs.left;
       const { win } = await this.game.spin(fs, { bet: this.bet, showWin: this.showWin });
       this.showWin(fs.total * this.bet);
-      if (fs.left >= before) await this.overlay.floatText(`+${this.game.retrigger} TIRADAS`, w / 2, h / 2, 0xffd23e, 48);
+      const added = fs.left - (before - 1);
+      if (added > 0) await this.overlay.floatText(`+${added} TIRADAS`, w / 2, h / 2, 0xffd23e, 48);
       await this.celebrate(win);
       this.refresh();
       await wait(250);

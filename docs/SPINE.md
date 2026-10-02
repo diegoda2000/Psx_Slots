@@ -58,5 +58,5 @@ registerSymbolVisual('AND', () => new SpineSymbolVisual('AND'));
 Los símbolos sin registrar siguen usando el arte de código, así que se puede ir símbolo a símbolo.
 
 ## Escenas grandes
-El duelo VS (`DueloOverlay.duel` en `src/games/duelo/view.ts`) y los big wins (`Overlay.bigWin`) son métodos
+La expansión de los rodillos wild (`DueloBoard.expand` en `src/games/duelo/view.ts`) y los big wins (`Overlay.bigWin`) son métodos
 asíncronos aislados: se pueden reescribir para reproducir una animación de Spine sin cambiar quién los llama.

@@ -19,7 +19,6 @@ export interface SpinOutcome {
 /** Lo que cada slot aporta al cascarón común (HUD, saldo, compra de bonus, flujo del bonus). */
 export interface SlotGame<B extends BonusState = BonusState> {
   readonly buyPrice: Record<BonusTier, number>;
-  readonly retrigger: number;
   /** Subtítulo del banner de inicio de cada bonus. */
   bonusPitch(tier: BonusTier): string;
   rulesHtml(): string;

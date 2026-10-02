@@ -55,11 +55,20 @@ export class CodeSymbolVisual implements SymbolVisual {
         }
         break;
       }
-      case 'wild':
-        g.roundRect(h, h, S, S, 16).fill(0x0b0b0f).stroke({ width: 4, color: 0xffd23e });
-        g.roundRect(-40, -40, 80, 80, 12).stroke({ width: 2, color: 0xff3df2, alpha: 0.8 });
-        this.art.addChild(label('WILD', 24, 0xffd23e));
+      case 'cwild': {
+        // Wild multiplicador de un personaje: inicial, WILD y su multiplicador.
+        const ch = this.sym.slice(2) as SymbolId;
+        g.roundRect(h, h, S, S, 16).fill(0x0b0b0f).stroke({ width: 5, color: info.color });
+        g.roundRect(-39, -39, 78, 78, 12).stroke({ width: 2, color: 0xffffff, alpha: 0.35 });
+        const big = label(INITIAL[ch]!, 30, info.color);
+        big.y = -22;
+        const w = label('WILD', 15, 0xffffff);
+        w.y = 4;
+        const m = label(`x${this.mult}`, 20, multColor(this.mult ?? 2));
+        m.y = 28;
+        this.art.addChild(big, w, m);
         break;
+      }
       case 'scatter': {
         g.star(0, -6, 5, 40, 18).fill(0xffd23e).stroke({ width: 3, color: 0xff8800 });
         const t = label('BONUS', 17, 0xffffff);
@@ -75,10 +84,6 @@ export class CodeSymbolVisual implements SymbolVisual {
         this.art.addChild(label(`x${this.mult}`, (this.mult ?? 0) >= 100 ? 20 : 26, 0xffffff));
         break;
       }
-      case 'vs':
-        g.roundRect(h, h, S, S, 12).fill(0x30101a);
-        this.art.addChild(label('VS', 30, 0xff3355));
-        break;
     }
   }
 

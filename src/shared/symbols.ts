@@ -1,11 +1,14 @@
 /** Símbolos comunes a las dos slots. */
 export type PaySymbol = 'CUA' | 'CRZ' | 'CIR' | 'TRI' | 'MAC' | 'ELE' | 'IBE' | 'AND';
-export type SymbolId = PaySymbol | 'WILD' | 'VS' | 'BONUS' | 'MULT';
-export type SymbolKind = 'low' | 'high' | 'wild' | 'vs' | 'scatter' | 'mult';
+export type Premium = 'AND' | 'IBE' | 'ELE' | 'MAC';
+/** Wild multiplicador de cada personaje (Duelo). */
+export type CharWild = 'W_AND' | 'W_IBE' | 'W_ELE' | 'W_MAC';
+export type SymbolId = PaySymbol | CharWild | 'BONUS' | 'MULT';
+export type SymbolKind = 'low' | 'high' | 'cwild' | 'scatter' | 'mult';
 
 export interface Cell {
   sym: SymbolId;
-  /** Multiplicador de orbes (Olimpo) o de la columna VS (Duelo). */
+  /** Multiplicador de orbes (Olimpo) o del wild de personaje (Duelo). */
   mult?: number;
 }
 export type Grid = Cell[][]; // grid[col][row]
@@ -22,8 +25,10 @@ export const SYMBOLS: Record<SymbolId, { name: string; kind: SymbolKind; color: 
   ELE: { name: 'Elena', kind: 'high', color: 0x2ed3e0 },
   IBE: { name: 'Iberru', kind: 'high', color: 0xa86bff },
   AND: { name: 'Andy', kind: 'high', color: 0xffd23e },
-  WILD: { name: 'Wild', kind: 'wild', color: 0xffffff },
-  VS: { name: 'VS', kind: 'vs', color: 0xff3355 },
+  W_AND: { name: 'Wild Andy', kind: 'cwild', color: 0xffd23e },
+  W_IBE: { name: 'Wild Iberru', kind: 'cwild', color: 0xa86bff },
+  W_ELE: { name: 'Wild Elena', kind: 'cwild', color: 0x2ed3e0 },
+  W_MAC: { name: 'Wild Macaco', kind: 'cwild', color: 0xffc72e },
   BONUS: { name: 'Bonus', kind: 'scatter', color: 0xffe14d },
   MULT: { name: 'Multiplicador', kind: 'mult', color: 0x7cf3ff },
 };
@@ -31,4 +36,7 @@ export const SYMBOLS: Record<SymbolId, { name: string; kind: SymbolKind; color: 
 /** Símbolos que pagan, de menos a más premio. */
 export const PAY_SYMBOLS: PaySymbol[] = ['CUA', 'CRZ', 'CIR', 'TRI', 'MAC', 'ELE', 'IBE', 'AND'];
 /** Premium, de más a menos: Andy "el sacarino", Iberru, Elena, Macaco. */
-export const PREMIUMS: PaySymbol[] = ['AND', 'IBE', 'ELE', 'MAC'];
+export const PREMIUMS: Premium[] = ['AND', 'IBE', 'ELE', 'MAC'];
+
+export const wildOf = (p: Premium) => `W_${p}` as CharWild;
+export const charOf = (w: CharWild) => w.slice(2) as Premium;

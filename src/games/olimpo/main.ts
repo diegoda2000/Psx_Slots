@@ -20,7 +20,6 @@ async function main() {
 
   const game: SlotGame<OlimpoBonus> = {
     buyPrice: OLIMPO.buyPrice,
-    retrigger: OLIMPO.retrigger,
     bonusPitch: (t) => PITCH[t],
     rulesHtml,
     createBonus,
