@@ -38,6 +38,7 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 
 ## Comandos
 - `npm run dev`, `npm run build`, `npm run typecheck`, `npm run sim -- --spins 3000000 --buys 30000 --game duelo`
+- `npm run build:demo`: cada slot en un HTML autocontenido (`dist-demo/`). Demos publicadas: Duelo https://claude.ai/artifact/1RB24hTi9n3Hvzhj4MWQKz · Olimpo https://claude.ai/artifact/To7kizU4n5rYppzZpBbBmK
 
 ## Estado
 - Separadas en dos slots independientes a partir del boceto https://claude.ai/artifact/9HapWazZ7B3SLxPiaaE5yo

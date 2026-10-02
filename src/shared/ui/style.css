@@ -12,7 +12,7 @@
   --body: 'Chakra Petch', system-ui, sans-serif;
   color-scheme: dark;
 }
-body.olimpo { --accent: var(--pink); }
+.app.olimpo { --accent: var(--pink); }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body {
