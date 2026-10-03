@@ -26,6 +26,13 @@ function miniLine(line: number[], i: number) {
   return `<div class="mini-line" title="Línea ${i + 1}">${cells}</div>`;
 }
 
+/** 1 de cada cuántas tiradas entra cada bonus en modo BonusHunt (fichas FS en 4 rodillos). */
+function huntOdds(tier: DueloTier) {
+  const p = DUELO.hunt.scatterPerReel;
+  const prob = tier === 1 ? 4 * p ** 3 * (1 - p) : p ** 4;
+  return Math.round(1 / prob).toLocaleString('es-ES');
+}
+
 export function rulesHtml(bet: number) {
   // De más a menos premio: arriba los 4 altos, abajo los 4 bajos (como en Life and Death).
   const best = [...DUELO_PAYS].reverse();
@@ -76,5 +83,11 @@ export function rulesHtml(bet: number) {
     )
       .join('')}
   </table>
+
+  <h3>BONUS HUNT</h3>
+  <p>Se activa desde el panel de compra y se queda puesto hasta quitarlo. Cada tirada cuesta ${DUELO.hunt.cost} veces la
+  apuesta (${money(DUELO.hunt.cost * bet)}) y las fichas FS salen mucho más: el bonus entra unas 5 o 6 veces más a menudo
+  (BONUS 1 de cada ~${huntOdds(1)} tiradas, TOCHO 1 de cada ~${huntOdds(2)}). Los premios se pagan sobre la apuesta normal.
+  Mientras está activo no se puede comprar bonus. Mismo RTP que el juego normal.</p>
   <p class="small">Premio máximo: ${DUELO.maxWin.toLocaleString('es-ES')} veces la apuesta. RTP simulado ≈ 93,6%. Demo con saldo ficticio.</p>`;
 }

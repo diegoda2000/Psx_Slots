@@ -55,6 +55,13 @@ export class SlotShell<B extends BonusState> {
   private autoRun = 0;
   private betPopTimer = 0;
   private buyTier: BonusTier | null = null;
+  /** Modo BonusHunt activo (solo si la slot lo tiene). */
+  hunt = false;
+
+  /** Lo que cuesta una tirada normal (más en modo BonusHunt). */
+  get spinCost() {
+    return this.bet * (this.hunt && this.game.hunt ? this.game.hunt.cost : 1);
+  }
 
   /** Premio máximo de la slot (veces la apuesta). */
   private get maxWin() {
@@ -133,6 +140,16 @@ export class SlotShell<B extends BonusState> {
         panel.showModal();
       };
       $('buyClose').onclick = () => panel.close();
+      const huntBtn = $opt('huntToggle');
+      if (huntBtn && this.game.hunt)
+        huntBtn.onclick = () => {
+          if (this.busy || this.bonus) return;
+          this.hunt = !this.hunt;
+          this.buyTier = null;
+          panel.close();
+          this.refresh();
+          this.toast(this.hunt ? `BONUS HUNT ACTIVADO: ${money(this.spinCost)} por tirada` : 'BONUS HUNT DESACTIVADO');
+        };
       $('buyNo').onclick = () => {
         this.buyTier = null;
         this.refresh();
@@ -189,7 +206,7 @@ export class SlotShell<B extends BonusState> {
         this.stopAuto();
         break;
       }
-      if (this.balance < this.bet) {
+      if (this.balance < this.spinCost) {
         this.toast('Sin saldo: autoplay detenido');
         this.stopAuto();
         break;
@@ -231,10 +248,28 @@ export class SlotShell<B extends BonusState> {
     document.querySelectorAll<HTMLButtonElement>('[data-tier]').forEach((b) => {
       const price = this.price(Number(b.dataset.tier) as BonusTier);
       (b.querySelector('.price') ?? b.querySelector('span'))!.textContent = money(price);
-      b.disabled = this.busy || !!this.bonus || this.balance < price;
+      // Con el BonusHunt activo no se puede comprar bonus (como en Hacksaw).
+      b.disabled = this.busy || !!this.bonus || this.balance < price || this.hunt;
       b.classList.toggle('selected', Number(b.dataset.tier) === this.buyTier);
     });
+    const huntBtn = $opt('huntToggle') as HTMLButtonElement | null;
+    if (huntBtn && this.game.hunt) {
+      huntBtn.disabled = this.busy || !!this.bonus;
+      huntBtn.classList.toggle('on', this.hunt);
+      huntBtn.setAttribute('aria-pressed', String(this.hunt));
+      const hp = $opt('huntPrice');
+      if (hp) hp.textContent = money(this.bet * this.game.hunt.cost);
+      const hs = $opt('huntState');
+      if (hs) hs.textContent = this.hunt ? 'ACTIVADO' : 'ACTIVAR';
+    }
+    const huntTag = $opt('huntTag');
+    if (huntTag) {
+      huntTag.hidden = !this.hunt;
+      huntTag.textContent = `BONUS HUNT ACTIVO · ${money(this.spinCost)} por tirada`;
+    }
+    $opt('buyOpen')?.classList.toggle('hunt', this.hunt);
     const spin = $('spin') as HTMLButtonElement;
+    spin.classList.toggle('hunt', this.hunt);
     spin.disabled = this.busy && !this.auto;
     spin.classList.toggle('auto', this.auto);
     $opt('auto')?.classList.toggle('on', this.auto);
@@ -276,15 +311,15 @@ export class SlotShell<B extends BonusState> {
 
   async spin() {
     if (this.busy || this.bonus) return;
-    if (this.balance < this.bet) {
+    if (this.balance < this.spinCost) {
       this.toast('Sin saldo: recarga la página para empezar de nuevo');
       return;
     }
     this.busy = true;
-    this.balance -= this.bet;
+    this.balance -= this.spinCost;
     this.showWin(0);
     this.refresh();
-    const { win, tier } = await this.game.spin(null, { bet: this.bet, showWin: this.showWin });
+    const { win, tier } = await this.game.spin(null, { bet: this.bet, hunt: this.hunt, showWin: this.showWin });
     const x = Math.min(win, this.maxWin);
     if (x > 0) {
       await this.celebrate(x);

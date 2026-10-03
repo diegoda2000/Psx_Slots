@@ -100,6 +100,11 @@ export const DUELO = {
   /** Tiradas extra dentro del bonus por número de fichas FS. */
   retrigger: { 2: 2, 3: 4 } as Record<number, number>,
   buyPrice: { 1: 100, 2: 200 } as Record<DueloTier, number>,
+  /**
+   * BonusHunt FeatureSpins (como Hacksaw): cada tirada cuesta 3 veces la apuesta y salen más fichas FS
+   * (el bonus entra unas 5-6 veces más). Mismo RTP que el juego normal.
+   */
+  hunt: { cost: 3, scatterPerReel: 0.1889 },
 };
 
 /** 3 fichas FS = BONUS, 4 o más = TOCHO. */
@@ -137,6 +142,8 @@ export interface DueloSpin {
 
 interface SpinOpts {
   wildChance: number;
+  /** Probabilidad de ficha FS en cada rodillo central (por defecto la del juego base). */
+  scatterChance?: number;
   /** Personajes con rodillo de la muerte activo (se expanden en cualquier rodillo central). */
   death: DueloChar[] | null;
 }
@@ -155,7 +162,7 @@ export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
   // Como mucho una ficha FS por rodillo, y solo en los rodillos centrales (2 a 5), como los personajes.
   let scatters = 0;
   for (let c = 1; c <= 4; c++)
-    if (rng() < DUELO.scatterPerReel) {
+    if (rng() < (opts.scatterChance ?? DUELO.scatterPerReel)) {
       grid[c][randInt(rng, ROWS)] = { sym: 'BONUS' };
       scatters++;
     }
@@ -238,6 +245,11 @@ export function evaluateLines(grid: Grid, wildReels: WildReel[]): LineWin[] {
 
 export function baseSpin(rng: Rng) {
   return spinDuelo(rng, { wildChance: DUELO.wildChance, death: null });
+}
+
+/** Tirada del modo BonusHunt: cuesta DUELO.hunt.cost veces la apuesta y salen más fichas FS. */
+export function huntSpin(rng: Rng) {
+  return spinDuelo(rng, { wildChance: DUELO.wildChance, death: null, scatterChance: DUELO.hunt.scatterPerReel });
 }
 
 export interface DueloBonus extends BonusState {

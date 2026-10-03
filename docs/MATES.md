@@ -49,6 +49,11 @@ Compra de bonus (la media se cumple solo a muy largo plazo; cada bonus por separ
 | TOCHO | 200x | 94,0% ± 1,2% | 50x | < 3,8x | > 434x | > 2.049x | 79% de las veces |
 
 Con 2,4 millones de compras de cada uno, la media sale 93,7x ± 0,4x el BONUS y 187x ± 0,7x el TOCHO.
+### BonusHunt FeatureSpins (como Hacksaw)
+Cada tirada cuesta 3x la apuesta; la ficha FS sale en cada rodillo central con un 18,89% (en vez de 10,3%). Lo demás
+igual. Calibrado con 20M tiradas para el mismo RTP de diseño (93,6%); la simulación de 10M da 94,6% ± 1,1%.
+BONUS 1 de cada ~46 tiradas (5,5 veces más) y TOCHO 1 de cada ~790 (11 veces más). Con él activo no se compran bonus.
+
 El ± es el margen de error al 95% de la propia simulación: el RTP real de diseño es el mismo para los tres (≈93,6%).
 
 ## Olimpo — 3M tiradas, semilla 42 (valores del boceto)

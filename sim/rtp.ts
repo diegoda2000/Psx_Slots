@@ -29,6 +29,8 @@ interface Game {
   buyPrice: Partial<Record<BonusTier, number>>;
   /** Premio máximo (veces la apuesta). */
   maxWin: number;
+  /** Modo BonusHunt (si lo tiene): coste por tirada y tirada de ese modo. */
+  hunt?: { cost: number; base(rng: Rng): { win: number; tier: BonusTier | 0 } };
 }
 
 const games: Game[] = [
@@ -43,6 +45,13 @@ const games: Game[] = [
     bonus: (rng, t) => duelo.playBonus(rng, t as duelo.DueloTier),
     buyPrice: duelo.DUELO.buyPrice,
     maxWin: duelo.DUELO.maxWin,
+    hunt: {
+      cost: duelo.DUELO.hunt.cost,
+      base: (rng) => {
+        const r = duelo.huntSpin(rng);
+        return { win: r.total, tier: r.tier };
+      },
+    },
   },
   {
     name: 'olimpo',
@@ -137,6 +146,34 @@ for (const g of games) {
     console.log(
       `             mediana ${quantile(res, 0.5).toFixed(1)}x · p10 ${quantile(res, 0.1).toFixed(1)}x · p90 ${quantile(res, 0.9).toFixed(1)}x · p99 ${n0(quantile(res, 0.99))}x · máx ${n0(res[res.length - 1])}x · pierde dinero ${pct(below)}`,
     );
+  }
+  if (g.hunt) {
+    const h = g.hunt;
+    let paid = 0;
+    let hHits = 0;
+    let hSq = 0;
+    const hTrig: Partial<Record<BonusTier, number>> = {};
+    for (let i = 0; i < SPINS; i++) {
+      const r = h.base(rng);
+      let w = r.win;
+      if (r.tier) {
+        hTrig[r.tier] = (hTrig[r.tier] ?? 0) + 1;
+        w += g.bonus(rng, r.tier);
+      }
+      w = Math.min(w, g.maxWin);
+      paid += w;
+      if (w > 0) hHits++;
+      hSq += (w / h.cost) ** 2;
+    }
+    const hr = paid / SPINS / h.cost;
+    const hsd = Math.sqrt(hSq / SPINS - hr * hr);
+    console.log(`BonusHunt (${n0(SPINS)} tiradas a ${h.cost}x la apuesta):`);
+    console.log(`  RTP ${pct(hr)} ± ${pct((1.96 * hsd) / Math.sqrt(SPINS))} · frecuencia premio ${pct(hHits / SPINS)}`);
+    for (const t of g.tiers) {
+      const n = hTrig[t] ?? 0;
+      const nb = triggers[t] ?? 0;
+      console.log(`  ${g.tierName(t).padEnd(10)} 1 de cada ${n ? n0(SPINS / n) : '∞'} tiradas (${nb ? (n / nb).toFixed(1) : '-'} veces más que normal)`);
+    }
   }
   console.log(`(${((Date.now() - t0) / 1000).toFixed(1)} s)`);
 }

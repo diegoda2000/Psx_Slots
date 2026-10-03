@@ -12,7 +12,7 @@ import { registerSymbolVisual } from '../../shared/view/SymbolVisual';
 import { fsChipUrl, loadDueloArt, symbolTexture } from './art';
 import { CharacterWildVisual } from './CharacterWildVisual';
 import { ImageSymbolVisual } from './ImageSymbolVisual';
-import { baseSpin, bonusSpin, createBonus, DUELO, DUELO_PAYS, DUELO_TIER_NAMES, type DueloBonus, type DueloTier } from './math';
+import { baseSpin, bonusSpin, createBonus, huntSpin, DUELO, DUELO_PAYS, DUELO_TIER_NAMES, type DueloBonus, type DueloTier } from './math';
 import { FONT, RED, YELLOW } from './palette';
 import { PITCH, rulesHtml } from './rules';
 import { CELL_W, DueloBoard } from './view';
@@ -47,6 +47,7 @@ async function main() {
   const game: SlotGame<DueloBonus> = {
     buyPrice: DUELO.buyPrice,
     maxWin: DUELO.maxWin,
+    hunt: { cost: DUELO.hunt.cost },
     bonusName: (t) => DUELO_TIER_NAMES[t as DueloTier],
     topTier: 2,
     turboModes: [
@@ -68,8 +69,8 @@ async function main() {
       // Tablero de reposo limpio, sin rodillos desplegados.
       void board.dropIn(idleGrid());
     },
-    async spin(bonus, { bet }) {
-      const res = bonus ? bonusSpin(defaultRng, bonus) : baseSpin(defaultRng);
+    async spin(bonus, { bet, hunt }) {
+      const res = bonus ? bonusSpin(defaultRng, bonus) : hunt ? huntSpin(defaultRng) : baseSpin(defaultRng);
       board.clearReels();
       await board.dropIn(res.grid);
       // Primero se enseñan las fichas FS (bonus o tiradas extra); luego los despliegues pueden taparlas.

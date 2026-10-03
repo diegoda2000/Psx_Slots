@@ -12,6 +12,7 @@
     <header class="title">
       <h1 class="logo">DUELO<span>PSX</span></h1>
       <div id="fsInfo" class="fs-info" role="status" hidden></div>
+      <div id="huntTag" class="hunt-tag" hidden></div>
     </header>
 
     <main class="play">
@@ -89,6 +90,13 @@
         <strong>TOCHO</strong>
         <small>10 tiradas · rodillos de la muerte</small>
         <span class="price">-</span>
+      </button>
+      <!-- BonusHunt FeatureSpins (como Hacksaw): se activa y se queda puesto hasta quitarlo -->
+      <button id="huntToggle" class="card hunt" aria-pressed="false">
+        <span class="chips"><img data-fs alt="" /><span class="x5">x5</span></span>
+        <strong>BONUS HUNT</strong>
+        <small>Tiradas a 3x la apuesta · el bonus sale unas 5 veces más</small>
+        <span class="hunt-side"><span id="huntPrice" class="price">-</span><span id="huntState" class="hunt-state">ACTIVAR</span></span>
       </button>
     </div>
     <div id="buyConfirm" class="confirm" hidden>

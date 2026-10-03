@@ -24,6 +24,8 @@ export interface SlotGame<B extends BonusState = BonusState> {
   readonly buyPrice: Partial<Record<BonusTier, number>>;
   /** Nombre de cada bonus (por defecto BONUS / SEMITOCHO / TOCHO). */
   bonusName?(tier: BonusTier): string;
+  /** Modo BonusHunt FeatureSpins (opcional): cada tirada cuesta `cost` veces la apuesta y el bonus sale más. */
+  readonly hunt?: { cost: number };
   /** Premio máximo en veces la apuesta. Por defecto MAX_WIN (10.000x). */
   readonly maxWin?: number;
   /**
@@ -48,5 +50,7 @@ export interface SlotGame<B extends BonusState = BonusState> {
 
 export interface SpinContext {
   bet: number;
+  /** Tirada del modo BonusHunt. */
+  hunt?: boolean;
   showWin(amountMoney: number): void;
 }

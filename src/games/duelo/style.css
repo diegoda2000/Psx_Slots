@@ -226,6 +226,18 @@ svg .fill { fill: currentColor; stroke: none; }
 .card.tocho strong { color: var(--red); -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; }
 .card small { font-size: 15px; color: var(--muted); }
 .card .price { font: 400 24px var(--display); color: var(--yellow); font-variant-numeric: tabular-nums; }
+.card.hunt { grid-column: 1 / -1; }
+.card.hunt strong { color: var(--yellow); -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; }
+.card.hunt.on { border-color: var(--yellow); background: rgba(255, 210, 0, 0.12); }
+.card .x5 { align-self: center; margin-left: 6px; font: 400 22px var(--display); color: var(--yellow); }
+.hunt-side { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.hunt-side .price::after { content: ' / tirada'; font: 600 14px var(--ui); color: var(--muted); }
+.hunt-state { font: 700 14px var(--ui); letter-spacing: 0.1em; padding: 3px 10px; border-radius: 999px; background: var(--yellow); color: var(--ink); }
+.card.hunt.on .hunt-state { background: var(--red); color: var(--sticker); }
+.hunt-tag { font: 400 16px / 1 var(--display); letter-spacing: 0.04em; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 6px 14px 4px; white-space: nowrap; }
+.hunt-tag[hidden], .title:has(.fs-info:not([hidden])) .hunt-tag { display: none; }
+.title:has(.hunt-tag:not([hidden])) { flex-wrap: wrap; gap: 4px 14px; }
+.buy-open.hunt, .spin.hunt { box-shadow: 0 0 0 4px var(--yellow), 0 0 22px rgba(255, 210, 0, 0.55); }
 .confirm { margin-top: 16px; padding: 16px; border-radius: 14px; background: var(--ink); text-align: center; }
 .confirm p { margin: 0 0 12px; font: 700 22px var(--ui); }
 .confirm-actions { display: flex; justify-content: center; gap: 12px; }
@@ -293,6 +305,8 @@ svg .fill { fill: currentColor; stroke: none; }
   .card small { grid-area: desc; font-size: 14px; }
   .card .price { grid-area: price; align-self: center; font-size: 20px; }
   .card .chips img { width: 24px; height: 24px; margin-left: -14px; }
+  .card .hunt-side { grid-area: price; align-self: center; }
+  .card .x5 { font-size: 18px; margin-left: 2px; }
   .panel h2 { font-size: 24px; }
   .play { padding-inline: 8px; }
   :root { --reserve: 300px; }

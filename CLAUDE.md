@@ -22,7 +22,7 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
 Bonus (se pueden comprar):
 - Duelo: solo dos. Fichas FS solo en los rodillos 2-5. 3 fichas FS = BONUS (más wilds, como Devastation, compra 100x); 4 fichas = TOCHO (rodillos de la
   muerte, como Reckoning: el personaje que cae en su rodillo lo activa y desde entonces se expande en cualquier rodillo
-  central; compra 200x). El tocho antiguo (wilds fijos) se eliminó y el semitocho pasó a llamarse TOCHO. Sin premio
+  central; compra 200x). Modo BonusHunt como Hacksaw (en el panel de compra): tiradas a 3x, bonus ~5 veces más, mismo RTP. El tocho antiguo (wilds fijos) se eliminó y el semitocho pasó a llamarse TOCHO. Sin premio
   mínimo. Retrigger: 2 fichas +2, 3 o más +4.
 - Olimpo: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho"; el multiplicador se va acumulando. **No tocar Olimpo
   salvo que el usuario lo pida.**
