@@ -58,8 +58,9 @@ Bonus (se pueden comprar):
   misma disposición que la barra de Hacksaw (compra de bonus redonda a la izquierda, saldo, apuesta con flechas y barra de
   nivel, botón de girar grande), menú en las tres rayas (INFO = reglas; velocidad normal/turbo x1,6/super turbo x2,5 por separado para juego base
   y bonus; interruptores de música y de efectos, guardados en `src/shared/settings.ts`). Efectos de sonido grabados en
-  `src/games/duelo/sounds/<nombre>.mp3` (Kenney CC0 y Mixkit, ver CREDITOS.md; se cargan solos por nombre, al usuario no le
-  gustan los sintetizados de `src/shared/sfx.ts`, que solo quedan de reserva); la música aún no existe, a la derecha solo
+  `src/games/duelo/sounds/<nombre>.mp3` (Kenney CC0, ver CREDITOS.md; se cargan solos por nombre). Estilo Hacksaw: cortos y limpios;
+  el usuario odia los sintetizados (`src/shared/sfx.ts`, solo de reserva) y los de casino recargados (alarmas, campanas,
+  monedas); la música aún no existe, a la derecha solo
   el botón de autoplay, autoplay (menú 10/25/50/100/250/500/1000/ilimitado, contador en el botón) y compra de
   bonus en panel con confirmación y selector de apuesta. Apuestas: 0,20-2 € de 20 en 20 céntimos, 3-10 € de euro en euro
   y 15-50 € de 5 en 5; al cambiarla sale en grande en el

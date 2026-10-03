@@ -1,24 +1,25 @@
 # Sonidos de Duelo
 
-Recortados y con el volumen igualado (ffmpeg, mono, mp3 96 kbps).
+Estilo Hacksaw: cortos y limpios. Recortados y con el volumen igualado (ffmpeg, mono, mp3 96 kbps).
 
-| Archivo | Origen | Licencia |
+| Archivo | Momento | Origen |
 |---|---|---|
-| spin | Mixkit 1930 "Slot machine random wheel" | Mixkit Sound Effects Free License |
-| reelStop-1..3 | Kenney "Impact Sounds" (impactWood_medium_000-002) | CC0 |
-| scatter | Kenney "Casino Audio" (chip-lay-1) + Mixkit 1937 "Bonus collect award" | CC0 / Mixkit |
-| scatterWin | Mixkit 2061 "Final level bonus" | Mixkit |
-| extraSpins | Mixkit 2058 "Bonus earned in video game" | Mixkit |
-| expand | Mixkit 1490 "Fast whoosh transition" | Mixkit |
-| mult | Mixkit 1999 "Gold coin prize" | Mixkit |
-| win | Mixkit 2020 "Small win" | Mixkit |
-| winBig | Mixkit 1931 "Slot machine win alert" | Mixkit |
-| bigWin | Mixkit 1928 "Slot machine win" | Mixkit |
-| bonusStart | Mixkit 2067 "Casino bling achievement" | Mixkit |
-| bonusStartTop | Mixkit 1981 "Casino bells reward" | Mixkit |
-| bonusEnd | Mixkit 1934 "Payout award" | Mixkit |
-| bonusEndZero | Mixkit 2042 "Player losing or failing" | Mixkit |
-| death | Mixkit 227 "Ominous drums" | Mixkit |
-| click, bet | Kenney "Interface Sounds" (click_001, tick_002) | CC0 |
+| spin | Giro | Kenney minimize_004 |
+| reelStop | Parada de rodillo | Kenney impactSoft_medium_000-002 (Impact Sounds) |
+| scatter | Ficha FS | Kenney glass_001 |
+| scatterWin | Fichas que cuentan | Kenney jingle PIZZI16 |
+| extraSpins | Tiradas extra | Kenney confirmation_002 |
+| expand | Despliegue del wild | Kenney maximize_004 |
+| mult | Multiplicador | Kenney pluck_002 |
+| win | Premio pequeño | Kenney confirmation_001 |
+| winBig | Premio de línea grande | Kenney jingle PIZZI04 |
+| bigWin | Big win | Kenney jingle PIZZI02 |
+| bonusStart | Entrada al BONUS | Kenney jingle STEEL02 |
+| bonusStartTop | Entrada al TOCHO | Kenney jingle HIT15 |
+| bonusEnd | Fin del bonus con premio | Kenney jingle PIZZI10 |
+| bonusEndZero | Fin del bonus sin premio | Kenney jingle PIZZI01 |
+| death | Rodillo de la muerte | Kenney impactBell_heavy_000 |
+| click | Botones | Kenney click1 |
+| bet | Cambiar apuesta | Kenney tick_004 |
 
-Mixkit: https://mixkit.co/license/#sfxFree · Kenney: https://kenney.nl (CC0).
+Todo de Kenney (https://kenney.nl): Interface Sounds, UI Audio, Digital Audio, Impact Sounds y Music Jingles. Licencia CC0.
