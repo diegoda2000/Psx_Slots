@@ -12,6 +12,8 @@ export interface SymbolVisual {
   land(): Promise<void>;
   win(): Promise<void>;
   remove(): Promise<void>;
+  /** Enseña información oculta al caer (p. ej. el multiplicador del wild cuando entra en premio). */
+  reveal?(): Promise<void>;
   destroy(): void;
 }
 

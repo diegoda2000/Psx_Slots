@@ -38,6 +38,12 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 - `src/games/<slot>/math.ts`: matemáticas puras, **sin importar PixiJS**, para que las use el simulador.
 - `sim/rtp.ts`: simulador de RTP (`npm run sim`).
 - Arte provisional hecho con código (`src/shared/view/CodeSymbolVisual.ts`). Spine más adelante: ver `docs/SPINE.md`.
+- Ilustraciones de personajes (del usuario): originales en `art/source/`, recorte de fondo con `art/recortar.py`,
+  versión de juego en `src/games/duelo/art/<ID>.webp`. Iberru = pelo rizado, Macaco = barba, Andy = gorra AAA.
+  Elena aún no tiene ilustración (usa arte de código).
+- Wild de personaje en Duelo: en la celda solo el retrato, sin multiplicador. Al desplegarse, el cuerpo completo va
+  apareciendo según se abre la columna y el multiplicador sale al terminar. Si no se despliega, el multiplicador sale
+  cuando entra en una línea premiada.
   Toda animación nueva de símbolos debe pasar por la interfaz `SymbolVisual` para poder cambiarla por Spine.
 
 ## Comandos

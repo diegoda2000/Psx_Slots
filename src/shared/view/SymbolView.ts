@@ -24,4 +24,7 @@ export class SymbolView extends Container {
   playRemove() {
     return this.visual.remove();
   }
+  playReveal() {
+    return this.visual.reveal?.() ?? Promise.resolve();
+  }
 }

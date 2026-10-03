@@ -10,7 +10,7 @@ export const speed = { factor: 1 };
 type Props = Record<string, number>;
 
 /** Tween mínimo sobre propiedades numéricas, con rutas tipo "scale.x". */
-export function tween(target: object, to: Props, ms: number, ease = easeOut): Promise<void> {
+export function tween(target: object, to: Props, ms: number, ease = easeOut, onUpdate?: () => void): Promise<void> {
   const dur = ms / speed.factor;
   const from: Props = {};
   for (const k of Object.keys(to)) from[k] = getPath(target, k);
@@ -21,6 +21,7 @@ export function tween(target: object, to: Props, ms: number, ease = easeOut): Pr
       const p = Math.min(1, dur <= 0 ? 1 : t / dur);
       const e = ease(p);
       for (const k of Object.keys(to)) setPath(target, k, from[k] + (to[k] - from[k]) * e);
+      onUpdate?.();
       if (p >= 1) {
         Ticker.shared.remove(tick);
         resolve();
