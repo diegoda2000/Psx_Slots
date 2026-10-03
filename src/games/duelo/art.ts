@@ -1,4 +1,4 @@
-import { Assets, Rectangle, Texture } from 'pixi.js';
+import { Rectangle, Texture } from 'pixi.js';
 import type { Premium } from '../../shared/symbols';
 import andy from './art/AND.webp';
 import iberru from './art/IBE.webp';
@@ -17,9 +17,28 @@ const PORTRAIT: Partial<Record<Premium, { x: number; y: number; size: number }>>
 const body = new Map<Premium, Texture>();
 const portrait = new Map<Premium, Texture>();
 
+/**
+ * Carga con <img> y no con Assets.load: el visor de artifacts prohíbe fetch() (también de data: URIs),
+ * pero sí deja cargar imágenes. Si una falla, ese personaje sigue con el arte de código.
+ */
+function loadImage(url: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`No se pudo cargar ${url.slice(0, 60)}`));
+    img.src = url;
+  });
+}
+
 export async function loadCharacterArt() {
   for (const [p, url] of Object.entries(URLS) as [Premium, string][]) {
-    const tex: Texture = await Assets.load(url);
+    let tex: Texture;
+    try {
+      tex = Texture.from(await loadImage(url));
+    } catch (e) {
+      console.warn(e);
+      continue;
+    }
     body.set(p, tex);
     const c = PORTRAIT[p]!;
     const w = tex.source.width;

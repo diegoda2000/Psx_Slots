@@ -22,37 +22,35 @@ export class WildReelView extends Container {
     this.addChild(this.frame, this.content, this.clip);
     this.content.mask = this.clip;
 
-    const glow = new Graphics().rect(4, 4, CELL - 8, BOARD_H - 8).fill({ color, alpha: 0.12 });
+    const glow = new Graphics().rect(4, 4, CELL - 8, BOARD_H - 8).fill({ color, alpha: 0.18 });
     this.content.addChild(glow);
     const tex = bodyTexture(wild.char);
     if (tex) {
-      // Cuerpo completo, ajustado al ancho de la columna y apoyado abajo.
+      // Cuerpo completo ocupando casi todo el rodillo (se recortan los lados con la máscara).
       const sp = new Sprite(tex);
       sp.anchor.set(0.5, 1);
-      const scale = (CELL + 6) / tex.width;
-      sp.scale.set(scale);
-      sp.position.set(CELL / 2, BOARD_H - 14);
+      sp.scale.set((BOARD_H - 16) / tex.height);
+      sp.position.set(CELL / 2, BOARD_H - 6);
       this.content.addChild(sp);
     } else {
       const initial = label(SYMBOLS[wild.char].name[0], 64, color);
-      initial.position.set(CELL / 2, BOARD_H - 150);
+      initial.position.set(CELL / 2, BOARD_H / 2);
       this.content.addChild(initial);
     }
-    const name = label(SYMBOLS[wild.char].name.toUpperCase(), 15, 0xffffff);
-    name.position.set(CELL / 2, 34);
-    const w = label('WILD', 22, 0xffd23e);
-    w.position.set(CELL / 2, 64);
-    this.content.addChild(name, w);
-    if (wild.sticky) {
-      const fixed = label('FIJO', 12, 0xaaaaaa);
-      fixed.position.set(CELL / 2, 88);
-      this.content.addChild(fixed);
-    }
+    // Rótulo abajo, sobre las piernas.
+    const band = new Graphics().rect(4, BOARD_H - 58, CELL - 8, 54).fill({ color: 0x000000, alpha: 0.55 });
+    const w = label(wild.sticky ? 'WILD FIJO' : 'WILD', wild.sticky ? 15 : 20, 0xffd23e);
+    w.position.set(CELL / 2, BOARD_H - 40);
+    const name = label(SYMBOLS[wild.char].name.toUpperCase(), 13, 0xffffff);
+    name.position.set(CELL / 2, BOARD_H - 18);
+    this.content.addChild(band, w, name);
 
+    // Multiplicador sobre el pecho; solo aparece al terminar de desplegarse.
     this.multTag = new Container();
-    const m = label(`x${wild.mult}`, 34, multColor(wild.mult));
-    this.multTag.addChild(m);
-    this.multTag.position.set(CELL / 2, 140);
+    const mc = multColor(wild.mult);
+    const badge = new Graphics().roundRect(-42, -26, 84, 52, 14).fill({ color: 0x000000, alpha: 0.75 }).stroke({ width: 3, color: mc });
+    this.multTag.addChild(badge, label(`x${wild.mult}`, 34, mc));
+    this.multTag.position.set(CELL / 2, BOARD_H * 0.55);
     this.multTag.visible = false;
     this.addChild(this.multTag);
     this.redraw();

@@ -14,6 +14,10 @@ import { baseSpin, bonusSpin, createBonus, DUELO, type DueloBonus } from './math
 import { PITCH, rulesHtml } from './rules';
 import { DueloBoard } from './view';
 
+/** Tablero de reposo: una tirada base con los wilds cambiados por símbolos normales. */
+const idleGrid = () =>
+  baseSpin(defaultRng).grid.map((col) => col.map((c) => (c.sym.startsWith('W_') ? { sym: 'TRI' as const } : c)));
+
 const W = BOARD_W + PAD * 2;
 const H = BOARD_H + PAD * 2;
 
@@ -39,6 +43,8 @@ async function main() {
     endBonus: () => {
       board.clearReels();
       board.setDeath(null);
+      // Rellena los rodillos que ocupaban los wilds fijos (sin personajes, es solo decorado).
+      void board.dropIn(idleGrid());
     },
     async spin(bonus, { bet }) {
       const keep = bonus ? [...bonus.sticky] : [];
@@ -80,7 +86,7 @@ async function main() {
   };
 
   new SlotShell(game, overlay);
-  await board.dropIn(baseSpin(defaultRng).grid);
+  await board.dropIn(idleGrid());
 }
 
 main();
