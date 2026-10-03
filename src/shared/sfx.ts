@@ -37,6 +37,7 @@ let pending: [string, string][] = [];
 
 /** Registra grabaciones: { nombre: [urls] }. Se decodifican al primer toque del jugador. */
 export function registerSounds(files: Record<string, string[]>) {
+  synth = false;
   for (const [name, urls] of Object.entries(files)) for (const url of urls) pending.push([name, url]);
   void decodePending();
 }
@@ -89,12 +90,16 @@ function ready() {
   return settings.sfx && ctx && master && ctx.state === 'running' ? ctx : null;
 }
 
+/** Si la slot trae grabaciones, nunca suena nada sintetizado: lo que no tenga grabación va en silencio. */
+let synth = true;
+const synthReady = () => (synth ? ready() : null);
+
 /** Nota con envolvente rápida (ataque corto y caída exponencial). */
 function tone(
   freq: number,
   { at = 0, dur = 0.25, type = 'sine' as OscillatorType, vol = 0.3, slide = 0, attack = 0.005 } = {},
 ) {
-  const a = ready();
+  const a = synthReady();
   if (!a) return;
   const t = a.currentTime + at;
   const o = a.createOscillator();
@@ -112,7 +117,7 @@ function tone(
 
 /** Ruido filtrado (giros, golpes, soplidos). */
 function hiss({ at = 0, dur = 0.3, vol = 0.2, from = 800, to = 800, q = 1, type = 'bandpass' as BiquadFilterType } = {}) {
-  const a = ready();
+  const a = synthReady();
   if (!a) return;
   const t = a.currentTime + at;
   const src = a.createBufferSource();
@@ -139,7 +144,7 @@ const sp = (s: number) => s / speed.factor;
 export const sfx = {
   /** Botón normal. */
   click() {
-    if (sample('click', { vol: 0.7 })) return;
+    if (sample('click')) return;
     tone(1800, { dur: 0.04, type: 'triangle', vol: 0.12 });
   },
   /** Subir o bajar la apuesta (más agudo cuanto más alta). */
