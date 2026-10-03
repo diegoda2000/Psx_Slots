@@ -44,9 +44,13 @@ export interface SlotGame<B extends BonusState = BonusState> {
   bonusInfo?(bonus: B): string;
   /** Juega y anima una tirada; con bonus = tirada gratis. */
   spin(bonus: B | null, ctx: SpinContext): Promise<SpinOutcome>;
+  /** Sonidos del cascarón (opcional): botones, apuesta, big win y entrada/salida del bonus. */
+  sound?(ev: ShellSound, value: number): void;
   /** Limpia lo que quede en el tablero al acabar el bonus. */
   endBonus?(): void;
 }
+
+export type ShellSound = 'bet' | 'bigWin' | 'bonusStart' | 'bonusEnd';
 
 export interface SpinContext {
   bet: number;

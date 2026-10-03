@@ -3,6 +3,7 @@ import { createStage, PAD, SlotShell } from '../../shared/game/shell';
 import type { SlotGame } from '../../shared/game/types';
 import { defaultRng } from '../../shared/rng';
 import { DUELO_CHARS, SYMBOLS, wildOf, type CharWild } from '../../shared/symbols';
+import { sfx } from '../../shared/sfx';
 import { money, theme } from '../../shared/text';
 import { wait } from '../../shared/tween';
 import { COLS } from '../../shared/symbols';
@@ -63,6 +64,12 @@ async function main() {
       return b;
     },
     bonusInfo: (b) => (b.death.length ? ` · ☠ ${b.death.map((p) => SYMBOLS[p].name).join(', ')}` : ''),
+    sound(ev, v) {
+      if (ev === 'bet') sfx.bet(v);
+      else if (ev === 'bigWin') sfx.bigWin();
+      else if (ev === 'bonusStart') sfx.bonusStart(v === 2);
+      else sfx.bonusEnd(v);
+    },
     endBonus: () => {
       board.clearReels();
       board.setDeath(null);
@@ -72,18 +79,30 @@ async function main() {
     async spin(bonus, { bet, hunt }) {
       const res = bonus ? bonusSpin(defaultRng, bonus) : hunt ? huntSpin(defaultRng) : baseSpin(defaultRng);
       board.clearReels();
+      // Sonidos: giro, golpe de cada rodillo al parar y campanita (cada vez más aguda) por ficha FS.
+      let fsSeen = 0;
+      board.onColumnLand = (c) => {
+        sfx.reelStop(c);
+        if (res.grid[c].some((cell) => cell.sym === 'BONUS')) sfx.scatter(++fsSeen);
+      };
+      sfx.spin();
       await board.dropIn(res.grid);
+      board.onColumnLand = undefined;
       // Primero se enseñan las fichas FS (bonus o tiradas extra); luego los despliegues pueden taparlas.
       const extra = bonus ? (DUELO.retrigger[Math.min(res.scatters, 3)] ?? 0) : 0;
       const fsCounts = bonus ? extra > 0 : res.scatters >= 3;
       if (fsCounts) {
+        sfx.scatterWin();
         await Promise.all(board.symbolsOf('BONUS').map((s) => s.playWin()));
+        if (extra > 0) sfx.extraSpins();
         if (extra > 0) await overlay.floatText(`+${extra} TIRADAS`, W / 2, H / 2, YELLOW, 48);
       }
       if (bonus && res.newDeath.length) {
         board.setDeath(bonus.death);
-        for (const p of res.newDeath)
+        for (const p of res.newDeath) {
+          sfx.death();
           await overlay.floatText(`☠ ${SYMBOLS[p].name.toUpperCase()}`, W / 2, H / 2, SYMBOLS[p].color, 44);
+        }
       }
       for (const w of res.wildReels) await board.expand(w);
       if (res.wins.length) {
@@ -97,6 +116,8 @@ async function main() {
           .map(([c, r]) => board.cells[c][r])
           .filter((s) => s?.sym.startsWith('W_'))
           .map((s) => s!.playReveal());
+        if (reveals.length) sfx.mult();
+        sfx.win(res.total);
         await Promise.all(reveals);
         await board.highlight(cells);
         const m = Math.max(...res.wins.map((w) => w.mult));
@@ -110,6 +131,11 @@ async function main() {
   };
 
   new SlotShell(game, overlay);
+  // Clic en los botones de la interfaz (girar y apuesta ya tienen su sonido).
+  document.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest('button');
+    if (b && !b.disabled && !['spin', 'betUp', 'betDown', 'buyBetUp', 'buyBetDown'].includes(b.id)) sfx.click();
+  });
   await board.dropIn(idleGrid());
 }
 

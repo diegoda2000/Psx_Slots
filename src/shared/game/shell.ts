@@ -272,6 +272,7 @@ export class SlotShell<B extends BonusState> {
   private changeBet(d: number) {
     if (this.busy || this.bonus) return;
     this.betIdx = Math.max(0, Math.min(BETS.length - 1, this.betIdx + d));
+    this.game.sound?.('bet', this.betIdx / (BETS.length - 1));
     this.refresh();
     if (!document.querySelector('dialog[open]')) this.showBetPop();
   }
@@ -409,6 +410,7 @@ export class SlotShell<B extends BonusState> {
     this.refresh();
     const w = this.overlay.w;
     const h = this.overlay.h;
+    this.game.sound?.('bonusStart', tier);
     await this.overlay.banner(
       this.name(tier),
       `${fs.left} tiradas gratis\n${this.game.bonusPitch(tier)}`,
@@ -426,6 +428,7 @@ export class SlotShell<B extends BonusState> {
     }
     this.game.endBonus?.();
     const x = Math.min(fs.total, this.maxWin);
+    this.game.sound?.('bonusEnd', x);
     await this.overlay.banner('BONUS TERMINADO', `${money(x * this.bet)}  (${x.toFixed(1)}x)`, theme.good, 3500);
     this.balance += x * this.bet;
     this.showWin(x * this.bet);
@@ -438,6 +441,7 @@ export class SlotShell<B extends BonusState> {
   private async celebrate(x: number) {
     const title = bigWinLabel(x);
     if (!title) return;
+    this.game.sound?.('bigWin', x);
     const phrase = BIG_WIN_PHRASES[Math.floor(Math.random() * BIG_WIN_PHRASES.length)];
     await this.overlay.bigWin(title, Math.min(x, this.maxWin) * this.bet, phrase, money);
   }

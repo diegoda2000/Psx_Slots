@@ -8,6 +8,7 @@ import { CELL } from '../../shared/view/CodeSymbolVisual';
 /** Rodillos de Duelo un 18% más anchos que altos, para que quepan los personajes desplegados. */
 export const CELL_W = 118;
 
+import { sfx } from '../../shared/sfx';
 import { bodyTexture } from './art';
 import { LINES, REEL_CHAR, type WildReel } from './math';
 import { GOLD, INK, REEL_A, REEL_B, STICKER, YELLOW } from './palette';
@@ -149,7 +150,9 @@ export class DueloBoard extends Board {
     // El rodillo desplegado tapa todo lo que había, también la ficha FS (ya se ha enseñado antes lo que daba).
     for (const s of this.cells[w.col]) s?.destroy({ children: true });
     this.cells[w.col].fill(null);
+    sfx.expand();
     await v.unfold(w.row, 520);
+    sfx.mult();
     await v.showMult();
     return v;
   }

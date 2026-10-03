@@ -48,6 +48,9 @@ export class Board extends Container {
     this.cells[col][row] = s;
   }
 
+  /** Aviso opcional cuando cada rodillo termina de caer (p. ej. para el sonido de parada). */
+  onColumnLand?: (col: number) => void;
+
   /** Tira los símbolos actuales hacia abajo y deja caer el nuevo tablero. */
   async dropIn(grid: Grid, keepCols: number[] = []) {
     const out: Promise<void>[] = [];
@@ -74,7 +77,13 @@ export class Board extends Container {
         this.place(s, c, r);
         const y = s.y;
         s.y = y - BOARD_H - 100;
-        inn.push(wait(c * 70 + (ROWS - r) * 18).then(() => tween(s, { y }, 300, backOut)));
+        inn.push(
+          wait(c * 70 + (ROWS - r) * 18)
+            .then(() => tween(s, { y }, 300, backOut))
+            .then(() => {
+              if (r === ROWS - 1) this.onColumnLand?.(c);
+            }),
+        );
       }
     }
     await Promise.all([...out, ...inn]);
