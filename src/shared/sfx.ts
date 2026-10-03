@@ -139,7 +139,7 @@ const sp = (s: number) => s / speed.factor;
 export const sfx = {
   /** Botón normal. */
   click() {
-    if (sample('click')) return;
+    if (sample('click', { vol: 0.7 })) return;
     tone(1800, { dur: 0.04, type: 'triangle', vol: 0.12 });
   },
   /** Subir o bajar la apuesta (más agudo cuanto más alta). */
@@ -155,7 +155,7 @@ export const sfx = {
   },
   /** Golpe seco de un rodillo al parar. */
   reelStop(col: number) {
-    if (sample('reelStop', { rate: 1 - col * 0.02 })) return;
+    if (sample('reelStop', { rate: 1 - col * 0.02, vol: 0.6 })) return;
     tone(150 - col * 6, { dur: 0.12, vol: 0.35, slide: 0.5 });
     hiss({ dur: 0.05, vol: 0.12, from: 3000, to: 1500, q: 0.7, type: 'highpass' });
   },
