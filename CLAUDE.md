@@ -47,7 +47,9 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
   pedir que las reenvíe en un mensaje nuevo.
 - Estética de Duelo sacada de los símbolos (`src/games/duelo/palette.ts` y `style.css`): tinta negra, pegatina blanco
   hueso, amarillo "OMG BRO", rojo; fuentes Luckiest Guy y Barlow Condensed. Interfaz estilo Hacksaw: barra inferior,
-  botón de girar redondo, turbo, autoplay y compra de bonus en panel con confirmación. Olimpo mantiene la interfaz vieja.
+  botón de girar redondo, turbo, autoplay (menú 10/25/50/100/250/500/1000/ilimitado, contador en el botón) y compra de
+  bonus en panel con confirmación. Apuestas de 0,20 a 2,00 € de 20 en 20 céntimos; al cambiarla sale en grande en el
+  centro. Olimpo mantiene la interfaz vieja.
 - Wild de personaje en Duelo: en la celda solo el retrato, sin multiplicador. Al desplegarse, el cuerpo completo va
   apareciendo según se abre la columna y el multiplicador sale al terminar. Si no se despliega, el multiplicador sale
   cuando entra en una línea premiada.

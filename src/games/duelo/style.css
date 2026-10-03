@@ -75,7 +75,21 @@ svg .fill { fill: currentColor; stroke: none; }
   min-height: 0;
   padding-inline: 16px;
 }
-.stage { grid-area: stage; display: flex; justify-content: center; min-width: 0; }
+.stage { grid-area: stage; position: relative; display: flex; justify-content: center; min-width: 0; }
+
+/* Apuesta en grande al pulsar − / + */
+.bet-pop {
+  position: absolute; left: 50%; top: 50%; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 14px 28px 10px;
+  background: var(--ink); border: 3px solid var(--sticker); border-radius: 20px;
+  box-shadow: 0 0 0 4px var(--ink), 0 10px 0 4px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%) scale(0.6); opacity: 0; pointer-events: none;
+  transition: transform 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.18s;
+}
+.bet-pop span { font: 700 14px var(--ui); letter-spacing: 0.16em; color: var(--muted); }
+.bet-pop b { font: 400 clamp(40px, 9vw, 64px) / 1 var(--display); color: var(--yellow); -webkit-text-stroke: 6px var(--ink); paint-order: stroke fill; font-variant-numeric: tabular-nums; }
+.bet-pop.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 .stage canvas {
   display: block;
   width: min(100%, calc((100dvh - var(--reserve)) * 1.122)) !important;
@@ -150,6 +164,26 @@ svg .fill { fill: currentColor; stroke: none; }
 .spin.auto { background: var(--red); color: var(--sticker); }
 .spin.auto .i-spin { display: none; }
 .spin.auto .i-stop { display: block; }
+.auto-count {
+  position: absolute; top: -6px; right: -6px; min-width: 28px; padding: 3px 6px 1px;
+  font: 400 14px / 1 var(--display); color: var(--ink); background: var(--yellow);
+  border: 2px solid var(--ink); border-radius: 999px;
+}
+.auto-count:empty { display: none; }
+.round:disabled { opacity: 0.35; cursor: default; }
+
+/* Menú de tiradas automáticas */
+.auto-menu { width: min(480px, calc(100vw - 32px)); }
+.auto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.auto-grid button {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-height: 64px; padding: 10px 6px 6px;
+  font: 400 26px / 1 var(--display); color: var(--sticker);
+  background: var(--ink); border: 3px solid var(--line); border-radius: 14px;
+}
+.auto-grid button:hover { border-color: var(--yellow); color: var(--yellow); }
+.auto-grid small { font: 700 11px var(--ui); letter-spacing: 0.12em; color: var(--muted); }
+.auto-menu .small { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
 
 /* Paneles (compra de bonus y reglas) */
 .panel {
@@ -234,5 +268,5 @@ svg .fill { fill: currentColor; stroke: none; }
   :root { --reserve: 330px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .spin svg, .buy-open, .toast { transition: none; }
+  .spin svg, .buy-open, .toast, .bet-pop { transition: none; }
 }

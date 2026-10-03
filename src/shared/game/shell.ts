@@ -5,7 +5,8 @@ import { speed, wait } from '../tween';
 import { Overlay } from '../view/Overlay';
 import type { BonusState, SlotGame } from './types';
 
-export const BETS = [0.2, 0.5, 1, 2, 5, 10, 20];
+/** Apuestas de 0,20 € a 2,00 €, de 20 en 20 céntimos. */
+export const BETS = Array.from({ length: 10 }, (_, i) => +(0.2 * (i + 1)).toFixed(2));
 export const PAD = 40;
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -40,11 +41,15 @@ export async function createStage(width: number, height: number, font = '40px Bu
  */
 export class SlotShell<B extends BonusState> {
   balance = 1000;
-  betIdx = 2;
+  betIdx = 4; // 1,00 €
   busy = false;
   bonus: B | null = null;
   /** Autoplay activo (se para al pulsar girar, al entrar un bonus o sin saldo). */
   auto = false;
+  /** Tiradas automáticas que quedan (Infinity = ilimitado). */
+  autoLeft = 0;
+  private autoRun = 0;
+  private betPopTimer = 0;
   private buyTier: BonusTier | null = null;
 
   constructor(private game: SlotGame<B>, private overlay: Overlay) {
@@ -59,7 +64,22 @@ export class SlotShell<B extends BonusState> {
   private bind() {
     $('spin').onclick = () => (this.auto ? this.stopAuto() : this.spin());
     const auto = $opt('auto');
-    if (auto) auto.onclick = () => (this.auto ? this.stopAuto() : this.startAuto());
+    const autoMenu = $opt('autoMenu') as HTMLDialogElement | null;
+    if (auto)
+      auto.onclick = () => {
+        if (this.auto) this.stopAuto();
+        else if (autoMenu) autoMenu.showModal();
+        else this.startAuto(Infinity);
+      };
+    if (autoMenu) {
+      autoMenu.querySelectorAll<HTMLButtonElement>('[data-auto]').forEach((b) => {
+        b.onclick = () => {
+          autoMenu.close();
+          this.startAuto(b.dataset.auto === 'inf' ? Infinity : Number(b.dataset.auto));
+        };
+      });
+      $('autoClose').onclick = () => autoMenu.close();
+    }
     $('betDown').onclick = () => this.changeBet(-1);
     $('betUp').onclick = () => this.changeBet(1);
     $('turbo').onclick = () => {
@@ -110,29 +130,36 @@ export class SlotShell<B extends BonusState> {
     $opt('buyConfirm')?.scrollIntoView({ block: 'nearest' });
   }
 
-  startAuto() {
-    if (this.bonus) return;
+  startAuto(count: number) {
+    if (this.bonus || this.auto) return;
     this.auto = true;
+    this.autoLeft = count;
     this.refresh();
-    void this.autoLoop();
+    void this.autoLoop(++this.autoRun);
   }
 
   stopAuto() {
     this.auto = false;
+    this.autoLeft = 0;
     this.refresh();
   }
 
-  private async autoLoop() {
-    while (this.auto) {
+  private async autoLoop(run: number) {
+    while (this.auto && run === this.autoRun) {
       if (this.busy) {
         await wait(200);
         continue;
+      }
+      if (this.autoLeft <= 0) {
+        this.stopAuto();
+        break;
       }
       if (this.balance < this.bet) {
         this.toast('Sin saldo: autoplay detenido');
         this.stopAuto();
         break;
       }
+      this.autoLeft--;
       await this.spin();
       await wait(250);
     }
@@ -142,6 +169,19 @@ export class SlotShell<B extends BonusState> {
     if (this.busy || this.bonus) return;
     this.betIdx = Math.max(0, Math.min(BETS.length - 1, this.betIdx + d));
     this.refresh();
+    this.showBetPop();
+  }
+
+  /** Enseña la apuesta nueva en grande en medio de la pantalla un momento. */
+  private showBetPop() {
+    const pop = $opt('betPop');
+    if (!pop) return;
+    pop.querySelector('b')!.textContent = money(this.bet);
+    pop.classList.remove('show');
+    void pop.offsetWidth; // reinicia la animación si se pulsa seguido
+    pop.classList.add('show');
+    clearTimeout(this.betPopTimer);
+    this.betPopTimer = window.setTimeout(() => pop.classList.remove('show'), 900);
   }
 
   refresh() {
@@ -157,6 +197,10 @@ export class SlotShell<B extends BonusState> {
     spin.disabled = this.busy && !this.auto;
     spin.classList.toggle('auto', this.auto);
     $opt('auto')?.classList.toggle('on', this.auto);
+    const count = $opt('autoCount');
+    if (count) count.textContent = this.auto ? (this.autoLeft === Infinity ? '∞' : String(this.autoLeft)) : '';
+    ($('betDown') as HTMLButtonElement).disabled = this.busy || !!this.bonus || this.betIdx === 0;
+    ($('betUp') as HTMLButtonElement).disabled = this.busy || !!this.bonus || this.betIdx === BETS.length - 1;
     const buyOpen = $opt('buyOpen') as HTMLButtonElement | null;
     if (buyOpen) buyOpen.disabled = this.busy || !!this.bonus || this.auto;
     const confirm = $opt('buyConfirm');
