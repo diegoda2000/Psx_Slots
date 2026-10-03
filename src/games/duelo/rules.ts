@@ -1,4 +1,3 @@
-import { MAX_WIN } from '../../shared/lore';
 import { COLS, DUELO_CHARS, ROWS, SYMBOLS, type SymbolId } from '../../shared/symbols';
 import { money } from '../../shared/text';
 import { faceUrl, fsChipUrl, symbolUrl } from './art';
@@ -77,5 +76,5 @@ export function rulesHtml(bet: number) {
     )
       .join('')}
   </table>
-  <p class="small">Premio máximo: ${MAX_WIN.toLocaleString('es-ES')} veces la apuesta. RTP simulado ≈ 93,6%. Demo con saldo ficticio.</p>`;
+  <p class="small">Premio máximo: ${DUELO.maxWin.toLocaleString('es-ES')} veces la apuesta. RTP simulado ≈ 93,6%. Demo con saldo ficticio.</p>`;
 }

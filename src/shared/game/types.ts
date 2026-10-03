@@ -24,6 +24,13 @@ export interface SlotGame<B extends BonusState = BonusState> {
   readonly buyPrice: Partial<Record<BonusTier, number>>;
   /** Nombre de cada bonus (por defecto BONUS / SEMITOCHO / TOCHO). */
   bonusName?(tier: BonusTier): string;
+  /** Premio máximo en veces la apuesta. Por defecto MAX_WIN (10.000x). */
+  readonly maxWin?: number;
+  /**
+   * Niveles del botón turbo, en orden (el primero es la velocidad normal). Si no se da, el botón
+   * alterna entre normal y x2,5.
+   */
+  readonly turboModes?: readonly { factor: number; label: string; cls?: string }[];
   /** El bonus más gordo de la slot (se anuncia con el color fuerte). Por defecto 3. */
   readonly topTier?: BonusTier;
   /** Subtítulo del banner de inicio de cada bonus. */

@@ -1,7 +1,7 @@
 # Matemáticas
 
 Configuración en `src/games/duelo/math.ts` (`DUELO`) y `src/games/olimpo/math.ts` (`OLIMPO`).
-Premio máximo 10.000x. Simulación: `npm run sim -- --game duelo --spins 10000000 --buys 200000 --seed 9360`.
+Premio máximo: Duelo 15.000x (como Life and Death), Olimpo 10.000x. Simulación: `npm run sim -- --game duelo --spins 10000000 --buys 200000 --seed 9360`.
 
 ## Duelo (estilo Life and Death)
 
@@ -14,8 +14,8 @@ Premio máximo 10.000x. Simulación: `npm run sim -- --game duelo --spins 100000
   una ficha FS en ese rodillo); en otro rodillo son un wild de una celda. Multiplicadores de una línea se suman.
 - Fichas FS solo en los rodillos 2 a 5 (10,3% por rodillo, como mucho una por rodillo).
 - Bonus: 3 fichas FS = BONUS (más wilds), 4 = TOCHO (rodillos de la muerte). 10 tiradas; dentro, 2 fichas +2 y
-  3 o más +4. Compra: BONUS 100x, TOCHO 200x. Premio máximo 10.000x.
-- El RTP se ajusta solo con la frecuencia de wilds por rodillo central: base 0,01677, BONUS 0,1368, TOCHO 0,1562.
+  3 o más +4. Compra: BONUS 100x, TOCHO 200x. Premio máximo 15.000x.
+- El RTP se ajusta solo con la frecuencia de wilds por rodillo central: base 0,01686, BONUS 0,1367, TOCHO 0,1559.
 - Pesos de símbolos (rata → Hutt) 34/32/32/30/22/20/17/14, elegidos para copiar la frecuencia de premio pública de
   Life and Death (27,93%).
 
@@ -29,11 +29,11 @@ Premio máximo 10.000x. Simulación: `npm run sim -- --game duelo --spins 100000
 
 | | |
 |---|---|
-| **RTP total** | **93,5% ± 1,4%** (objetivo 93,6%): juego base 54,6% + bonus 38,9% |
+| **RTP total** | **93,7% ± 1,5%** (objetivo 93,6%): juego base 54,8% + bonus 38,9% |
 | Frecuencia de premio | 28,3% (1 de cada 3,54 tiradas; Life and Death 27,93%) |
-| Volatilidad | muy alta: desviación típica 22,4x por tirada; tope de 10.000x alcanzado 8 veces |
-| BONUS | 1 de cada ~253 tiradas, media 93x |
-| TOCHO | 1 de cada ~8.700 tiradas (hacen falta las 4 fichas), media 194x |
+| Volatilidad | muy alta: desviación típica 23,4x por tirada; tope de 15.000x alcanzado 2 veces |
+| BONUS | 1 de cada ~253 tiradas, media 93x; 1 de cada ~28.000 llega a 15.000x |
+| TOCHO | 1 de cada ~8.800 tiradas (hacen falta las 4 fichas), media 192x; 1 de cada ~8.400 llega a 15.000x |
 
 Reparto de premios por tirada (incluido el bonus que se abre en ella):
 
@@ -45,9 +45,10 @@ Compra de bonus (la media se cumple solo a muy largo plazo; cada bonus por separ
 
 | | Precio | RTP | Mediana | 10% peores | 10% mejores | 1% mejores | Pierde dinero |
 |---|---|---|---|---|---|---|---|
-| BONUS | 100x | 93,6% ± 1,3% | 25x | < 2,1x | > 210x | > 1.016x | 78% de las veces |
-| TOCHO | 200x | 94,4% ± 1,1% | 51x | < 3,8x | > 437x | > 2.093x | 79% de las veces |
+| BONUS | 100x | 93,8% ± 1,4% | 25x | < 2,1x | > 209x | > 1.019x | 78% de las veces |
+| TOCHO | 200x | 94,0% ± 1,2% | 50x | < 3,8x | > 434x | > 2.049x | 79% de las veces |
 
+Con 2,4 millones de compras de cada uno, la media sale 93,7x ± 0,4x el BONUS y 187x ± 0,7x el TOCHO.
 El ± es el margen de error al 95% de la propia simulación: el RTP real de diseño es el mismo para los tres (≈93,6%).
 
 ## Olimpo — 3M tiradas, semilla 42 (valores del boceto)

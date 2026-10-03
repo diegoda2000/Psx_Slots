@@ -46,8 +46,14 @@ async function main() {
 
   const game: SlotGame<DueloBonus> = {
     buyPrice: DUELO.buyPrice,
+    maxWin: DUELO.maxWin,
     bonusName: (t) => DUELO_TIER_NAMES[t as DueloTier],
     topTier: 2,
+    turboModes: [
+      { factor: 1, label: 'VELOCIDAD NORMAL' },
+      { factor: 1.6, label: 'TURBO', cls: 'on' },
+      { factor: 2.5, label: 'SUPER TURBO', cls: 'super' },
+    ],
     bonusPitch: (t) => PITCH[t as DueloTier],
     rulesHtml,
     createBonus(tier) {

@@ -7,7 +7,6 @@
  * si caen en el suyo se expanden a toda la columna (solo si así entran en algún premio).
  * En otro rodillo hacen de wild normal con su multiplicador. Varios multiplicadores se suman.
  */
-import { MAX_WIN } from '../../shared/lore';
 import { randInt, weightedPick, type Rng } from '../../shared/rng';
 import {
   COLS,
@@ -61,9 +60,11 @@ export const DUELO_TIERS: DueloTier[] = [1, 2];
 export const DUELO_TIER_NAMES: Record<DueloTier, string> = { 1: 'BONUS', 2: 'TOCHO' };
 
 export const DUELO = {
+  /** Premio máximo en veces la apuesta (el de Life and Death). */
+  maxWin: 15_000,
   weights: { RATA: 34, REMOS: 32, OMG: 32, RADIO: 30, TERNASCO: 22, SIM3: 20, DORMIDO: 17, HUTT: 14 } as Record<DueloPay, number>,
   /** Probabilidad de wild en cada rodillo central (juego base). */
-  wildChance: 0.01677,
+  wildChance: 0.01686,
   /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
   ownChance: 0.6,
   /** [multiplicador, peso] de cada personaje (valores de Life and Death). */
@@ -92,9 +93,9 @@ export const DUELO = {
   payScale: 1,
   tiers: {
     // BONUS (como Devastation): más wilds.
-    1: { spins: 10, wildChance: 0.1368, deathReels: false },
+    1: { spins: 10, wildChance: 0.1367, deathReels: false },
     // TOCHO (antes semitocho; como Reckoning): rodillos de la muerte.
-    2: { spins: 10, wildChance: 0.1562, deathReels: true },
+    2: { spins: 10, wildChance: 0.1559, deathReels: true },
   } as Record<DueloTier, { spins: number; wildChance: number; deathReels: boolean }>,
   /** Tiradas extra dentro del bonus por número de fichas FS. */
   retrigger: { 2: 2, 3: 4 } as Record<number, number>,
@@ -263,6 +264,6 @@ export function bonusSpin(rng: Rng, b: DueloBonus): DueloSpin {
 /** Bonus completo sin animaciones (para el simulador). Devuelve veces la apuesta. */
 export function playBonus(rng: Rng, tier: DueloTier): number {
   const b = createBonus(tier);
-  while (b.left > 0 && b.total < MAX_WIN) bonusSpin(rng, b);
-  return Math.min(b.total, MAX_WIN);
+  while (b.left > 0 && b.total < DUELO.maxWin) bonusSpin(rng, b);
+  return Math.min(b.total, DUELO.maxWin);
 }

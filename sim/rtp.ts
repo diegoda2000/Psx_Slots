@@ -27,6 +27,8 @@ interface Game {
   base(rng: Rng): { win: number; tier: BonusTier | 0 };
   bonus(rng: Rng, tier: BonusTier): number;
   buyPrice: Partial<Record<BonusTier, number>>;
+  /** Premio máximo (veces la apuesta). */
+  maxWin: number;
 }
 
 const games: Game[] = [
@@ -40,6 +42,7 @@ const games: Game[] = [
     },
     bonus: (rng, t) => duelo.playBonus(rng, t as duelo.DueloTier),
     buyPrice: duelo.DUELO.buyPrice,
+    maxWin: duelo.DUELO.maxWin,
   },
   {
     name: 'olimpo',
@@ -51,6 +54,7 @@ const games: Game[] = [
     },
     bonus: olimpo.playBonus,
     buyPrice: olimpo.OLIMPO.buyPrice,
+    maxWin: MAX_WIN,
   },
 ];
 
@@ -84,17 +88,17 @@ for (const g of games) {
   const buckets = BUCKETS.map(() => 0);
   for (let i = 0; i < SPINS; i++) {
     const r = g.base(rng);
-    let w = Math.min(r.win, MAX_WIN);
+    let w = Math.min(r.win, g.maxWin);
     baseWin += w;
     if (r.tier) {
       triggers[r.tier] = (triggers[r.tier] ?? 0) + 1;
       const b = g.bonus(rng, r.tier);
       bonusSum[r.tier] = (bonusSum[r.tier] ?? 0) + b;
       bonusWin += b;
-      w = Math.min(w + b, MAX_WIN);
+      w = Math.min(w + b, g.maxWin);
     }
     if (w > 0) hits++;
-    if (w >= MAX_WIN) maxHits++;
+    if (w >= g.maxWin) maxHits++;
     if (w > maxWin) maxWin = w;
     buckets[bucketOf(w)]++;
     sumSq += w * w;
@@ -106,7 +110,7 @@ for (const g of games) {
   console.log(`\n=== ${g.name.toUpperCase()} (${n0(SPINS)} tiradas, semilla ${SEED}) ===`);
   console.log(`RTP total          ${pct(rtp)} ± ${pct(margin)}  (base ${pct(baseWin / SPINS)} + bonus ${pct(bonusWin / SPINS)})`);
   console.log(`Frecuencia premio  ${pct(hits / SPINS)} (1 de cada ${(SPINS / hits).toFixed(2)})`);
-  console.log(`Volatilidad (DT)   ${sd.toFixed(1)}x por tirada · premio máx. visto ${n0(maxWin)}x · tope ${n0(MAX_WIN)}x alcanzado ${maxHits} veces`);
+  console.log(`Volatilidad (DT)   ${sd.toFixed(1)}x por tirada · premio máx. visto ${n0(maxWin)}x · tope ${n0(g.maxWin)}x alcanzado ${maxHits} veces`);
   console.log('Distribución de premios por tirada (incluye el bonus que abre):');
   BUCKETS.forEach(([label], i) => console.log(`  ${label.padEnd(11)} ${pct(buckets[i] / SPINS).padStart(8)}`));
   for (const t of g.tiers) {

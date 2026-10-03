@@ -127,6 +127,11 @@ svg .fill { fill: currentColor; stroke: none; }
 }
 .icon:hover { border-color: rgba(244, 236, 220, 0.25); }
 .icon.on { color: var(--yellow); border-color: var(--yellow); }
+/* Turbo: un rayo amarillo; super turbo: doble rayo rojo. */
+.turbo-btn .bolt2 { display: none; }
+.turbo-btn.super { color: var(--red); border-color: var(--red); }
+.turbo-btn.super .bolt1 { display: none; }
+.turbo-btn.super .bolt2 { display: block; }
 
 /* Compra de bonus: pegatina redonda que sobresale por la izquierda */
 .buy-open {

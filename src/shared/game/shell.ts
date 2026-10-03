@@ -56,6 +56,11 @@ export class SlotShell<B extends BonusState> {
   private betPopTimer = 0;
   private buyTier: BonusTier | null = null;
 
+  /** Premio máximo de la slot (veces la apuesta). */
+  private get maxWin() {
+    return this.game.maxWin ?? MAX_WIN;
+  }
+
   constructor(private game: SlotGame<B>, private overlay: Overlay) {
     this.bind();
     this.refresh();
@@ -99,9 +104,22 @@ export class SlotShell<B extends BonusState> {
     const buyBetUp = $opt('buyBetUp');
     if (buyBetDown) buyBetDown.onclick = () => this.changeBet(-1);
     if (buyBetUp) buyBetUp.onclick = () => this.changeBet(1);
+    const modes = this.game.turboModes;
+    let mode = 0;
     $('turbo').onclick = () => {
-      speed.factor = speed.factor === 1 ? 2.5 : 1;
-      $('turbo').classList.toggle('on', speed.factor > 1);
+      if (!modes) {
+        speed.factor = speed.factor === 1 ? 2.5 : 1;
+        $('turbo').classList.toggle('on', speed.factor > 1);
+        return;
+      }
+      // Como en Hacksaw: normal → turbo → super turbo → normal.
+      mode = (mode + 1) % modes.length;
+      const m = modes[mode];
+      speed.factor = m.factor;
+      for (const x of modes) if (x.cls) $('turbo').classList.remove(x.cls);
+      if (m.cls) $('turbo').classList.add(m.cls);
+      $('turbo').setAttribute('aria-label', `Velocidad: ${m.label}`);
+      this.toast(m.label);
     };
     const panel = $opt('buyPanel') as HTMLDialogElement | null;
     document.querySelectorAll<HTMLButtonElement>('[data-tier]').forEach((b) => {
@@ -267,7 +285,7 @@ export class SlotShell<B extends BonusState> {
     this.showWin(0);
     this.refresh();
     const { win, tier } = await this.game.spin(null, { bet: this.bet, showWin: this.showWin });
-    const x = Math.min(win, MAX_WIN);
+    const x = Math.min(win, this.maxWin);
     if (x > 0) {
       await this.celebrate(x);
       this.balance += x * this.bet;
@@ -304,7 +322,7 @@ export class SlotShell<B extends BonusState> {
       `${fs.left} tiradas gratis\n${this.game.bonusPitch(tier)}`,
       tier === (this.game.topTier ?? 3) ? theme.hot : theme.gold,
     );
-    while (fs.left > 0 && fs.total < MAX_WIN) {
+    while (fs.left > 0 && fs.total < this.maxWin) {
       const before = fs.left;
       const { win, retriggerShown } = await this.game.spin(fs, { bet: this.bet, showWin: this.showWin });
       this.showWin(fs.total * this.bet);
@@ -315,7 +333,7 @@ export class SlotShell<B extends BonusState> {
       await wait(250);
     }
     this.game.endBonus?.();
-    const x = Math.min(fs.total, MAX_WIN);
+    const x = Math.min(fs.total, this.maxWin);
     await this.overlay.banner('BONUS TERMINADO', `${money(x * this.bet)}  (${x.toFixed(1)}x)`, theme.good, 3500);
     this.balance += x * this.bet;
     this.showWin(x * this.bet);
@@ -328,6 +346,6 @@ export class SlotShell<B extends BonusState> {
     const title = bigWinLabel(x);
     if (!title) return;
     const phrase = BIG_WIN_PHRASES[Math.floor(Math.random() * BIG_WIN_PHRASES.length)];
-    await this.overlay.bigWin(title, Math.min(x, MAX_WIN) * this.bet, phrase, money);
+    await this.overlay.bigWin(title, Math.min(x, this.maxWin) * this.bet, phrase, money);
   }
 }
