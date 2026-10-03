@@ -11,6 +11,7 @@ import { BOARD_H } from '../../shared/view/Board';
 import { Overlay } from '../../shared/view/Overlay';
 import { registerSymbolVisual } from '../../shared/view/SymbolVisual';
 import { fsChipUrl, loadDueloArt, symbolTexture } from './art';
+import { loadDueloSounds } from './sounds';
 import { CharacterWildVisual } from './CharacterWildVisual';
 import { ImageSymbolVisual } from './ImageSymbolVisual';
 import { baseSpin, bonusSpin, createBonus, huntSpin, DUELO, DUELO_PAYS, DUELO_TIER_NAMES, type DueloBonus, type DueloTier } from './math';
@@ -31,6 +32,7 @@ async function main() {
   Object.assign(theme, { font: FONT, gold: YELLOW, hot: RED, good: YELLOW });
   const { root } = await createStage(W, H, '40px "Luckiest Guy"');
   await loadDueloArt();
+  loadDueloSounds();
   for (const p of DUELO_CHARS) registerSymbolVisual(wildOf(p), (sym, mult) => new CharacterWildVisual(sym as CharWild, mult));
   for (const s of [...DUELO_PAYS, 'BONUS' as const]) {
     const tex = symbolTexture(s);
