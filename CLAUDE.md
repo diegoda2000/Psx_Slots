@@ -50,7 +50,8 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
   hueso, amarillo "OMG BRO", rojo; fuentes Luckiest Guy y Barlow Condensed. Interfaz estilo Hacksaw: barra inferior,
   misma disposición que la barra de Hacksaw (compra de bonus redonda a la izquierda, saldo, apuesta con flechas y barra de
   nivel, botón de girar grande), turbo, autoplay (menú 10/25/50/100/250/500/1000/ilimitado, contador en el botón) y compra de
-  bonus en panel con confirmación. Apuestas de 0,20 a 2,00 € de 20 en 20 céntimos; al cambiarla sale en grande en el
+  bonus en panel con confirmación y selector de apuesta. Apuestas: 0,20-5,00 € de 20 en 20 céntimos y 6-50 € de euro en
+  euro; al cambiarla sale en grande en el
   centro. Olimpo mantiene la interfaz vieja.
 - Wild de personaje en Duelo: en la celda solo el retrato, sin multiplicador. Al desplegarse, el cuerpo completo va
   apareciendo según se abre la columna y el multiplicador sale al terminar. Si no se despliega, el multiplicador sale

@@ -5,8 +5,11 @@ import { speed, wait } from '../tween';
 import { Overlay } from '../view/Overlay';
 import type { BonusState, SlotGame } from './types';
 
-/** Apuestas de 0,20 € a 2,00 €, de 20 en 20 céntimos. */
-export const BETS = Array.from({ length: 10 }, (_, i) => +(0.2 * (i + 1)).toFixed(2));
+/** Apuestas: de 0,20 € a 5,00 € de 20 en 20 céntimos, y de 6 € a 50 € de euro en euro. */
+export const BETS = [
+  ...Array.from({ length: 25 }, (_, i) => +(0.2 * (i + 1)).toFixed(2)),
+  ...Array.from({ length: 45 }, (_, i) => i + 6),
+];
 export const PAD = 40;
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -82,6 +85,11 @@ export class SlotShell<B extends BonusState> {
     }
     $('betDown').onclick = () => this.changeBet(-1);
     $('betUp').onclick = () => this.changeBet(1);
+    // Selector de apuesta dentro del panel de compra (si existe).
+    const buyBetDown = $opt('buyBetDown');
+    const buyBetUp = $opt('buyBetUp');
+    if (buyBetDown) buyBetDown.onclick = () => this.changeBet(-1);
+    if (buyBetUp) buyBetUp.onclick = () => this.changeBet(1);
     $('turbo').onclick = () => {
       speed.factor = speed.factor === 1 ? 2.5 : 1;
       $('turbo').classList.toggle('on', speed.factor > 1);
@@ -169,7 +177,7 @@ export class SlotShell<B extends BonusState> {
     if (this.busy || this.bonus) return;
     this.betIdx = Math.max(0, Math.min(BETS.length - 1, this.betIdx + d));
     this.refresh();
-    this.showBetPop();
+    if (!document.querySelector('dialog[open]')) this.showBetPop();
   }
 
   /** Enseña la apuesta nueva en grande en medio de la pantalla un momento. */
@@ -187,6 +195,12 @@ export class SlotShell<B extends BonusState> {
   refresh() {
     $('balance').textContent = money(this.balance);
     $('bet').textContent = money(this.bet);
+    const buyBet = $opt('buyBet');
+    if (buyBet) buyBet.textContent = money(this.bet);
+    for (const [id, edge] of [['buyBetDown', 0], ['buyBetUp', BETS.length - 1]] as const) {
+      const b = $opt(id) as HTMLButtonElement | null;
+      if (b) b.disabled = this.busy || !!this.bonus || this.betIdx === edge;
+    }
     document.querySelectorAll<HTMLButtonElement>('[data-tier]').forEach((b) => {
       const price = this.game.buyPrice[Number(b.dataset.tier) as BonusTier] * this.bet;
       (b.querySelector('.price') ?? b.querySelector('span'))!.textContent = money(price);
