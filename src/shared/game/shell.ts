@@ -1,5 +1,6 @@
 import { Application, Container } from 'pixi.js';
 import { BIG_WIN_PHRASES, BONUS_NAMES, MAX_WIN, bigWinLabel, type BonusTier } from '../lore';
+import { saveSettings, settings } from '../settings';
 import { money, theme } from '../text';
 import { speed, wait } from '../tween';
 import { Overlay } from '../view/Overlay';
@@ -70,6 +71,7 @@ export class SlotShell<B extends BonusState> {
 
   constructor(private game: SlotGame<B>, private overlay: Overlay) {
     this.bind();
+    this.applySpeed();
     this.refresh();
   }
 
@@ -113,7 +115,9 @@ export class SlotShell<B extends BonusState> {
     if (buyBetUp) buyBetUp.onclick = () => this.changeBet(1);
     const modes = this.game.turboModes;
     let mode = 0;
-    $('turbo').onclick = () => {
+    const turboBtn = $opt('turbo');
+    // Slots con menú de ajustes: la velocidad se elige ahí (juego base y bonus por separado).
+    if (turboBtn) turboBtn.onclick = () => {
       if (!modes) {
         speed.factor = speed.factor === 1 ? 2.5 : 1;
         $('turbo').classList.toggle('on', speed.factor > 1);
@@ -162,16 +166,64 @@ export class SlotShell<B extends BonusState> {
       };
     }
     const rules = $('rules') as HTMLDialogElement;
-    $('rulesBtn').onclick = () => {
+    const openRules = () => {
       $('rulesBody').innerHTML = this.game.rulesHtml(this.bet);
       rules.showModal();
     };
+    const menu = $opt('menuPanel') as HTMLDialogElement | null;
+    if (menu) {
+      // Menú de las tres rayas: info, velocidad (base y bonus) y sonido.
+      $('rulesBtn').onclick = () => {
+        this.renderMenu();
+        menu.showModal();
+      };
+      $('menuClose').onclick = () => menu.close();
+      $('menuInfo').onclick = () => {
+        menu.close();
+        openRules();
+      };
+      menu.querySelectorAll<HTMLButtonElement>('[data-speed]').forEach((b) => {
+        b.onclick = () => {
+          const [which, i] = b.dataset.speed!.split(':');
+          settings[which === 'bonus' ? 'speedBonus' : 'speedBase'] = Number(i);
+          saveSettings();
+          this.applySpeed();
+          this.renderMenu();
+        };
+      });
+      menu.querySelectorAll<HTMLInputElement>('[data-audio]').forEach((input) => {
+        input.onchange = () => {
+          settings[input.dataset.audio as 'music' | 'sfx'] = input.checked;
+          saveSettings();
+        };
+      });
+    } else $('rulesBtn').onclick = openRules;
     $('rulesClose').onclick = () => rules.close();
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space' && !document.querySelector('dialog[open]')) {
         e.preventDefault();
         this.spin();
       }
+    });
+  }
+
+  /** Velocidad según el menú: la del bonus dentro del bonus y la del juego base fuera. */
+  private applySpeed() {
+    const modes = this.game.turboModes;
+    if (!modes || !$opt('menuPanel')) return;
+    const i = this.bonus ? settings.speedBonus : settings.speedBase;
+    speed.factor = (modes[i] ?? modes[0]).factor;
+  }
+
+  private renderMenu() {
+    document.querySelectorAll<HTMLButtonElement>('[data-speed]').forEach((b) => {
+      const [which, i] = b.dataset.speed!.split(':');
+      const on = (which === 'bonus' ? settings.speedBonus : settings.speedBase) === Number(i);
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-checked', String(on));
+    });
+    document.querySelectorAll<HTMLInputElement>('[data-audio]').forEach((input) => {
+      input.checked = settings[input.dataset.audio as 'music' | 'sfx'];
     });
   }
 
@@ -353,6 +405,7 @@ export class SlotShell<B extends BonusState> {
     if (this.auto) this.stopAuto();
     const fs = this.game.createBonus(tier);
     this.bonus = fs;
+    this.applySpeed();
     this.refresh();
     const w = this.overlay.w;
     const h = this.overlay.h;
@@ -377,6 +430,7 @@ export class SlotShell<B extends BonusState> {
     this.balance += x * this.bet;
     this.showWin(x * this.bet);
     this.bonus = null;
+    this.applySpeed();
     this.refresh();
   }
 

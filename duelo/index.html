@@ -25,7 +25,7 @@
     <footer class="hud">
       <div class="hud-inner">
         <div class="bar">
-          <button id="rulesBtn" class="icon menu" aria-label="Menú: reglas y pagos">
+          <button id="rulesBtn" class="icon menu" aria-label="Menú: info, velocidad y sonido" aria-haspopup="dialog">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
           </button>
           <div class="stat balance"><span>SALDO</span><b id="balance">-</b></div>
@@ -52,10 +52,6 @@
         <div class="side">
           <button id="auto" class="icon" aria-label="Tiradas automáticas">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7" /><path d="M20 4v5h-5" /><path d="M10 9v6l5-3z" class="fill" /></svg>
-          </button>
-          <button id="turbo" class="icon turbo-btn" aria-label="Velocidad: normal">
-            <svg class="bolt1" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" class="fill" /></svg>
-            <svg class="bolt2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2 2 13h5l-1 7 7-10H8z M17 4l-6 9h4.5l-1 7 7-10h-4.5z" class="fill" /></svg>
           </button>
         </div>
       </div>
@@ -106,6 +102,27 @@
         <button id="buyYes" class="btn">COMPRAR</button>
       </div>
     </div>
+  </dialog>
+
+  <!-- Menú de las tres rayas: info, velocidad del juego base y del bonus, música y efectos -->
+  <dialog id="menuPanel" class="panel menu-panel" aria-labelledby="menuTitle">
+    <header>
+      <h2 id="menuTitle">MENÚ</h2>
+      <button id="menuClose" class="icon" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </header>
+    <button id="menuInfo" class="menu-info">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg>
+      <span>INFO<small>Reglas, tabla de pagos y líneas</small></span>
+    </button>
+    <h3>VELOCIDAD</h3>
+    <div class="opt-row"><span>JUEGO BASE</span><div class="seg" role="radiogroup" aria-label="Velocidad del juego base"><button data-speed="base:0" role="radio">NORMAL</button><button data-speed="base:1" role="radio">TURBO</button><button data-speed="base:2" role="radio">SUPER TURBO</button></div></div>
+    <div class="opt-row"><span>BONUS</span><div class="seg" role="radiogroup" aria-label="Velocidad del bonus"><button data-speed="bonus:0" role="radio">NORMAL</button><button data-speed="bonus:1" role="radio">TURBO</button><button data-speed="bonus:2" role="radio">SUPER TURBO</button></div></div>
+    <h3>SONIDO</h3>
+    <label class="opt-row switch"><span>MÚSICA</span><input type="checkbox" data-audio="music" checked /><i aria-hidden="true"></i></label>
+    <label class="opt-row switch"><span>EFECTOS DE SONIDO</span><input type="checkbox" data-audio="sfx" checked /><i aria-hidden="true"></i></label>
+    <p class="small">Para quitar todo el sonido, apaga las dos.</p>
   </dialog>
 
   <dialog id="autoMenu" class="panel auto-menu" aria-labelledby="autoTitle">

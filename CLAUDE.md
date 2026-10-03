@@ -56,7 +56,9 @@ Bonus (se pueden comprar):
 - Estética de Duelo sacada de los símbolos (`src/games/duelo/palette.ts` y `style.css`): tinta negra, pegatina blanco
   hueso, amarillo "OMG BRO", rojo; fuentes Luckiest Guy y Barlow Condensed. Interfaz estilo Hacksaw: barra inferior,
   misma disposición que la barra de Hacksaw (compra de bonus redonda a la izquierda, saldo, apuesta con flechas y barra de
-  nivel, botón de girar grande), turbo de tres niveles como Hacksaw (normal, turbo x1,6, super turbo x2,5), autoplay (menú 10/25/50/100/250/500/1000/ilimitado, contador en el botón) y compra de
+  nivel, botón de girar grande), menú en las tres rayas (INFO = reglas; velocidad normal/turbo x1,6/super turbo x2,5 por separado para juego base
+  y bonus; interruptores de música y de efectos, guardados en `src/shared/settings.ts`; aún no hay audio), a la derecha solo
+  el botón de autoplay, autoplay (menú 10/25/50/100/250/500/1000/ilimitado, contador en el botón) y compra de
   bonus en panel con confirmación y selector de apuesta. Apuestas: 0,20-2 € de 20 en 20 céntimos, 3-10 € de euro en euro
   y 15-50 € de 5 en 5; al cambiarla sale en grande en el
   centro. Olimpo mantiene la interfaz vieja.

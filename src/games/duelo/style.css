@@ -136,11 +136,6 @@ svg .fill { fill: currentColor; stroke: none; }
 }
 .icon:hover { border-color: rgba(244, 236, 220, 0.25); }
 .icon.on { color: var(--yellow); border-color: var(--yellow); }
-/* Turbo: un rayo amarillo; super turbo: doble rayo rojo. */
-.turbo-btn .bolt2 { display: none; }
-.turbo-btn.super { color: var(--red); border-color: var(--red); }
-.turbo-btn.super .bolt1 { display: none; }
-.turbo-btn.super .bolt2 { display: block; }
 
 /* Compra de bonus: pegatina redonda que sobresale por la izquierda */
 .buy-open {
@@ -196,6 +191,33 @@ svg .fill { fill: currentColor; stroke: none; }
 .auto-grid button:hover { border-color: var(--yellow); color: var(--yellow); }
 .auto-grid small { font: 700 11px var(--ui); letter-spacing: 0.12em; color: var(--muted); }
 .auto-menu .small { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+
+/* Menú: info, velocidad y sonido */
+.menu-panel { width: min(520px, calc(100vw - 32px)); }
+.menu-panel h3 { margin: 18px 0 8px; font: 400 18px var(--display); letter-spacing: 0.06em; color: var(--muted); }
+.menu-info {
+  display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 16px; text-align: left;
+  color: var(--sticker); background: var(--ink); border: 3px solid var(--line); border-radius: 14px;
+}
+.menu-info:hover { border-color: var(--yellow); color: var(--yellow); }
+.menu-info svg { width: 30px; height: 30px; }
+.menu-info span { display: flex; flex-direction: column; font: 400 24px / 1.1 var(--display); }
+.menu-info small { font: 600 14px var(--ui); color: var(--muted); }
+.opt-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.opt-row > span { font: 700 16px var(--ui); letter-spacing: 0.08em; }
+.seg { display: flex; padding: 3px; gap: 3px; background: var(--ink); border-radius: 12px; }
+.seg button { padding: 8px 10px; font: 400 15px / 1 var(--display); color: var(--muted); background: none; border: 0; border-radius: 9px; white-space: nowrap; }
+.seg button:hover { color: var(--sticker); }
+.seg button.on { background: var(--yellow); color: var(--ink); }
+.seg button.on[data-speed$=':2'] { background: var(--red); color: var(--sticker); }
+.switch { cursor: pointer; }
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch i { position: relative; width: 52px; height: 30px; flex: none; border-radius: 15px; background: var(--line); transition: background 0.15s; }
+.switch i::after { content: ''; position: absolute; left: 4px; top: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--sticker); transition: translate 0.15s; }
+.switch input:checked + i { background: var(--yellow); }
+.switch input:checked + i::after { translate: 22px 0; background: var(--ink); }
+.switch input:focus-visible + i { outline: 2px solid var(--yellow); outline-offset: 2px; }
+.menu-panel .small { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
 
 /* Paneles (compra de bonus y reglas) */
 .panel {
