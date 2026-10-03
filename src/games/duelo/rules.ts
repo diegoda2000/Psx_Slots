@@ -35,7 +35,7 @@ export function rulesHtml(bet: number) {
     1: 'Más wilds de personaje.',
     2: 'Rodillos de la muerte: el personaje que cae en su rodillo lo activa y desde entonces se expande en cualquier rodillo central.',
   };
-  const fichas: Record<DueloTier, string> = { 1: '3', 2: '4 o más' };
+  const fichas: Record<DueloTier, string> = { 1: '3', 2: '4' };
   const chip = fsChipUrl ? `<img class="chip" src="${fsChipUrl}" alt="FS" />` : 'FS';
   return `
   <h2>REGLAS Y PAGOS</h2>
@@ -66,7 +66,7 @@ export function rulesHtml(bet: number) {
   <div class="lines-grid">${LINES.map(miniLine).join('')}</div>
 
   <h3>BONUS</h3>
-  <p>${chip} La ficha FS es el scatter, como mucho una por rodillo: 3 fichas abren el BONUS y 4 o más, el TOCHO.
+  <p>${chip} La ficha FS es el scatter, como mucho una por rodillo: 3 fichas abren el BONUS y 4, el TOCHO.
   Dentro del bonus, 2 fichas dan
   +${DUELO.retrigger[2]} tiradas y 3 o más, +${DUELO.retrigger[3]}.</p>
   <table>
@@ -77,5 +77,5 @@ export function rulesHtml(bet: number) {
     )
       .join('')}
   </table>
-  <p class="small">Premio máximo: ${MAX_WIN.toLocaleString('es-ES')} veces la apuesta. RTP simulado ≈ 94%. Demo con saldo ficticio.</p>`;
+  <p class="small">Premio máximo: ${MAX_WIN.toLocaleString('es-ES')} veces la apuesta. RTP simulado ≈ 93,6%. Demo con saldo ficticio.</p>`;
 }

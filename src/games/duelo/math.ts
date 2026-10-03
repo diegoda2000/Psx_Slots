@@ -61,9 +61,9 @@ export const DUELO_TIERS: DueloTier[] = [1, 2];
 export const DUELO_TIER_NAMES: Record<DueloTier, string> = { 1: 'BONUS', 2: 'TOCHO' };
 
 export const DUELO = {
-  weights: { RATA: 24, REMOS: 24, OMG: 22, RADIO: 22, TERNASCO: 12, SIM3: 10, DORMIDO: 8, HUTT: 6 } as Record<DueloPay, number>,
+  weights: { RATA: 34, REMOS: 32, OMG: 32, RADIO: 30, TERNASCO: 22, SIM3: 20, DORMIDO: 17, HUTT: 14 } as Record<DueloPay, number>,
   /** Probabilidad de wild en cada rodillo central (juego base). */
-  wildChance: 0.01633,
+  wildChance: 0.01677,
   /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
   ownChance: 0.6,
   /** [multiplicador, peso] de cada personaje (valores de Life and Death). */
@@ -92,9 +92,9 @@ export const DUELO = {
   payScale: 1,
   tiers: {
     // BONUS (como Devastation): más wilds.
-    1: { spins: 10, wildChance: 0.1408, deathReels: false },
+    1: { spins: 10, wildChance: 0.1368, deathReels: false },
     // TOCHO (antes semitocho; como Reckoning): rodillos de la muerte.
-    2: { spins: 10, wildChance: 0.1616, deathReels: true },
+    2: { spins: 10, wildChance: 0.1562, deathReels: true },
   } as Record<DueloTier, { spins: number; wildChance: number; deathReels: boolean }>,
   /** Tiradas extra dentro del bonus por número de fichas FS. */
   retrigger: { 2: 2, 3: 4 } as Record<number, number>,

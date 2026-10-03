@@ -72,5 +72,6 @@ Bonus (se pueden comprar):
 
 ## Estado
 - Separadas en dos slots independientes a partir del boceto https://claude.ai/artifact/9HapWazZ7B3SLxPiaaE5yo
-- Matemáticas de Duelo: RTP objetivo **93,6%**, muy volátil; ver `docs/MATES.md` (simulación de 10M tiradas).
+- Matemáticas de Duelo: RTP objetivo **93,6%**, muy volátil, frecuencia de premio ~28% copiada de Life and Death
+  (27,93% pública); ver `docs/MATES.md` (simulación de 10M tiradas).
   El RTP se cumple a largo plazo (millones de tiradas), no por bonus: no prometer resultados por bonus.

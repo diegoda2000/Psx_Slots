@@ -15,31 +15,38 @@ Premio máximo 10.000x. Simulación: `npm run sim -- --game duelo --spins 100000
 - Fichas FS solo en los rodillos 2 a 5 (10,3% por rodillo, como mucho una por rodillo).
 - Bonus: 3 fichas FS = BONUS (más wilds), 4 = TOCHO (rodillos de la muerte). 10 tiradas; dentro, 2 fichas +2 y
   3 o más +4. Compra: BONUS 100x, TOCHO 200x. Premio máximo 10.000x.
-- El RTP se ajusta solo con la frecuencia de wilds por rodillo central: base 0,01633, BONUS 0,1408, TOCHO 0,1616
-  (pesos de símbolos 24/24/22/22/12/10/8/6).
+- El RTP se ajusta solo con la frecuencia de wilds por rodillo central: base 0,01677, BONUS 0,1368, TOCHO 0,1562.
+- Pesos de símbolos (rata → Hutt) 34/32/32/30/22/20/17/14, elegidos para copiar la frecuencia de premio pública de
+  Life and Death (27,93%).
+
+### Datos públicos de Life and Death (Hacksaw)
+- Frecuencia de premio 27,93% (con su RTP de 96,36%); versiones de RTP 96,36 / 94,26 / 92,33 / 88,24%.
+- Volatilidad alta, premio máximo 15.000x, compras 100x y 200x, BonusHunt FeatureSpins (3x apuesta, 5x más bonus).
+- No se publican la frecuencia de cada bonus ni su premio medio.
+- Fuentes: slotcatalog.com, bigwinboard.com, aboutslots.com, olbg.com.
 
 ### Resultado — 10.000.000 tiradas y 200.000 compras de cada bonus (semilla 9360)
 
 | | |
 |---|---|
-| **RTP total** | **93,6% ± 1,3%** (objetivo 93,6%): juego base 54,9% + bonus 38,7% |
-| Frecuencia de premio | 33,7% (1 de cada 2,96 tiradas) |
-| Volatilidad | muy alta: desviación típica 20,5x por tirada; tope de 10.000x alcanzado 6 veces |
-| BONUS | 1 de cada ~253 tiradas, media 92x |
-| TOCHO | 1 de cada ~8.700 tiradas (hacen falta las 4 fichas), media 188x |
+| **RTP total** | **93,5% ± 1,4%** (objetivo 93,6%): juego base 54,6% + bonus 38,9% |
+| Frecuencia de premio | 28,3% (1 de cada 3,54 tiradas; Life and Death 27,93%) |
+| Volatilidad | muy alta: desviación típica 22,4x por tirada; tope de 10.000x alcanzado 8 veces |
+| BONUS | 1 de cada ~253 tiradas, media 93x |
+| TOCHO | 1 de cada ~8.700 tiradas (hacen falta las 4 fichas), media 194x |
 
 Reparto de premios por tirada (incluido el bonus que se abre en ella):
 
 | 0x | <1x | 1-5x | 5-20x | 20-100x | 100-1.000x | 1.000x+ |
 |---|---|---|---|---|---|---|
-| 66,3% | 26,6% | 5,2% | 1,2% | 0,5% | 0,15% | <0,01% |
+| 71,7% | 20,7% | 5,8% | 1,2% | 0,5% | 0,15% | 0,01% |
 
 Compra de bonus (la media se cumple solo a muy largo plazo; cada bonus por separado es puro azar):
 
 | | Precio | RTP | Mediana | 10% peores | 10% mejores | 1% mejores | Pierde dinero |
 |---|---|---|---|---|---|---|---|
-| BONUS | 100x | 92,7% ± 1,2% | 28x | < 2,8x | > 213x | > 933x | 77% de las veces |
-| TOCHO | 200x | 93,5% ± 1,0% | 59x | < 5,2x | > 439x | > 1.888x | 78% de las veces |
+| BONUS | 100x | 93,6% ± 1,3% | 25x | < 2,1x | > 210x | > 1.016x | 78% de las veces |
+| TOCHO | 200x | 94,4% ± 1,1% | 51x | < 3,8x | > 437x | > 2.093x | 79% de las veces |
 
 El ± es el margen de error al 95% de la propia simulación: el RTP real de diseño es el mismo para los tres (≈93,6%).
 
