@@ -7,8 +7,7 @@ import { CELL } from '../../shared/view/CodeSymbolVisual';
 
 /** Rodillos de Duelo un 18% más anchos que altos, para que quepan los personajes desplegados. */
 export const CELL_W = 118;
-/** Lo que puede salirse el personaje desplegado por cada lado de su rodillo. */
-const OVERFLOW = 50;
+
 import { bodyTexture } from './art';
 import { LINES, REEL_CHAR, type WildReel } from './math';
 import { GOLD, INK, REEL_A, REEL_B, STICKER, YELLOW } from './palette';
@@ -18,7 +17,7 @@ export class WildReelView extends Container {
   private frame = new Graphics();
   private clip = new Graphics();
   private content = new Container();
-  /** El cuerpo va aparte, con una máscara más ancha que el rodillo: puede salirse un poco por los lados. */
+  /** El cuerpo va aparte de los rótulos; los dos se recortan al rodillo. */
   private figure = new Container();
   private figClip = new Graphics();
   private labels = new Container();
@@ -82,7 +81,7 @@ export class WildReelView extends Container {
     this.clip.clear();
     this.clip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
     this.figClip.clear();
-    this.figClip.rect(-OVERFLOW, this.top + 10, CELL_W + OVERFLOW * 2, h - 20).fill(0xffffff);
+    this.figClip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
     this.labelClip.clear();
     this.labelClip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
   }
