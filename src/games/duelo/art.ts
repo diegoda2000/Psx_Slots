@@ -43,5 +43,8 @@ export async function loadDueloArt() {
 export const bodyTexture = (p: Premium) => textures.get(p);
 export const portraitTexture = (p: Premium) => textures.get(`${p}-face`);
 export const symbolTexture = (s: SymbolId) => textures.get(s);
-/** URL de la ficha FS para usarla también en el HTML (panel de compra). */
-export const fsChipUrl = Object.entries(SYMBOL_FILES).find(([p]) => keyOf(p) === 'BONUS')?.[1];
+const urlOf = (files: Record<string, string>, key: string) => Object.entries(files).find(([p]) => keyOf(p) === key)?.[1];
+/** URLs para usar las ilustraciones también en el HTML (panel de compra, tabla de pagos). */
+export const symbolUrl = (s: SymbolId) => urlOf(SYMBOL_FILES, s);
+export const faceUrl = (p: Premium) => urlOf(CHARACTER_FILES, `${p}-face`);
+export const fsChipUrl = symbolUrl('BONUS');

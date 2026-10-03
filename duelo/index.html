@@ -18,40 +18,44 @@
       <div id="stage" class="stage">
         <div id="betPop" class="bet-pop" aria-hidden="true"><span>APUESTA</span><b></b></div>
       </div>
-      <button id="buyOpen" class="buy-open" aria-haspopup="dialog">
-        <img data-fs alt="" />
-        <span>COMPRAR <br />BONUS</span>
-      </button>
     </main>
 
+    <!-- Barra al estilo Hacksaw: compra de bonus redonda a la izquierda, saldo, apuesta con flechas y botón de girar grande -->
     <footer class="hud">
-      <div class="hud-stats">
-        <button id="rulesBtn" class="icon" aria-label="Menú: reglas y pagos">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
-        </button>
-        <div class="stat"><span>SALDO</span><b id="balance">-</b></div>
-        <div class="stat"><span>APUESTA</span><b id="bet">-</b></div>
-      </div>
-      <div class="hud-win">
-        <span>PREMIO</span><b id="win">0.00 €</b>
-      </div>
-      <div class="hud-controls">
-        <button id="turbo" class="icon" aria-label="Turbo">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" class="fill" /></svg>
-        </button>
-        <button id="betDown" class="round" aria-label="Bajar apuesta">−</button>
+      <div class="hud-inner">
+        <div class="bar">
+          <button id="rulesBtn" class="icon menu" aria-label="Menú: reglas y pagos">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+          <div class="stat balance"><span>SALDO</span><b id="balance">-</b></div>
+          <div class="hud-win"><span>PREMIO</span><b id="win">0.00 €</b></div>
+          <div class="bet-box">
+            <div class="stat"><span>APUESTA</span><b id="bet">-</b></div>
+            <span class="bet-level" aria-hidden="true"><span id="betLevel"></span></span>
+          </div>
+          <div class="bet-arrows">
+            <button id="betUp" aria-label="Subir apuesta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7" /></svg>
+            </button>
+            <button id="betDown" aria-label="Bajar apuesta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7" /></svg>
+            </button>
+          </div>
+        </div>
+        <button id="buyOpen" class="buy-open" aria-haspopup="dialog"><span>COMPRAR <br />BONUS</span></button>
         <button id="spin" class="spin" aria-label="Girar">
-          <svg class="i-spin" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20 12a8 8 0 0 1-13.7 5.7" /><path d="M4 12a8 8 0 0 1 13.7-5.7" />
-            <path d="M18 2v5h-5" /><path d="M6 22v-5h5" />
-          </svg>
+          <svg class="i-spin" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3" /><path d="M20 3.5v5h-5" class="fill" /></svg>
           <svg class="i-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" class="fill" /></svg>
           <span id="autoCount" class="auto-count"></span>
         </button>
-        <button id="betUp" class="round" aria-label="Subir apuesta">+</button>
-        <button id="auto" class="icon" aria-label="Autoplay">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7" /><path d="M20 4v5h-5" /><path d="M10 9v6l5-3z" class="fill" /></svg>
-        </button>
+        <div class="side">
+          <button id="auto" class="icon" aria-label="Tiradas automáticas">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7" /><path d="M20 4v5h-5" /><path d="M10 9v6l5-3z" class="fill" /></svg>
+          </button>
+          <button id="turbo" class="icon" aria-label="Turbo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" class="fill" /></svg>
+          </button>
+        </div>
       </div>
     </footer>
   </div>

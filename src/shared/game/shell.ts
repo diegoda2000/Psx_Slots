@@ -111,7 +111,7 @@ export class SlotShell<B extends BonusState> {
     }
     const rules = $('rules') as HTMLDialogElement;
     $('rulesBtn').onclick = () => {
-      $('rulesBody').innerHTML = this.game.rulesHtml();
+      $('rulesBody').innerHTML = this.game.rulesHtml(this.bet);
       rules.showModal();
     };
     $('rulesClose').onclick = () => rules.close();
@@ -197,6 +197,8 @@ export class SlotShell<B extends BonusState> {
     spin.disabled = this.busy && !this.auto;
     spin.classList.toggle('auto', this.auto);
     $opt('auto')?.classList.toggle('on', this.auto);
+    const level = $opt('betLevel');
+    if (level) level.style.width = `${((this.betIdx + 1) / BETS.length) * 100}%`;
     const count = $opt('autoCount');
     if (count) count.textContent = this.auto ? (this.autoLeft === Infinity ? '∞' : String(this.autoLeft)) : '';
     ($('betDown') as HTMLButtonElement).disabled = this.busy || !!this.bonus || this.betIdx === 0;

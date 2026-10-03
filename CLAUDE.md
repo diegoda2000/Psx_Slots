@@ -13,7 +13,8 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
    expande a toda la columna (si así entra en premio); en otro rodillo es un wild normal con su multiplicador. Los
    multiplicadores de una línea se suman. Símbolos de pago (ilustraciones del usuario), de más a menos premio:
    1 Andy the Hutt, 2 Majarias dictador, 3 (por decidir, provisional SIM3), 4 Ternasco, 5 Radio, 6 OMG Bro, 7 Remos,
-   8 Rata. Altos = 1-4, bajos = 5-8. Scatter = ficha FS.
+   8 Rata. Altos = 1-4, bajos = 5-8. Scatter = ficha FS. Tabla de pagos, 19 líneas y multiplicadores copiados
+   literalmente de Life and Death (ver `docs/MATES.md`); el RTP se ajusta con la frecuencia de wilds, no con la tabla.
    (Antes era estilo "Wanted" con duelos VS; el usuario lo cambió. Ser fiel a Life and Death.)
 2. **Olimpo** (`olimpo/`, `src/games/olimpo/`): inspirada en "Gates of Olympus" (Pragmatic). Paga con 8 o más iguales en
    cualquier posición, con cascadas y orbes multiplicadores.
@@ -47,7 +48,8 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
   pedir que las reenvíe en un mensaje nuevo.
 - Estética de Duelo sacada de los símbolos (`src/games/duelo/palette.ts` y `style.css`): tinta negra, pegatina blanco
   hueso, amarillo "OMG BRO", rojo; fuentes Luckiest Guy y Barlow Condensed. Interfaz estilo Hacksaw: barra inferior,
-  botón de girar redondo, turbo, autoplay (menú 10/25/50/100/250/500/1000/ilimitado, contador en el botón) y compra de
+  misma disposición que la barra de Hacksaw (compra de bonus redonda a la izquierda, saldo, apuesta con flechas y barra de
+  nivel, botón de girar grande), turbo, autoplay (menú 10/25/50/100/250/500/1000/ilimitado, contador en el botón) y compra de
   bonus en panel con confirmación. Apuestas de 0,20 a 2,00 € de 20 en 20 céntimos; al cambiarla sale en grande en el
   centro. Olimpo mantiene la interfaz vieja.
 - Wild de personaje en Duelo: en la celda solo el retrato, sin multiplicador. Al desplegarse, el cuerpo completo va

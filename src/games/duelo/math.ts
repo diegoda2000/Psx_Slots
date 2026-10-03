@@ -31,33 +31,33 @@ import type { BonusState } from '../../shared/game/types';
 export const CHAR_REEL: Record<Premium, number> = { MAC: 1, ELE: 2, IBE: 3, AND: 4 };
 export const REEL_CHAR: (Premium | null)[] = [null, 'MAC', 'ELE', 'IBE', 'AND', null];
 
-/** 19 líneas: fila de cada rodillo. */
+/** Las 19 líneas de Life and Death (fila de cada rodillo, 0 = arriba), en el mismo orden que su tabla. */
 export const LINES: number[][] = [
   [0, 0, 0, 0, 0, 0],
   [1, 1, 1, 1, 1, 1],
   [2, 2, 2, 2, 2, 2],
   [3, 3, 3, 3, 3, 3],
   [4, 4, 4, 4, 4, 4],
+  [0, 1, 0, 1, 0, 1],
+  [1, 2, 1, 2, 1, 2],
+  [2, 3, 2, 3, 2, 3],
+  [3, 4, 3, 4, 3, 4],
+  [1, 0, 1, 0, 1, 0],
+  [2, 1, 2, 1, 2, 1],
+  [3, 2, 3, 2, 3, 2],
+  [4, 3, 4, 3, 4, 3],
   [0, 1, 2, 2, 1, 0],
-  [4, 3, 2, 2, 3, 4],
   [1, 2, 3, 3, 2, 1],
+  [2, 3, 4, 4, 3, 2],
+  [4, 3, 2, 2, 3, 4],
   [3, 2, 1, 1, 2, 3],
   [2, 1, 0, 0, 1, 2],
-  [2, 3, 4, 4, 3, 2],
-  [0, 0, 1, 1, 0, 0],
-  [4, 4, 3, 3, 4, 4],
-  [1, 0, 0, 0, 0, 1],
-  [3, 4, 4, 4, 4, 3],
-  [1, 2, 1, 1, 2, 1],
-  [3, 2, 3, 3, 2, 3],
-  [2, 1, 2, 2, 1, 2],
-  [2, 3, 2, 2, 3, 2],
 ];
 
 export const DUELO = {
   weights: { RATA: 24, REMOS: 24, OMG: 22, RADIO: 22, TERNASCO: 12, SIM3: 10, DICTADOR: 8, HUTT: 6 } as Record<DueloPay, number>,
   /** Probabilidad de wild en cada rodillo central (juego base). */
-  wildChance: 0.042,
+  wildChance: 0.016,
   /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
   ownChance: 0.6,
   /** [multiplicador, peso] de cada personaje. Andy, "el sacarino", el más bestia. */
@@ -68,26 +68,29 @@ export const DUELO = {
     AND: [[30, 40], [40, 25], [50, 18], [75, 10], [100, 5], [200, 2]],
   } as Record<Premium, [number, number][]>,
   scatterPerReel: 0.062,
-  /** Pago por línea, en veces la apuesta total, para 3/4/5/6 seguidos. */
+  /**
+   * Pago por línea con apuesta de 1 € (= veces la apuesta total), copiado de Life and Death para 3/4/5/6 seguidos:
+   * rata = 10, remos = J, OMG = K, radio = A, ternasco = corazón, 3 = sol, dictador = mano, Andy the Hutt = caras.
+   */
   pays: {
     RATA: [0.1, 0.3, 1, 3],
-    REMOS: [0.1, 0.3, 1, 4],
-    OMG: [0.15, 0.4, 1.5, 6],
-    RADIO: [0.2, 0.5, 2, 10],
-    TERNASCO: [0.3, 1, 4, 15],
-    SIM3: [0.4, 1.5, 5, 20],
-    DICTADOR: [0.5, 2, 8, 30],
-    HUTT: [1, 3, 12, 50],
+    REMOS: [0.2, 0.5, 1.5, 5],
+    OMG: [0.2, 0.5, 1.5, 5],
+    RADIO: [0.3, 1, 3, 10],
+    TERNASCO: [0.5, 1.5, 5, 15],
+    SIM3: [1, 2.5, 7.5, 25],
+    DICTADOR: [1, 2.5, 7.5, 25],
+    HUTT: [2, 5, 15, 50],
   } as Record<DueloPay, number[]>,
-  /** Escala global de la tabla de pagos (para afinar el RTP). */
-  payScale: 0.52,
+  /** Escala global de la tabla de pagos (1 = tabla de Life and Death tal cual). */
+  payScale: 1,
   tiers: {
     // BONUS (como Devastation): más wilds.
-    1: { spins: 10, wildChance: 0.235, deathReels: false, sticky: false },
+    1: { spins: 10, wildChance: 0.15, deathReels: false, sticky: false },
     // SEMITOCHO (como Reckoning): rodillos de la muerte.
-    2: { spins: 10, wildChance: 0.246, deathReels: true, sticky: false },
+    2: { spins: 10, wildChance: 0.171, deathReels: true, sticky: false },
     // TOCHO: rodillos de la muerte y los wilds expandidos se quedan fijos.
-    3: { spins: 10, wildChance: 0.1, deathReels: true, sticky: true },
+    3: { spins: 10, wildChance: 0.076, deathReels: true, sticky: true },
   } as Record<BonusTier, { spins: number; wildChance: number; deathReels: boolean; sticky: boolean }>,
   /** Tiradas extra dentro del bonus por número de BONUS. */
   retrigger: { 2: 2, 3: 4 } as Record<number, number>,
@@ -132,10 +135,10 @@ interface SpinOpts {
   sticky: WildReel[];
 }
 
-const SYMS = Object.entries(DUELO.weights) as [DueloPay, number][];
 const isWild = (c: Cell): c is Cell & { sym: CharWild } => c.sym.startsWith('W_');
 
 export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
+  const SYMS = Object.entries(DUELO.weights) as [DueloPay, number][];
   const stickyCols = new Set(opts.sticky.map((s) => s.col));
   const grid: Grid = [];
   for (let c = 0; c < COLS; c++) {

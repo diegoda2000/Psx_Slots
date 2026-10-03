@@ -21,7 +21,8 @@ export interface SlotGame<B extends BonusState = BonusState> {
   readonly buyPrice: Record<BonusTier, number>;
   /** Subtítulo del banner de inicio de cada bonus. */
   bonusPitch(tier: BonusTier): string;
-  rulesHtml(): string;
+  /** HTML de la ventana de reglas; recibe la apuesta actual para enseñar premios en euros. */
+  rulesHtml(bet: number): string;
   createBonus(tier: BonusTier): B;
   /** Texto extra en la barra del bonus (p. ej. el multiplicador acumulado). */
   bonusInfo?(bonus: B): string;
