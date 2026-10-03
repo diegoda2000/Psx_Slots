@@ -12,7 +12,7 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
    rodillo (Macaco 2, Majarias 3, Iberru 4, Andy 5; Majarias sustituye a Elena) y su rango (x2-4, x5-9, x10-25, x30-200). Si cae en su rodillo se
    expande a toda la columna (si así entra en premio); en otro rodillo es un wild normal con su multiplicador. Los
    multiplicadores de una línea se suman. Símbolos de pago (ilustraciones del usuario), de más a menos premio:
-   1 Andy the Hutt, 2 (por decidir, provisional SIM2; antes Majarias dictador, que pasó a wild), 3 (por decidir, SIM3), 4 Ternasco, 5 Radio, 6 OMG Bro, 7 Remos,
+   1 Andy the Hutt, 2 Dormilón (DORMIDO, chico dormido con cascos; antes era Majarias dictador, que pasó a wild), 3 (por decidir, SIM3), 4 Ternasco, 5 Radio, 6 OMG Bro, 7 Remos,
    8 Rata. Altos = 1-4, bajos = 5-8. Scatter = ficha FS. Tabla de pagos, 19 líneas y multiplicadores copiados
    literalmente de Life and Death (ver `docs/MATES.md`); el RTP se ajusta con la frecuencia de wilds, no con la tabla.
    (Antes era estilo "Wanted" con duelos VS; el usuario lo cambió. Ser fiel a Life and Death.)
@@ -44,8 +44,8 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 - Ilustraciones (del usuario): originales en `art/source/`. Versión de juego: personajes en
   `src/games/duelo/art/<ID>.webp` + retrato `<ID>-face.webp`; símbolos en `src/games/duelo/art/symbols/<ID>.webp`
   (BONUS = ficha FS). Se cargan solos por nombre de archivo (`art.ts`); lo que falte usa arte de código.
-  Iberru = pelo rizado, Macaco = mono calvo, Andy = gorra AAA, Majarias = uniforme de dictador. Los símbolos 2 y 3 aún
-  no tienen ilustración.
+  Iberru = pelo rizado, Macaco = mono calvo, Andy = gorra AAA, Majarias = uniforme de dictador. El símbolo 3 aún no tiene
+  ilustración.
 - El chat solo deja ~5 imágenes por mensaje y las que llegan mientras trabajo no se guardan como archivo:
   pedir que las reenvíe en un mensaje nuevo.
 - Estética de Duelo sacada de los símbolos (`src/games/duelo/palette.ts` y `style.css`): tinta negra, pegatina blanco

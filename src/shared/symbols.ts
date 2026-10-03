@@ -1,8 +1,8 @@
 /** Símbolos de las dos slots. Cada slot elige cuáles usa para pagar. */
 export type Low = 'CUA' | 'CRZ' | 'CIR' | 'TRI';
 export type Premium = 'AND' | 'IBE' | 'ELE' | 'MAC';
-/** Símbolos de pago de Duelo (ilustraciones del usuario). SIM2 y SIM3 son huecos provisionales. */
-export type DueloSym = 'HUTT' | 'SIM2' | 'SIM3' | 'TERNASCO' | 'RADIO' | 'OMG' | 'REMOS' | 'RATA';
+/** Símbolos de pago de Duelo (ilustraciones del usuario). SIM3 es un hueco provisional. */
+export type DueloSym = 'HUTT' | 'DORMIDO' | 'SIM3' | 'TERNASCO' | 'RADIO' | 'OMG' | 'REMOS' | 'RATA';
 export type PaySymbol = Low | Premium | DueloSym;
 /** Personajes de Duelo (los 4 jinetes): Majarias ocupa el sitio de Elena. */
 export type DueloChar = 'AND' | 'IBE' | 'MAJ' | 'MAC';
@@ -32,7 +32,7 @@ export const SYMBOLS: Record<SymbolId, { name: string; kind: SymbolKind; color: 
   AND: { name: 'Andy', kind: 'high', color: 0xffd23e },
   MAJ: { name: 'Majarias', kind: 'high', color: 0xd8342b },
   HUTT: { name: 'Andy the Hutt', kind: 'item', color: 0xf2b81c },
-  SIM2: { name: 'Por decidir', kind: 'item', color: 0x8a857c },
+  DORMIDO: { name: 'Dormilón', kind: 'item', color: 0x3aa0ff },
   SIM3: { name: 'Por decidir', kind: 'item', color: 0x8a857c },
   TERNASCO: { name: 'Ternasco', kind: 'item', color: 0xf3e6d3 },
   RADIO: { name: 'Radio', kind: 'item', color: 0xc9c9c9 },

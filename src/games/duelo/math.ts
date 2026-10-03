@@ -24,7 +24,7 @@ import {
 /** En Duelo pagan las ilustraciones del canal: 4 bajos (rata a radio) y 4 altos (ternasco a Andy the Hutt). */
 export type DueloPay = DueloSym;
 /** Símbolos que pagan, de menos a más premio (8 = rata ... 1 = Andy the Hutt). */
-export const DUELO_PAYS: DueloPay[] = ['RATA', 'REMOS', 'OMG', 'RADIO', 'TERNASCO', 'SIM3', 'SIM2', 'HUTT'];
+export const DUELO_PAYS: DueloPay[] = ['RATA', 'REMOS', 'OMG', 'RADIO', 'TERNASCO', 'SIM3', 'DORMIDO', 'HUTT'];
 import type { BonusState } from '../../shared/game/types';
 
 /** Rodillo de cada personaje (0-index): Macaco 2, Majarias 3, Iberru 4, Andy 5. */
@@ -55,7 +55,7 @@ export const LINES: number[][] = [
 ];
 
 export const DUELO = {
-  weights: { RATA: 24, REMOS: 24, OMG: 22, RADIO: 22, TERNASCO: 12, SIM3: 10, SIM2: 8, HUTT: 6 } as Record<DueloPay, number>,
+  weights: { RATA: 24, REMOS: 24, OMG: 22, RADIO: 22, TERNASCO: 12, SIM3: 10, DORMIDO: 8, HUTT: 6 } as Record<DueloPay, number>,
   /** Probabilidad de wild en cada rodillo central (juego base). */
   wildChance: 0.016,
   /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
@@ -79,7 +79,7 @@ export const DUELO = {
     RADIO: [0.3, 1, 3, 10],
     TERNASCO: [0.5, 1.5, 5, 15],
     SIM3: [1, 2.5, 7.5, 25],
-    SIM2: [1, 2.5, 7.5, 25],
+    DORMIDO: [1, 2.5, 7.5, 25],
     HUTT: [2, 5, 15, 50],
   } as Record<DueloPay, number[]>,
   /** Escala global de la tabla de pagos (1 = tabla de Life and Death tal cual). */
