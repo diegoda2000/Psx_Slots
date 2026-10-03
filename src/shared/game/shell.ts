@@ -5,10 +5,11 @@ import { speed, wait } from '../tween';
 import { Overlay } from '../view/Overlay';
 import type { BonusState, SlotGame } from './types';
 
-/** Apuestas: de 0,20 € a 5,00 € de 20 en 20 céntimos, y de 6 € a 50 € de euro en euro. */
+/** Apuestas: 0,20-2 € de 20 en 20 céntimos, 3-10 € de euro en euro y 15-50 € de 5 en 5. */
 export const BETS = [
-  ...Array.from({ length: 25 }, (_, i) => +(0.2 * (i + 1)).toFixed(2)),
-  ...Array.from({ length: 45 }, (_, i) => i + 6),
+  ...Array.from({ length: 10 }, (_, i) => +(0.2 * (i + 1)).toFixed(2)),
+  ...Array.from({ length: 8 }, (_, i) => i + 3),
+  ...Array.from({ length: 8 }, (_, i) => 15 + i * 5),
 ];
 export const PAD = 40;
 
