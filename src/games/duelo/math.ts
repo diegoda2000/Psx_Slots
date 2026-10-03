@@ -63,7 +63,7 @@ export const DUELO_TIER_NAMES: Record<DueloTier, string> = { 1: 'BONUS', 2: 'TOC
 export const DUELO = {
   weights: { RATA: 24, REMOS: 24, OMG: 22, RADIO: 22, TERNASCO: 12, SIM3: 10, DORMIDO: 8, HUTT: 6 } as Record<DueloPay, number>,
   /** Probabilidad de wild en cada rodillo central (juego base). */
-  wildChance: 0.01546,
+  wildChance: 0.01633,
   /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
   ownChance: 0.6,
   /** [multiplicador, peso] de cada personaje (valores de Life and Death). */
@@ -73,7 +73,7 @@ export const DUELO = {
     IBE: [[10, 40], [15, 30], [20, 18], [25, 12]],
     AND: [[30, 40], [40, 25], [50, 18], [75, 10], [100, 5], [200, 2]],
   } as Record<DueloChar, [number, number][]>,
-  scatterPerReel: 0.062,
+  scatterPerReel: 0.103,
   /**
    * Pago por línea con apuesta de 1 € (= veces la apuesta total), copiado de Life and Death para 3/4/5/6 seguidos:
    * rata = 10, remos = J, OMG = K, radio = A, ternasco = corazón, 3 = sol, 2 = mano, Andy the Hutt = caras.
@@ -92,9 +92,9 @@ export const DUELO = {
   payScale: 1,
   tiers: {
     // BONUS (como Devastation): más wilds.
-    1: { spins: 10, wildChance: 0.1431, deathReels: false },
+    1: { spins: 10, wildChance: 0.1408, deathReels: false },
     // TOCHO (antes semitocho; como Reckoning): rodillos de la muerte.
-    2: { spins: 10, wildChance: 0.1628, deathReels: true },
+    2: { spins: 10, wildChance: 0.1616, deathReels: true },
   } as Record<DueloTier, { spins: number; wildChance: number; deathReels: boolean }>,
   /** Tiradas extra dentro del bonus por número de fichas FS. */
   retrigger: { 2: 2, 3: 4 } as Record<number, number>,
@@ -151,9 +151,9 @@ export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
     grid.push(col);
   }
 
-  // Como mucho una ficha FS por rodillo.
+  // Como mucho una ficha FS por rodillo, y solo en los rodillos centrales (2 a 5), como los personajes.
   let scatters = 0;
-  for (let c = 0; c < COLS; c++)
+  for (let c = 1; c <= 4; c++)
     if (rng() < DUELO.scatterPerReel) {
       grid[c][randInt(rng, ROWS)] = { sym: 'BONUS' };
       scatters++;

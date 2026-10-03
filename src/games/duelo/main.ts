@@ -66,6 +66,13 @@ async function main() {
       const res = bonus ? bonusSpin(defaultRng, bonus) : baseSpin(defaultRng);
       board.clearReels();
       await board.dropIn(res.grid);
+      // Primero se enseñan las fichas FS (bonus o tiradas extra); luego los despliegues pueden taparlas.
+      const extra = bonus ? (DUELO.retrigger[Math.min(res.scatters, 3)] ?? 0) : 0;
+      const fsCounts = bonus ? extra > 0 : res.scatters >= 3;
+      if (fsCounts) {
+        await Promise.all(board.symbolsOf('BONUS').map((s) => s.playWin()));
+        if (extra > 0) await overlay.floatText(`+${extra} TIRADAS`, W / 2, H / 2, YELLOW, 48);
+      }
       if (bonus && res.newDeath.length) {
         board.setDeath(bonus.death);
         for (const p of res.newDeath)
@@ -91,9 +98,7 @@ async function main() {
         await wait(600);
         board.resetAlpha();
       }
-      if (res.scatters >= 3 || (bonus && res.scatters >= 2))
-        await Promise.all(board.symbolsOf('BONUS').map((s) => s.playWin()));
-      return { win: res.total, tier: bonus ? 0 : res.tier };
+      return { win: res.total, tier: bonus ? 0 : res.tier, retriggerShown: extra > 0 };
     },
   };
 

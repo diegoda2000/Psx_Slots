@@ -17,11 +17,9 @@ export class WildReelView extends Container {
   private frame = new Graphics();
   private clip = new Graphics();
   private content = new Container();
-  /** El cuerpo va aparte de los rótulos; los dos se recortan al rodillo. */
+  /** El cuerpo del personaje, recortado al rodillo. */
   private figure = new Container();
   private figClip = new Graphics();
-  private labels = new Container();
-  private labelClip = new Graphics();
   private multTag: Container;
   private top = 0;
   private bottom = BOARD_H;
@@ -29,10 +27,9 @@ export class WildReelView extends Container {
   constructor(readonly wild: WildReel) {
     super();
     const color = SYMBOLS[wild.char].color;
-    this.addChild(this.frame, this.content, this.clip, this.figure, this.figClip, this.labels, this.labelClip);
+    this.addChild(this.frame, this.content, this.clip, this.figure, this.figClip);
     this.content.mask = this.clip;
     this.figure.mask = this.figClip;
-    this.labels.mask = this.labelClip;
 
     // Foco de luz detrás del personaje, del color de su ficha.
     const glow = new Graphics();
@@ -51,11 +48,6 @@ export class WildReelView extends Container {
       initial.position.set(CELL_W / 2, BOARD_H / 2);
       this.figure.addChild(initial);
     }
-    // Abajo solo el nombre (sin cartel de WILD).
-    const band = new Graphics().rect(4, BOARD_H - 34, CELL_W - 8, 30).fill({ color: INK, alpha: 0.7 });
-    const name = label(SYMBOLS[wild.char].name.toUpperCase(), 14, color);
-    name.position.set(CELL_W / 2, BOARD_H - 18);
-    this.labels.addChild(band, name);
 
     // Multiplicador encima de la cabeza; solo aparece al terminar de desplegarse.
     this.multTag = new Container();
@@ -79,8 +71,6 @@ export class WildReelView extends Container {
     this.clip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
     this.figClip.clear();
     this.figClip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
-    this.labelClip.clear();
-    this.labelClip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
   }
 
   /** Despliegue desde la celda donde cayó: el cuerpo va apareciendo según se abre la columna. */
@@ -107,7 +97,6 @@ export class WildReelView extends Container {
 
 export class DueloBoard extends Board {
   private reelLayer = new Container();
-  private topLayer = new Container();
   private lineLayer = new Graphics();
   private headers = new Map<number, Text>();
   reels: WildReelView[] = [];
@@ -121,10 +110,7 @@ export class DueloBoard extends Board {
       .roundRect(-20, -20, this.bw + 40, BOARD_H + 40, 28)
       .fill(STICKER);
     this.addChildAt(sticker, 0);
-    // Capa por encima de los rodillos desplegados (fichas FS), recortada al tablero.
-    const topMask = new Graphics().rect(0, 0, this.bw, BOARD_H).fill(0xffffff);
-    this.topLayer.mask = topMask;
-    this.addChild(this.reelLayer, topMask, this.topLayer, this.lineLayer);
+    this.addChild(this.reelLayer, this.lineLayer);
     // Encima de cada rodillo central, su personaje (como los 4 jinetes).
     REEL_CHAR.forEach((ch, col) => {
       if (!ch) return;
@@ -160,16 +146,9 @@ export class DueloBoard extends Board {
     v.x = w.col * CELL_W;
     this.reelLayer.addChild(v);
     this.reels.push(v);
-    // La ficha FS de ese rodillo sigue contando: se queda visible encima del personaje.
-    this.cells[w.col].forEach((s, r) => {
-      if (!s) return;
-      if (s.sym === 'BONUS') {
-        this.topLayer.addChild(s);
-      } else {
-        s.destroy({ children: true });
-        this.cells[w.col][r] = null;
-      }
-    });
+    // El rodillo desplegado tapa todo lo que había, también la ficha FS (ya se ha enseñado antes lo que daba).
+    for (const s of this.cells[w.col]) s?.destroy({ children: true });
+    this.cells[w.col].fill(null);
     await v.unfold(w.row, 520);
     await v.showMult();
     return v;

@@ -306,10 +306,10 @@ export class SlotShell<B extends BonusState> {
     );
     while (fs.left > 0 && fs.total < MAX_WIN) {
       const before = fs.left;
-      const { win } = await this.game.spin(fs, { bet: this.bet, showWin: this.showWin });
+      const { win, retriggerShown } = await this.game.spin(fs, { bet: this.bet, showWin: this.showWin });
       this.showWin(fs.total * this.bet);
       const added = fs.left - (before - 1);
-      if (added > 0) await this.overlay.floatText(`+${added} TIRADAS`, w / 2, h / 2, theme.gold, 48);
+      if (added > 0 && !retriggerShown) await this.overlay.floatText(`+${added} TIRADAS`, w / 2, h / 2, theme.gold, 48);
       await this.celebrate(win);
       this.refresh();
       await wait(250);

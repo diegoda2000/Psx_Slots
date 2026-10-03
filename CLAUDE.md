@@ -20,14 +20,15 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
    cualquier posición, con cascadas y orbes multiplicadores.
 
 Bonus (se pueden comprar):
-- Duelo: solo dos. 3 fichas FS = BONUS (más wilds, como Devastation, compra 100x); 4 o más = TOCHO (rodillos de la
+- Duelo: solo dos. Fichas FS solo en los rodillos 2-5. 3 fichas FS = BONUS (más wilds, como Devastation, compra 100x); 4 fichas = TOCHO (rodillos de la
   muerte, como Reckoning: el personaje que cae en su rodillo lo activa y desde entonces se expande en cualquier rodillo
   central; compra 200x). El tocho antiguo (wilds fijos) se eliminó y el semitocho pasó a llamarse TOCHO. Sin premio
   mínimo. Retrigger: 2 fichas +2, 3 o más +4.
 - Olimpo: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho"; el multiplicador se va acumulando. **No tocar Olimpo
   salvo que el usuario lo pida.**
 - Regla de despliegue en Duelo: si un personaje cae en su rodillo y así entra en premio, se despliega SIEMPRE (también
-  con una ficha FS en ese rodillo, que queda visible encima). Comprobado con un test de 13.508 casos sin fallos.
+  con una ficha FS en ese rodillo). Si hay fichas FS que cuentan (bonus o tiradas extra), primero se enseñan y se
+  anuncian las tiradas extra; después se despliega y el rodillo tapa la ficha. Test de ~13.000 casos sin fallos.
 
 ## Lore
 - Frases míticas para ganancias grandes: "¡Apaga la puta radio!", "¡Iberru gordofóbico!", "¡Majarias dictador!" (es MAJARIAS, con S, y sin "es").
@@ -61,8 +62,8 @@ Bonus (se pueden comprar):
   centro. Olimpo mantiene la interfaz vieja.
 - Wild de personaje en Duelo: en la celda, retrato en un cuadrado de esquinas redondeadas, sin la palabra WILD. Si no se
   despliega, el multiplicador sale abajo (donde no tapa la cara) al entrar en una línea premiada. Al desplegarse, el
-  cuerpo completo va apareciendo según se abre la columna, el multiplicador sale arriba al terminar y abajo solo va el
-  nombre. Rodillos de Duelo de 118 px de ancho; los cuerpos están centrados en sus imágenes.
+  cuerpo completo va apareciendo según se abre la columna y el multiplicador sale arriba al terminar; abajo no va
+  nada (ni WILD ni nombre: el nombre ya está encima del rodillo). Rodillos de Duelo de 118 px de ancho; los cuerpos están centrados en sus imágenes.
   Toda animación nueva de símbolos debe pasar por la interfaz `SymbolVisual` para poder cambiarla por Spine.
 
 ## Comandos

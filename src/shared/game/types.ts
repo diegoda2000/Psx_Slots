@@ -14,6 +14,8 @@ export interface SpinOutcome {
   win: number;
   /** Bonus que abre esta tirada (solo en juego base). */
   tier: BonusTier | 0;
+  /** La slot ya ha anunciado las tiradas extra de esta tirada (el cascarón no lo repite). */
+  retriggerShown?: boolean;
 }
 
 /** Lo que cada slot aporta al cascarón común (HUD, saldo, compra de bonus, flujo del bonus). */
