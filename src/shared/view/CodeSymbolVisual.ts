@@ -7,7 +7,7 @@ import type { SymbolVisual } from './SymbolVisual';
 export const CELL = 100;
 const S = 90; // tamaño del símbolo dentro de la celda
 
-const INITIAL: Partial<Record<SymbolId, string>> = { AND: 'A', IBE: 'I', ELE: 'E', MAC: 'M' };
+const INITIAL: Partial<Record<SymbolId, string>> = { AND: 'A', IBE: 'I', ELE: 'E', MAC: 'M', MAJ: 'M' };
 const LABEL: Partial<Record<SymbolId, string>> = { AND: 'ANDY', IBE: 'IBERRU', ELE: 'ELENA', MAC: 'MACACO' };
 
 /** Arte provisional dibujado con Graphics. Lo sustituirá el arte final o Spine. */

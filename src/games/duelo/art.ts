@@ -1,10 +1,10 @@
 import { Texture } from 'pixi.js';
-import type { Premium, SymbolId } from '../../shared/symbols';
+import type { DueloChar, SymbolId } from '../../shared/symbols';
 
 /**
  * Ilustraciones de Duelo. Basta con dejar el archivo en la carpeta con el id como nombre:
- * - art/<ID>.webp y art/<ID>-face.webp: personaje de cuerpo completo y su retrato (AND, IBE, ELE, MAC).
- * - art/symbols/<ID>.webp: símbolos de pago (HUTT, DICTADOR, ...) y BONUS (la ficha FS).
+ * - art/<ID>.webp y art/<ID>-face.webp: personaje de cuerpo completo y su retrato (AND, IBE, MAJ, MAC).
+ * - art/symbols/<ID>.webp: símbolos de pago (HUTT, TERNASCO, ...) y BONUS (la ficha FS).
  * Lo que no tenga imagen sigue con el arte de código.
  */
 const CHARACTER_FILES = import.meta.glob('./art/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
@@ -40,11 +40,11 @@ export async function loadDueloArt() {
   );
 }
 
-export const bodyTexture = (p: Premium) => textures.get(p);
-export const portraitTexture = (p: Premium) => textures.get(`${p}-face`);
+export const bodyTexture = (p: DueloChar) => textures.get(p);
+export const portraitTexture = (p: DueloChar) => textures.get(`${p}-face`);
 export const symbolTexture = (s: SymbolId) => textures.get(s);
 const urlOf = (files: Record<string, string>, key: string) => Object.entries(files).find(([p]) => keyOf(p) === key)?.[1];
 /** URLs para usar las ilustraciones también en el HTML (panel de compra, tabla de pagos). */
 export const symbolUrl = (s: SymbolId) => urlOf(SYMBOL_FILES, s);
-export const faceUrl = (p: Premium) => urlOf(CHARACTER_FILES, `${p}-face`);
+export const faceUrl = (p: DueloChar) => urlOf(CHARACTER_FILES, `${p}-face`);
 export const fsChipUrl = symbolUrl('BONUS');

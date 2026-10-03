@@ -1,5 +1,5 @@
 import { Container, Graphics, Sprite } from 'pixi.js';
-import { SYMBOLS, type CharWild, type Premium } from '../../shared/symbols';
+import { SYMBOLS, type CharWild, type DueloChar } from '../../shared/symbols';
 import { label, multColor } from '../../shared/text';
 import { backOut, tween } from '../../shared/tween';
 import type { SymbolVisual } from '../../shared/view/SymbolVisual';
@@ -16,10 +16,10 @@ export class CharacterWildVisual implements SymbolVisual {
   readonly view = new Container();
   private art = new Container();
   private multTag: Container | null = null;
-  private char: Premium;
+  private char: DueloChar;
 
   constructor(sym: CharWild, private mult = 2) {
-    this.char = sym.slice(2) as Premium;
+    this.char = sym.slice(2) as DueloChar;
     const color = SYMBOLS[this.char].color;
     const chip = new Graphics()
       .circle(0, -4, R + 4)

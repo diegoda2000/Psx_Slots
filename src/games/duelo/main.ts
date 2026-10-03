@@ -2,7 +2,7 @@ import './style.css';
 import { createStage, PAD, SlotShell } from '../../shared/game/shell';
 import type { SlotGame } from '../../shared/game/types';
 import { defaultRng } from '../../shared/rng';
-import { PREMIUMS, SYMBOLS, wildOf, type CharWild } from '../../shared/symbols';
+import { DUELO_CHARS, SYMBOLS, wildOf, type CharWild } from '../../shared/symbols';
 import { money, theme } from '../../shared/text';
 import { wait } from '../../shared/tween';
 import { BOARD_H, BOARD_W } from '../../shared/view/Board';
@@ -29,7 +29,7 @@ async function main() {
   Object.assign(theme, { font: FONT, gold: YELLOW, hot: RED, good: YELLOW });
   const { root } = await createStage(W, H, '40px "Luckiest Guy"');
   await loadDueloArt();
-  for (const p of PREMIUMS) registerSymbolVisual(wildOf(p), (sym, mult) => new CharacterWildVisual(sym as CharWild, mult));
+  for (const p of DUELO_CHARS) registerSymbolVisual(wildOf(p), (sym, mult) => new CharacterWildVisual(sym as CharWild, mult));
   for (const s of [...DUELO_PAYS, 'BONUS' as const]) {
     const tex = symbolTexture(s);
     if (tex) registerSymbolVisual(s, () => new ImageSymbolVisual(tex, s === 'BONUS' ? 0.96 : 1));

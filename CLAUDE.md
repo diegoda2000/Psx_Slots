@@ -9,10 +9,10 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
 1. **Duelo** (`duelo/`, `src/games/duelo/`): copia la mecánica de "Life and Death" (Hacksaw). 19 líneas, 3 o más
    iguales seguidos desde la izquierda. Los 4 personajes son los 4 jinetes y **NO son símbolos de pago, solo wilds
    multiplicadores**: como mucho uno de cada en pantalla. Pueden caer en cualquier rodillo del 2 al 5; cada uno tiene su
-   rodillo (Macaco 2, Elena 3, Iberru 4, Andy 5) y su rango (x2-4, x5-9, x10-25, x30-200). Si cae en su rodillo se
+   rodillo (Macaco 2, Majarias 3, Iberru 4, Andy 5; Majarias sustituye a Elena) y su rango (x2-4, x5-9, x10-25, x30-200). Si cae en su rodillo se
    expande a toda la columna (si así entra en premio); en otro rodillo es un wild normal con su multiplicador. Los
    multiplicadores de una línea se suman. Símbolos de pago (ilustraciones del usuario), de más a menos premio:
-   1 Andy the Hutt, 2 Majarias dictador, 3 (por decidir, provisional SIM3), 4 Ternasco, 5 Radio, 6 OMG Bro, 7 Remos,
+   1 Andy the Hutt, 2 (por decidir, provisional SIM2; antes Majarias dictador, que pasó a wild), 3 (por decidir, SIM3), 4 Ternasco, 5 Radio, 6 OMG Bro, 7 Remos,
    8 Rata. Altos = 1-4, bajos = 5-8. Scatter = ficha FS. Tabla de pagos, 19 líneas y multiplicadores copiados
    literalmente de Life and Death (ver `docs/MATES.md`); el RTP se ajusta con la frecuencia de wilds, no con la tabla.
    (Antes era estilo "Wanted" con duelos VS; el usuario lo cambió. Ser fiel a Life and Death.)
@@ -28,7 +28,8 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 ## Lore
 - Frases míticas para ganancias grandes: "¡Apaga la puta radio!", "¡Iberru gordofóbico!", "¡Majarias dictador!" (es MAJARIAS, con S, y sin "es").
 - Personajes, de más a menos: Andy ("el sacarino"), Iberru, Elena, Macaco (hermano pequeño de Andy, "un mantenido del
-  pelado"). En Olimpo son los símbolos premium; en Duelo son solo los wilds.
+  pelado"). En Olimpo son los símbolos premium. En Duelo los wilds son Andy, Iberru, Majarias (con uniforme de
+  dictador) y Macaco: Elena no sale en Duelo.
 - Olimpo aún usa botones de PlayStation como bajos provisionales.
 - Gesto de Andy pidiendo "los bolos": el usuario ya tiene pensado cómo meterlo. **Preguntarle antes de inventarlo.**
 - Investiga el lore por tu cuenta antes de preguntar cosas que se pueden buscar.
@@ -43,7 +44,8 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 - Ilustraciones (del usuario): originales en `art/source/`. Versión de juego: personajes en
   `src/games/duelo/art/<ID>.webp` + retrato `<ID>-face.webp`; símbolos en `src/games/duelo/art/symbols/<ID>.webp`
   (BONUS = ficha FS). Se cargan solos por nombre de archivo (`art.ts`); lo que falte usa arte de código.
-  Iberru = pelo rizado, Macaco = mono calvo, Andy = gorra AAA. Elena y el símbolo 3 aún no tienen ilustración.
+  Iberru = pelo rizado, Macaco = mono calvo, Andy = gorra AAA, Majarias = uniforme de dictador. Los símbolos 2 y 3 aún
+  no tienen ilustración.
 - El chat solo deja ~5 imágenes por mensaje y las que llegan mientras trabajo no se guardan como archivo:
   pedir que las reenvíe en un mensaje nuevo.
 - Estética de Duelo sacada de los símbolos (`src/games/duelo/palette.ts` y `style.css`): tinta negra, pegatina blanco

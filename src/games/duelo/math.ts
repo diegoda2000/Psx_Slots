@@ -11,25 +11,25 @@ import { MAX_WIN, tierFromScatters, type BonusTier } from '../../shared/lore';
 import { randInt, weightedPick, type Rng } from '../../shared/rng';
 import {
   COLS,
-  PREMIUMS,
+  DUELO_CHARS,
   ROWS,
   wildOf,
   type Cell,
   type CharWild,
   type Grid,
   type DueloSym,
-  type Premium,
+  type DueloChar,
 } from '../../shared/symbols';
 
 /** En Duelo pagan las ilustraciones del canal: 4 bajos (rata a radio) y 4 altos (ternasco a Andy the Hutt). */
 export type DueloPay = DueloSym;
 /** Símbolos que pagan, de menos a más premio (8 = rata ... 1 = Andy the Hutt). */
-export const DUELO_PAYS: DueloPay[] = ['RATA', 'REMOS', 'OMG', 'RADIO', 'TERNASCO', 'SIM3', 'DICTADOR', 'HUTT'];
+export const DUELO_PAYS: DueloPay[] = ['RATA', 'REMOS', 'OMG', 'RADIO', 'TERNASCO', 'SIM3', 'SIM2', 'HUTT'];
 import type { BonusState } from '../../shared/game/types';
 
-/** Rodillo de cada personaje (0-index): Macaco 2, Elena 3, Iberru 4, Andy 5. */
-export const CHAR_REEL: Record<Premium, number> = { MAC: 1, ELE: 2, IBE: 3, AND: 4 };
-export const REEL_CHAR: (Premium | null)[] = [null, 'MAC', 'ELE', 'IBE', 'AND', null];
+/** Rodillo de cada personaje (0-index): Macaco 2, Majarias 3, Iberru 4, Andy 5. */
+export const CHAR_REEL: Record<DueloChar, number> = { MAC: 1, MAJ: 2, IBE: 3, AND: 4 };
+export const REEL_CHAR: (DueloChar | null)[] = [null, 'MAC', 'MAJ', 'IBE', 'AND', null];
 
 /** Las 19 líneas de Life and Death (fila de cada rodillo, 0 = arriba), en el mismo orden que su tabla. */
 export const LINES: number[][] = [
@@ -55,7 +55,7 @@ export const LINES: number[][] = [
 ];
 
 export const DUELO = {
-  weights: { RATA: 24, REMOS: 24, OMG: 22, RADIO: 22, TERNASCO: 12, SIM3: 10, DICTADOR: 8, HUTT: 6 } as Record<DueloPay, number>,
+  weights: { RATA: 24, REMOS: 24, OMG: 22, RADIO: 22, TERNASCO: 12, SIM3: 10, SIM2: 8, HUTT: 6 } as Record<DueloPay, number>,
   /** Probabilidad de wild en cada rodillo central (juego base). */
   wildChance: 0.016,
   /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
@@ -63,14 +63,14 @@ export const DUELO = {
   /** [multiplicador, peso] de cada personaje. Andy, "el sacarino", el más bestia. */
   wildMults: {
     MAC: [[2, 50], [3, 30], [4, 20]],
-    ELE: [[5, 30], [6, 25], [7, 20], [8, 15], [9, 10]],
+    MAJ: [[5, 30], [6, 25], [7, 20], [8, 15], [9, 10]],
     IBE: [[10, 40], [15, 30], [20, 18], [25, 12]],
     AND: [[30, 40], [40, 25], [50, 18], [75, 10], [100, 5], [200, 2]],
-  } as Record<Premium, [number, number][]>,
+  } as Record<DueloChar, [number, number][]>,
   scatterPerReel: 0.062,
   /**
    * Pago por línea con apuesta de 1 € (= veces la apuesta total), copiado de Life and Death para 3/4/5/6 seguidos:
-   * rata = 10, remos = J, OMG = K, radio = A, ternasco = corazón, 3 = sol, dictador = mano, Andy the Hutt = caras.
+   * rata = 10, remos = J, OMG = K, radio = A, ternasco = corazón, 3 = sol, 2 = mano, Andy the Hutt = caras.
    */
   pays: {
     RATA: [0.1, 0.3, 1, 3],
@@ -79,7 +79,7 @@ export const DUELO = {
     RADIO: [0.3, 1, 3, 10],
     TERNASCO: [0.5, 1.5, 5, 15],
     SIM3: [1, 2.5, 7.5, 25],
-    DICTADOR: [1, 2.5, 7.5, 25],
+    SIM2: [1, 2.5, 7.5, 25],
     HUTT: [2, 5, 15, 50],
   } as Record<DueloPay, number[]>,
   /** Escala global de la tabla de pagos (1 = tabla de Life and Death tal cual). */
@@ -99,7 +99,7 @@ export const DUELO = {
 
 export interface WildReel {
   col: number;
-  char: Premium;
+  char: DueloChar;
   mult: number;
   /** Fila donde cayó el wild antes de expandirse. */
   row: number;
@@ -125,13 +125,13 @@ export interface DueloSpin {
   scatters: number;
   tier: BonusTier | 0;
   /** Personajes que activan su rodillo de la muerte en esta tirada. */
-  newDeath: Premium[];
+  newDeath: DueloChar[];
 }
 
 interface SpinOpts {
   wildChance: number;
   /** Personajes con rodillo de la muerte activo (se expanden en cualquier rodillo central). */
-  death: Premium[] | null;
+  death: DueloChar[] | null;
   sticky: WildReel[];
 }
 
@@ -157,9 +157,9 @@ export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
 
   // Como mucho un wild por rodillo central y uno de cada personaje en pantalla.
   const candidates: WildReel[] = [];
-  const newDeath: Premium[] = [];
+  const newDeath: DueloChar[] = [];
   const death = new Set(opts.death ?? []);
-  const available = PREMIUMS.filter((p) => !opts.sticky.some((s) => s.char === p));
+  const available = DUELO_CHARS.filter((p) => !opts.sticky.some((s) => s.char === p));
   for (let c = 1; c <= 4; c++) {
     if (stickyCols.has(c) || available.length === 0 || rng() >= opts.wildChance) continue;
     const own = REEL_CHAR[c]!;
@@ -238,7 +238,7 @@ export function baseSpin(rng: Rng) {
 
 export interface DueloBonus extends BonusState {
   /** Personajes con rodillo de la muerte activo (semitocho y tocho). */
-  death: Premium[];
+  death: DueloChar[];
   /** Rodillos wild fijos (tocho). */
   sticky: WildReel[];
 }

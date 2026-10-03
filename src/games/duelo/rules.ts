@@ -1,5 +1,5 @@
 import { BONUS_NAMES, MAX_WIN, type BonusTier } from '../../shared/lore';
-import { COLS, PREMIUMS, ROWS, SYMBOLS, type SymbolId } from '../../shared/symbols';
+import { COLS, DUELO_CHARS, ROWS, SYMBOLS, type SymbolId } from '../../shared/symbols';
 import { money } from '../../shared/text';
 import { faceUrl, fsChipUrl, symbolUrl } from './art';
 import { CHAR_REEL, DUELO, DUELO_PAYS, LINES } from './math';
@@ -31,7 +31,7 @@ function miniLine(line: number[], i: number) {
 export function rulesHtml(bet: number) {
   // De más a menos premio: arriba los 4 altos, abajo los 4 bajos (como en Life and Death).
   const best = [...DUELO_PAYS].reverse();
-  const chars = [...PREMIUMS].sort((a, b) => CHAR_REEL[a] - CHAR_REEL[b]);
+  const chars = [...DUELO_CHARS].sort((a, b) => CHAR_REEL[a] - CHAR_REEL[b]);
   const tiers: BonusTier[] = [1, 2, 3];
   const what: Record<BonusTier, string> = {
     1: 'Más wilds de personaje.',
@@ -47,7 +47,7 @@ export function rulesHtml(bet: number) {
   <div class="pay-grid">${best.slice(4).map((s) => payCard(s, bet)).join('')}</div>
 
   <h3>WILDS MULTIPLICADORES Y RODILLOS EXPANDIDOS</h3>
-  <p>Andy, Iberru, Elena y Macaco son los cuatro wilds multiplicadores: sustituyen a todos los símbolos de la tabla de
+  <p>Andy, Iberru, Majarias y Macaco son los cuatro wilds multiplicadores: sustituyen a todos los símbolos de la tabla de
   pagos y multiplican el premio de la línea en la que entran. Si una línea pasa por varios, sus multiplicadores se suman.</p>
   <p>Pueden caer en los rodillos 2 a 5 y como mucho sale uno de cada en pantalla. Cada uno tiene su rodillo: si cae en él
   se expande a todo el rodillo, siempre que así entre en algún premio.</p>

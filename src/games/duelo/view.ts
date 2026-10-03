@@ -1,5 +1,5 @@
 import { Container, Graphics, Sprite, Text } from 'pixi.js';
-import { SYMBOLS, type Premium } from '../../shared/symbols';
+import { SYMBOLS, type DueloChar } from '../../shared/symbols';
 import { label, multColor } from '../../shared/text';
 import { backOut, easeOut, tween } from '../../shared/tween';
 import { Board, BOARD_H, BOARD_W, cellX, cellY } from '../../shared/view/Board';
@@ -121,7 +121,7 @@ export class DueloBoard extends Board {
   }
 
   /** Marca los rodillos de la muerte activos. null = fuera del semitocho/tocho. */
-  setDeath(active: Premium[] | null) {
+  setDeath(active: DueloChar[] | null) {
     for (const [col, t] of this.headers) {
       const on = !!active?.includes(REEL_CHAR[col]!);
       t.text = `${on ? '☠ ' : ''}${SYMBOLS[REEL_CHAR[col]!].name.toUpperCase()}`;
