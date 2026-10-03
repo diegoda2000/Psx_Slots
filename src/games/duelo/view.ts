@@ -51,14 +51,11 @@ export class WildReelView extends Container {
       initial.position.set(CELL_W / 2, BOARD_H / 2);
       this.figure.addChild(initial);
     }
-    // Rótulo abajo, sobre las piernas.
-    const band = new Graphics().rect(4, BOARD_H - 58, CELL_W - 8, 54).fill({ color: INK, alpha: 0.7 });
-    const ribbon = new Graphics().roundRect(10, BOARD_H - 54, CELL_W - 20, 24, 6).fill(YELLOW).stroke({ width: 3, color: INK });
-    const w = label(wild.sticky ? 'FIJO' : 'WILD', 18, INK, { stroke: { color: INK, width: 0 } });
-    w.position.set(CELL_W / 2, BOARD_H - 41);
+    // Abajo solo el nombre (sin cartel de WILD).
+    const band = new Graphics().rect(4, BOARD_H - 34, CELL_W - 8, 30).fill({ color: INK, alpha: 0.7 });
     const name = label(SYMBOLS[wild.char].name.toUpperCase(), 14, color);
-    name.position.set(CELL_W / 2, BOARD_H - 16);
-    this.labels.addChild(band, ribbon, w, name);
+    name.position.set(CELL_W / 2, BOARD_H - 18);
+    this.labels.addChild(band, name);
 
     // Multiplicador encima de la cabeza; solo aparece al terminar de desplegarse.
     this.multTag = new Container();
@@ -110,6 +107,7 @@ export class WildReelView extends Container {
 
 export class DueloBoard extends Board {
   private reelLayer = new Container();
+  private topLayer = new Container();
   private lineLayer = new Graphics();
   private headers = new Map<number, Text>();
   reels: WildReelView[] = [];
@@ -123,7 +121,10 @@ export class DueloBoard extends Board {
       .roundRect(-20, -20, this.bw + 40, BOARD_H + 40, 28)
       .fill(STICKER);
     this.addChildAt(sticker, 0);
-    this.addChild(this.reelLayer, this.lineLayer);
+    // Capa por encima de los rodillos desplegados (fichas FS), recortada al tablero.
+    const topMask = new Graphics().rect(0, 0, this.bw, BOARD_H).fill(0xffffff);
+    this.topLayer.mask = topMask;
+    this.addChild(this.reelLayer, topMask, this.topLayer, this.lineLayer);
     // Encima de cada rodillo central, su personaje (como los 4 jinetes).
     REEL_CHAR.forEach((ch, col) => {
       if (!ch) return;
@@ -145,13 +146,10 @@ export class DueloBoard extends Board {
     }
   }
 
-  /** Quita los rodillos expandidos salvo los fijos. */
-  clearReels(keep: WildReel[] = []) {
-    for (const v of [...this.reels]) {
-      if (keep.some((k) => k.col === v.wild.col)) continue;
-      v.destroy({ children: true });
-      this.reels = this.reels.filter((x) => x !== v);
-    }
+  /** Quita los rodillos expandidos. */
+  clearReels() {
+    for (const v of this.reels) v.destroy({ children: true });
+    this.reels = [];
   }
 
   /** El wild crece desde su celda hasta ocupar el rodillo; luego aparece el multiplicador. */
@@ -162,8 +160,16 @@ export class DueloBoard extends Board {
     v.x = w.col * CELL_W;
     this.reelLayer.addChild(v);
     this.reels.push(v);
-    for (const s of this.cells[w.col]) s?.destroy({ children: true });
-    this.cells[w.col].fill(null);
+    // La ficha FS de ese rodillo sigue contando: se queda visible encima del personaje.
+    this.cells[w.col].forEach((s, r) => {
+      if (!s) return;
+      if (s.sym === 'BONUS') {
+        this.topLayer.addChild(s);
+      } else {
+        s.destroy({ children: true });
+        this.cells[w.col][r] = null;
+      }
+    });
     await v.unfold(w.row, 520);
     await v.showMult();
     return v;

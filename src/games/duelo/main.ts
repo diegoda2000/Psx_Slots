@@ -12,7 +12,7 @@ import { registerSymbolVisual } from '../../shared/view/SymbolVisual';
 import { fsChipUrl, loadDueloArt, symbolTexture } from './art';
 import { CharacterWildVisual } from './CharacterWildVisual';
 import { ImageSymbolVisual } from './ImageSymbolVisual';
-import { baseSpin, bonusSpin, createBonus, DUELO, DUELO_PAYS, type DueloBonus } from './math';
+import { baseSpin, bonusSpin, createBonus, DUELO, DUELO_PAYS, DUELO_TIER_NAMES, type DueloBonus, type DueloTier } from './math';
 import { FONT, RED, YELLOW } from './palette';
 import { PITCH, rulesHtml } from './rules';
 import { CELL_W, DueloBoard } from './view';
@@ -46,34 +46,32 @@ async function main() {
 
   const game: SlotGame<DueloBonus> = {
     buyPrice: DUELO.buyPrice,
-    bonusPitch: (t) => PITCH[t],
+    bonusName: (t) => DUELO_TIER_NAMES[t as DueloTier],
+    topTier: 2,
+    bonusPitch: (t) => PITCH[t as DueloTier],
     rulesHtml,
     createBonus(tier) {
-      const b = createBonus(tier);
-      board.setDeath(DUELO.tiers[tier].deathReels ? b.death : null);
+      const b = createBonus(tier as DueloTier);
+      board.setDeath(DUELO.tiers[b.tier].deathReels ? b.death : null);
       return b;
     },
     bonusInfo: (b) => (b.death.length ? ` · ☠ ${b.death.map((p) => SYMBOLS[p].name).join(', ')}` : ''),
     endBonus: () => {
       board.clearReels();
       board.setDeath(null);
-      // Rellena los rodillos que ocupaban los wilds fijos (sin personajes, es solo decorado).
+      // Tablero de reposo limpio, sin rodillos desplegados.
       void board.dropIn(idleGrid());
     },
     async spin(bonus, { bet }) {
-      const keep = bonus ? [...bonus.sticky] : [];
       const res = bonus ? bonusSpin(defaultRng, bonus) : baseSpin(defaultRng);
-      board.clearReels(keep);
-      await board.dropIn(res.grid, keep.map((w) => w.col));
+      board.clearReels();
+      await board.dropIn(res.grid);
       if (bonus && res.newDeath.length) {
         board.setDeath(bonus.death);
         for (const p of res.newDeath)
           await overlay.floatText(`☠ ${SYMBOLS[p].name.toUpperCase()}`, W / 2, H / 2, SYMBOLS[p].color, 44);
       }
-      for (const w of res.wildReels) {
-        if (keep.some((k) => k.col === w.col)) continue;
-        await board.expand(w);
-      }
+      for (const w of res.wildReels) await board.expand(w);
       if (res.wins.length) {
         board.showLines(
           res.wins.map((w) => w.line),

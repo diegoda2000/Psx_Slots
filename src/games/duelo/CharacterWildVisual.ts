@@ -4,13 +4,15 @@ import { label, multColor } from '../../shared/text';
 import { backOut, tween } from '../../shared/tween';
 import type { SymbolVisual } from '../../shared/view/SymbolVisual';
 import { portraitTexture } from './art';
-import { INK, STICKER, YELLOW } from './palette';
+import { INK } from './palette';
 
-const R = 40;
+const S = 92;
+const RAD = 18;
 
 /**
- * Wild de personaje en una celda: retrato en una ficha redonda (como la ficha FS) y la cinta WILD.
- * El multiplicador no se ve hasta reveal(), cuando el wild entra en una línea premiada.
+ * Wild de personaje en una celda: retrato en un cuadrado de esquinas redondeadas (como el hueco "por decidir").
+ * Sin cartel de WILD. El multiplicador no se ve hasta reveal(), cuando entra en una línea premiada,
+ * y sale abajo para no tapar la cara.
  */
 export class CharacterWildVisual implements SymbolVisual {
   readonly view = new Container();
@@ -21,33 +23,20 @@ export class CharacterWildVisual implements SymbolVisual {
   constructor(sym: CharWild, private mult = 2) {
     this.char = sym.slice(2) as DueloChar;
     const color = SYMBOLS[this.char].color;
-    const chip = new Graphics()
-      .circle(0, -4, R + 4)
-      .fill(INK)
-      .circle(0, -4, R)
-      .fill(color)
-      .circle(0, -4, R - 6)
-      .fill(INK);
-    this.art.addChild(chip);
+    const h = -S / 2;
+    const tile = new Graphics().roundRect(h, h, S, S, RAD).fill(INK).stroke({ width: 4, color });
+    this.art.addChild(tile);
     const tex = portraitTexture(this.char);
     if (tex) {
       const sp = new Sprite(tex);
       sp.anchor.set(0.5);
-      sp.width = sp.height = (R - 6) * 2;
-      sp.y = -4;
-      const mask = new Graphics().circle(0, -4, R - 6).fill(0xffffff);
+      sp.width = sp.height = S - 10;
+      const mask = new Graphics().roundRect(h + 5, h + 5, S - 10, S - 10, RAD - 4).fill(0xffffff);
       sp.mask = mask;
       this.art.addChild(sp, mask);
     } else {
-      const big = label(SYMBOLS[this.char].name[0], 40, color);
-      big.y = -4;
-      this.art.addChild(big);
+      this.art.addChild(label(SYMBOLS[this.char].name[0], 40, color));
     }
-    // Cinta WILD, estilo pegatina.
-    const ribbon = new Graphics().roundRect(-30, 24, 60, 20, 6).fill(YELLOW).stroke({ width: 3, color: INK });
-    const w = label('WILD', 15, INK, { stroke: { color: STICKER, width: 0 } });
-    w.y = 35;
-    this.art.addChild(ribbon, w);
     this.view.addChild(this.art);
   }
 
@@ -55,9 +44,9 @@ export class CharacterWildVisual implements SymbolVisual {
     if (this.multTag) return;
     const c = multColor(this.mult);
     const tag = new Container();
-    const bg = new Graphics().roundRect(-30, -17, 60, 34, 12).fill(INK).stroke({ width: 3, color: c });
-    tag.addChild(bg, label(`x${this.mult}`, 24, c));
-    tag.position.set(0, -4);
+    const bg = new Graphics().roundRect(-30, -13, 60, 26, 8).fill(INK).stroke({ width: 3, color: c });
+    tag.addChild(bg, label(`x${this.mult}`, 19, c));
+    tag.position.set(0, S / 2 - 10);
     tag.scale.set(0);
     this.multTag = tag;
     this.view.addChild(tag);

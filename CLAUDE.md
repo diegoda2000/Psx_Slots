@@ -19,11 +19,15 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
 2. **Olimpo** (`olimpo/`, `src/games/olimpo/`): inspirada en "Gates of Olympus" (Pragmatic). Paga con 8 o más iguales en
    cualquier posición, con cascadas y orbes multiplicadores.
 
-Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se pueden comprar (bonus buy).
-- Duelo: bonus = más wilds (Devastation); semitocho = rodillos de la muerte (Reckoning: el personaje que cae en su
-  rodillo lo activa y desde entonces se expande en cualquier rodillo central); tocho = rodillos de la muerte y los
-  rodillos expandidos se quedan fijos todo el bonus. Retrigger: 2 BONUS +2, 3 BONUS +4.
-- Olimpo: el multiplicador se va acumulando.
+Bonus (se pueden comprar):
+- Duelo: solo dos. 3 fichas FS = BONUS (más wilds, como Devastation, compra 100x); 4 o más = TOCHO (rodillos de la
+  muerte, como Reckoning: el personaje que cae en su rodillo lo activa y desde entonces se expande en cualquier rodillo
+  central; compra 200x). El tocho antiguo (wilds fijos) se eliminó y el semitocho pasó a llamarse TOCHO. Sin premio
+  mínimo. Retrigger: 2 fichas +2, 3 o más +4.
+- Olimpo: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho"; el multiplicador se va acumulando. **No tocar Olimpo
+  salvo que el usuario lo pida.**
+- Regla de despliegue en Duelo: si un personaje cae en su rodillo y así entra en premio, se despliega SIEMPRE (también
+  con una ficha FS en ese rodillo, que queda visible encima). Comprobado con un test de 13.508 casos sin fallos.
 
 ## Lore
 - Frases míticas para ganancias grandes: "¡Apaga la puta radio!", "¡Iberru gordofóbico!", "¡Majarias dictador!" (es MAJARIAS, con S, y sin "es").
@@ -55,9 +59,10 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
   bonus en panel con confirmación y selector de apuesta. Apuestas: 0,20-2 € de 20 en 20 céntimos, 3-10 € de euro en euro
   y 15-50 € de 5 en 5; al cambiarla sale en grande en el
   centro. Olimpo mantiene la interfaz vieja.
-- Wild de personaje en Duelo: en la celda solo el retrato, sin multiplicador. Al desplegarse, el cuerpo completo va
-  apareciendo según se abre la columna y el multiplicador sale al terminar. Si no se despliega, el multiplicador sale
-  cuando entra en una línea premiada.
+- Wild de personaje en Duelo: en la celda, retrato en un cuadrado de esquinas redondeadas, sin la palabra WILD. Si no se
+  despliega, el multiplicador sale abajo (donde no tapa la cara) al entrar en una línea premiada. Al desplegarse, el
+  cuerpo completo va apareciendo según se abre la columna, el multiplicador sale arriba al terminar y abajo solo va el
+  nombre. Rodillos de Duelo de 118 px de ancho; los cuerpos están centrados en sus imágenes.
   Toda animación nueva de símbolos debe pasar por la interfaz `SymbolVisual` para poder cambiarla por Spine.
 
 ## Comandos
@@ -66,4 +71,5 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 
 ## Estado
 - Separadas en dos slots independientes a partir del boceto https://claude.ai/artifact/9HapWazZ7B3SLxPiaaE5yo
-- Pendiente: fase de matemáticas. Objetivo inicial 93-95% de RTP; ver `docs/MATES.md` para la última simulación.
+- Matemáticas de Duelo: RTP objetivo **93,6%**, muy volátil; ver `docs/MATES.md` (simulación de 10M tiradas).
+  El RTP se cumple a largo plazo (millones de tiradas), no por bonus: no prometer resultados por bonus.

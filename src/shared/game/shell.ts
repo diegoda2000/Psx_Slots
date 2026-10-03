@@ -61,6 +61,14 @@ export class SlotShell<B extends BonusState> {
     this.refresh();
   }
 
+  private name(tier: BonusTier) {
+    return this.game.bonusName?.(tier) ?? BONUS_NAMES[tier];
+  }
+
+  private price(tier: BonusTier) {
+    return (this.game.buyPrice[tier] ?? 0) * this.bet;
+  }
+
   get bet() {
     return BETS[this.betIdx];
   }
@@ -203,7 +211,7 @@ export class SlotShell<B extends BonusState> {
       if (b) b.disabled = this.busy || !!this.bonus || this.betIdx === edge;
     }
     document.querySelectorAll<HTMLButtonElement>('[data-tier]').forEach((b) => {
-      const price = this.game.buyPrice[Number(b.dataset.tier) as BonusTier] * this.bet;
+      const price = this.price(Number(b.dataset.tier) as BonusTier);
       (b.querySelector('.price') ?? b.querySelector('span'))!.textContent = money(price);
       b.disabled = this.busy || !!this.bonus || this.balance < price;
       b.classList.toggle('selected', Number(b.dataset.tier) === this.buyTier);
@@ -224,8 +232,8 @@ export class SlotShell<B extends BonusState> {
     if (confirm) {
       confirm.hidden = !this.buyTier;
       if (this.buyTier) {
-        const price = this.game.buyPrice[this.buyTier] * this.bet;
-        $('buyConfirmText').textContent = `¿Comprar ${BONUS_NAMES[this.buyTier]} por ${money(price)}?`;
+        const price = this.price(this.buyTier);
+        $('buyConfirmText').textContent = `¿Comprar ${this.name(this.buyTier)} por ${money(price)}?`;
       }
     }
     const info = $('fsInfo');
@@ -233,7 +241,7 @@ export class SlotShell<B extends BonusState> {
     info.hidden = !fs;
     if (fs) {
       const extra = this.game.bonusInfo?.(fs) ?? '';
-      info.textContent = `${BONUS_NAMES[fs.tier]} · Tiradas: ${fs.left} · Ganado: ${money(fs.total * this.bet)}${extra}`;
+      info.textContent = `${this.name(fs.tier)} · Tiradas: ${fs.left} · Ganado: ${money(fs.total * this.bet)}${extra}`;
     }
   }
 
@@ -273,7 +281,7 @@ export class SlotShell<B extends BonusState> {
 
   async buy(tier: BonusTier) {
     if (this.busy || this.bonus) return;
-    const price = this.game.buyPrice[tier] * this.bet;
+    const price = this.price(tier);
     if (this.balance < price) return;
     this.busy = true;
     this.balance -= price;
@@ -292,9 +300,9 @@ export class SlotShell<B extends BonusState> {
     const w = this.overlay.w;
     const h = this.overlay.h;
     await this.overlay.banner(
-      BONUS_NAMES[tier],
+      this.name(tier),
       `${fs.left} tiradas gratis\n${this.game.bonusPitch(tier)}`,
-      tier === 3 ? theme.hot : theme.gold,
+      tier === (this.game.topTier ?? 3) ? theme.hot : theme.gold,
     );
     while (fs.left > 0 && fs.total < MAX_WIN) {
       const before = fs.left;

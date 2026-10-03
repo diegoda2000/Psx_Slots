@@ -1,13 +1,12 @@
-import { BONUS_NAMES, MAX_WIN, type BonusTier } from '../../shared/lore';
+import { MAX_WIN } from '../../shared/lore';
 import { COLS, DUELO_CHARS, ROWS, SYMBOLS, type SymbolId } from '../../shared/symbols';
 import { money } from '../../shared/text';
 import { faceUrl, fsChipUrl, symbolUrl } from './art';
-import { CHAR_REEL, DUELO, DUELO_PAYS, LINES } from './math';
+import { CHAR_REEL, DUELO, DUELO_PAYS, DUELO_TIER_NAMES, DUELO_TIERS, LINES, type DueloTier } from './math';
 
-export const PITCH: Record<BonusTier, string> = {
+export const PITCH: Record<DueloTier, string> = {
   1: 'Más wilds de personaje',
   2: 'Rodillos de la muerte: cada personaje que cae en su rodillo se expande en todos',
-  3: 'Rodillos de la muerte y los wilds expandidos se quedan FIJOS',
 };
 
 /** Dibujo del símbolo (o su nombre si aún no tiene ilustración). */
@@ -32,12 +31,11 @@ export function rulesHtml(bet: number) {
   // De más a menos premio: arriba los 4 altos, abajo los 4 bajos (como en Life and Death).
   const best = [...DUELO_PAYS].reverse();
   const chars = [...DUELO_CHARS].sort((a, b) => CHAR_REEL[a] - CHAR_REEL[b]);
-  const tiers: BonusTier[] = [1, 2, 3];
-  const what: Record<BonusTier, string> = {
+  const what: Record<DueloTier, string> = {
     1: 'Más wilds de personaje.',
     2: 'Rodillos de la muerte: el personaje que cae en su rodillo lo activa y desde entonces se expande en cualquier rodillo central.',
-    3: 'Rodillos de la muerte y, además, los rodillos expandidos se quedan fijos hasta el final del bonus.',
   };
+  const fichas: Record<DueloTier, string> = { 1: '3', 2: '4 o más' };
   const chip = fsChipUrl ? `<img class="chip" src="${fsChipUrl}" alt="FS" />` : 'FS';
   return `
   <h2>REGLAS Y PAGOS</h2>
@@ -50,7 +48,8 @@ export function rulesHtml(bet: number) {
   <p>Andy, Iberru, Majarias y Macaco son los cuatro wilds multiplicadores: sustituyen a todos los símbolos de la tabla de
   pagos y multiplican el premio de la línea en la que entran. Si una línea pasa por varios, sus multiplicadores se suman.</p>
   <p>Pueden caer en los rodillos 2 a 5 y como mucho sale uno de cada en pantalla. Cada uno tiene su rodillo: si cae en él
-  se expande a todo el rodillo, siempre que así entre en algún premio.</p>
+  y así entra en algún premio, se expande siempre a todo el rodillo. En otro rodillo hace de wild normal con su
+  multiplicador.</p>
   <div class="wild-grid">
     ${chars
       .map((c) => {
@@ -67,15 +66,15 @@ export function rulesHtml(bet: number) {
   <div class="lines-grid">${LINES.map(miniLine).join('')}</div>
 
   <h3>BONUS</h3>
-  <p>${chip} La ficha FS es el scatter, como mucho una por rodillo. Dentro del bonus, 2 fichas dan
+  <p>${chip} La ficha FS es el scatter, como mucho una por rodillo: 3 fichas abren el BONUS y 4 o más, el TOCHO.
+  Dentro del bonus, 2 fichas dan
   +${DUELO.retrigger[2]} tiradas y 3 o más, +${DUELO.retrigger[3]}.</p>
   <table>
     <tr><th>Bonus</th><th>Fichas</th><th>Tiradas</th><th>Qué tiene</th><th>Compra</th></tr>
-    ${tiers
-      .map(
-        (t) =>
-          `<tr><td>${BONUS_NAMES[t]}</td><td>${t + 2}</td><td>${DUELO.tiers[t].spins}</td><td>${what[t]}</td><td>${money(DUELO.buyPrice[t] * bet)}</td></tr>`,
-      )
+    ${DUELO_TIERS.map(
+      (t) =>
+        `<tr><td>${DUELO_TIER_NAMES[t]}</td><td>${fichas[t]}</td><td>${DUELO.tiers[t].spins}</td><td>${what[t]}</td><td>${money(DUELO.buyPrice[t] * bet)}</td></tr>`,
+    )
       .join('')}
   </table>
   <p class="small">Premio máximo: ${MAX_WIN.toLocaleString('es-ES')} veces la apuesta. RTP simulado ≈ 94%. Demo con saldo ficticio.</p>`;
