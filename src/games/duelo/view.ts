@@ -26,10 +26,10 @@ export class WildReelView extends Container {
     this.content.addChild(glow);
     const tex = bodyTexture(wild.char);
     if (tex) {
-      // Cuerpo completo ocupando casi todo el rodillo (se recortan los lados con la máscara).
+      // Cuerpo completo: ~70% del alto del rodillo para que se aprecie la complexión de cada uno.
       const sp = new Sprite(tex);
       sp.anchor.set(0.5, 1);
-      sp.scale.set((BOARD_H - 16) / tex.height);
+      sp.scale.set((BOARD_H * 0.7) / tex.height);
       sp.position.set(CELL / 2, BOARD_H - 6);
       this.content.addChild(sp);
     } else {
@@ -45,12 +45,12 @@ export class WildReelView extends Container {
     name.position.set(CELL / 2, BOARD_H - 18);
     this.content.addChild(band, w, name);
 
-    // Multiplicador sobre el pecho; solo aparece al terminar de desplegarse.
+    // Multiplicador encima de la cabeza; solo aparece al terminar de desplegarse.
     this.multTag = new Container();
     const mc = multColor(wild.mult);
     const badge = new Graphics().roundRect(-42, -26, 84, 52, 14).fill({ color: 0x000000, alpha: 0.75 }).stroke({ width: 3, color: mc });
     this.multTag.addChild(badge, label(`x${wild.mult}`, 34, mc));
-    this.multTag.position.set(CELL / 2, BOARD_H * 0.55);
+    this.multTag.position.set(CELL / 2, BOARD_H * 0.15);
     this.multTag.visible = false;
     this.addChild(this.multTag);
     this.redraw();
