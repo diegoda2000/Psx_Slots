@@ -5,7 +5,8 @@ import { defaultRng } from '../../shared/rng';
 import { DUELO_CHARS, SYMBOLS, wildOf, type CharWild } from '../../shared/symbols';
 import { money, theme } from '../../shared/text';
 import { wait } from '../../shared/tween';
-import { BOARD_H, BOARD_W } from '../../shared/view/Board';
+import { COLS } from '../../shared/symbols';
+import { BOARD_H } from '../../shared/view/Board';
 import { Overlay } from '../../shared/view/Overlay';
 import { registerSymbolVisual } from '../../shared/view/SymbolVisual';
 import { fsChipUrl, loadDueloArt, symbolTexture } from './art';
@@ -14,7 +15,7 @@ import { ImageSymbolVisual } from './ImageSymbolVisual';
 import { baseSpin, bonusSpin, createBonus, DUELO, DUELO_PAYS, type DueloBonus } from './math';
 import { FONT, RED, YELLOW } from './palette';
 import { PITCH, rulesHtml } from './rules';
-import { DueloBoard } from './view';
+import { CELL_W, DueloBoard } from './view';
 
 /** Tablero de reposo: una tirada base con los wilds cambiados por símbolos normales. */
 const idleGrid = () =>
@@ -22,7 +23,7 @@ const idleGrid = () =>
 
 /** Hueco extra arriba para los nombres de los personajes sobre sus rodillos. */
 const TOP = 26;
-const W = BOARD_W + PAD * 2;
+const W = COLS * CELL_W + PAD * 2;
 const H = BOARD_H + PAD * 2 + TOP;
 
 async function main() {

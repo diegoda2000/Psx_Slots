@@ -20,21 +20,30 @@ export interface BoardTheme {
 export class Board extends Container {
   cells: (SymbolView | null)[][] = [];
   protected layer = new Container();
+  /** Ancho total del tablero (las columnas pueden ser más anchas que altas). */
+  readonly bw: number;
 
-  constructor(theme: BoardTheme) {
+  /** cellW: ancho de cada rodillo (por defecto igual que el alto de la celda). */
+  constructor(theme: BoardTheme, readonly cellW = CELL) {
     super();
+    this.bw = COLS * cellW;
     const bg = new Graphics();
-    bg.roundRect(-14, -14, BOARD_W + 28, BOARD_H + 28, 24).fill(theme.frame).stroke({ width: 4, color: theme.stroke });
-    for (let c = 0; c < COLS; c++) bg.rect(c * CELL + 2, 2, CELL - 4, BOARD_H - 4).fill({ color: c % 2 ? theme.colB : theme.colA });
+    bg.roundRect(-14, -14, this.bw + 28, BOARD_H + 28, 24).fill(theme.frame).stroke({ width: 4, color: theme.stroke });
+    for (let c = 0; c < COLS; c++) bg.rect(c * cellW + 2, 2, cellW - 4, BOARD_H - 4).fill({ color: c % 2 ? theme.colB : theme.colA });
     this.addChild(bg);
-    const mask = new Graphics().rect(0, 0, BOARD_W, BOARD_H).fill(0xffffff);
+    const mask = new Graphics().rect(0, 0, this.bw, BOARD_H).fill(0xffffff);
     this.addChild(mask, this.layer);
     this.layer.mask = mask;
     for (let c = 0; c < COLS; c++) this.cells.push(Array<SymbolView | null>(ROWS).fill(null));
   }
 
+  /** Centro horizontal de un rodillo. */
+  colX(col: number) {
+    return col * this.cellW + this.cellW / 2;
+  }
+
   protected place(s: SymbolView, col: number, row: number) {
-    s.position.set(cellX(col), cellY(row));
+    s.position.set(this.colX(col), cellY(row));
     this.layer.addChild(s);
     this.cells[col][row] = s;
   }

@@ -2,8 +2,13 @@ import { Container, Graphics, Sprite, Text } from 'pixi.js';
 import { SYMBOLS, type DueloChar } from '../../shared/symbols';
 import { label, multColor } from '../../shared/text';
 import { backOut, easeOut, tween } from '../../shared/tween';
-import { Board, BOARD_H, BOARD_W, cellX, cellY } from '../../shared/view/Board';
+import { Board, BOARD_H, cellY } from '../../shared/view/Board';
 import { CELL } from '../../shared/view/CodeSymbolVisual';
+
+/** Rodillos de Duelo un 18% más anchos que altos, para que quepan los personajes desplegados. */
+export const CELL_W = 118;
+/** Lo que puede salirse el personaje desplegado por cada lado de su rodillo. */
+const OVERFLOW = 50;
 import { bodyTexture } from './art';
 import { LINES, REEL_CHAR, type WildReel } from './math';
 import { GOLD, INK, REEL_A, REEL_B, STICKER, YELLOW } from './palette';
@@ -13,6 +18,11 @@ export class WildReelView extends Container {
   private frame = new Graphics();
   private clip = new Graphics();
   private content = new Container();
+  /** El cuerpo va aparte, con una máscara más ancha que el rodillo: puede salirse un poco por los lados. */
+  private figure = new Container();
+  private figClip = new Graphics();
+  private labels = new Container();
+  private labelClip = new Graphics();
   private multTag: Container;
   private top = 0;
   private bottom = BOARD_H;
@@ -20,12 +30,14 @@ export class WildReelView extends Container {
   constructor(readonly wild: WildReel) {
     super();
     const color = SYMBOLS[wild.char].color;
-    this.addChild(this.frame, this.content, this.clip);
+    this.addChild(this.frame, this.content, this.clip, this.figure, this.figClip, this.labels, this.labelClip);
     this.content.mask = this.clip;
+    this.figure.mask = this.figClip;
+    this.labels.mask = this.labelClip;
 
     // Foco de luz detrás del personaje, del color de su ficha.
     const glow = new Graphics();
-    for (let i = 0; i < 6; i++) glow.ellipse(CELL / 2, BOARD_H * 0.62, 30 + i * 14, 90 + i * 40).fill({ color, alpha: 0.07 });
+    for (let i = 0; i < 6; i++) glow.ellipse(CELL_W / 2, BOARD_H * 0.62, 30 + i * 14, 90 + i * 40).fill({ color, alpha: 0.07 });
     this.content.addChild(glow);
     const tex = bodyTexture(wild.char);
     if (tex) {
@@ -33,28 +45,28 @@ export class WildReelView extends Container {
       const sp = new Sprite(tex);
       sp.anchor.set(0.5, 1);
       sp.scale.set((BOARD_H * 0.7) / tex.height);
-      sp.position.set(CELL / 2, BOARD_H - 6);
-      this.content.addChild(sp);
+      sp.position.set(CELL_W / 2, BOARD_H - 6);
+      this.figure.addChild(sp);
     } else {
       const initial = label(SYMBOLS[wild.char].name[0], 64, color);
-      initial.position.set(CELL / 2, BOARD_H / 2);
-      this.content.addChild(initial);
+      initial.position.set(CELL_W / 2, BOARD_H / 2);
+      this.figure.addChild(initial);
     }
     // Rótulo abajo, sobre las piernas.
-    const band = new Graphics().rect(4, BOARD_H - 58, CELL - 8, 54).fill({ color: INK, alpha: 0.7 });
-    const ribbon = new Graphics().roundRect(10, BOARD_H - 54, CELL - 20, 24, 6).fill(YELLOW).stroke({ width: 3, color: INK });
+    const band = new Graphics().rect(4, BOARD_H - 58, CELL_W - 8, 54).fill({ color: INK, alpha: 0.7 });
+    const ribbon = new Graphics().roundRect(10, BOARD_H - 54, CELL_W - 20, 24, 6).fill(YELLOW).stroke({ width: 3, color: INK });
     const w = label(wild.sticky ? 'FIJO' : 'WILD', 18, INK, { stroke: { color: INK, width: 0 } });
-    w.position.set(CELL / 2, BOARD_H - 41);
+    w.position.set(CELL_W / 2, BOARD_H - 41);
     const name = label(SYMBOLS[wild.char].name.toUpperCase(), 14, color);
-    name.position.set(CELL / 2, BOARD_H - 16);
-    this.content.addChild(band, ribbon, w, name);
+    name.position.set(CELL_W / 2, BOARD_H - 16);
+    this.labels.addChild(band, ribbon, w, name);
 
     // Multiplicador encima de la cabeza; solo aparece al terminar de desplegarse.
     this.multTag = new Container();
     const mc = multColor(wild.mult);
     const badge = new Graphics().roundRect(-42, -26, 84, 52, 14).fill(INK).stroke({ width: 4, color: mc });
     this.multTag.addChild(badge, label(`x${wild.mult}`, 36, mc));
-    this.multTag.position.set(CELL / 2, BOARD_H * 0.15);
+    this.multTag.position.set(CELL_W / 2, BOARD_H * 0.15);
     this.multTag.visible = false;
     this.addChild(this.multTag);
     this.redraw();
@@ -65,10 +77,14 @@ export class WildReelView extends Container {
     const color = SYMBOLS[this.wild.char].color;
     const h = this.bottom - this.top;
     this.frame.clear();
-    this.frame.roundRect(3, this.top + 3, CELL - 6, h - 6, 14).fill(INK).stroke({ width: 4, color: STICKER });
-    this.frame.roundRect(8, this.top + 8, CELL - 16, h - 16, 10).stroke({ width: 3, color });
+    this.frame.roundRect(3, this.top + 3, CELL_W - 6, h - 6, 14).fill(INK).stroke({ width: 4, color: STICKER });
+    this.frame.roundRect(8, this.top + 8, CELL_W - 16, h - 16, 10).stroke({ width: 3, color });
     this.clip.clear();
-    this.clip.roundRect(10, this.top + 10, CELL - 20, h - 20, 9).fill(0xffffff);
+    this.clip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
+    this.figClip.clear();
+    this.figClip.rect(-OVERFLOW, this.top + 10, CELL_W + OVERFLOW * 2, h - 20).fill(0xffffff);
+    this.labelClip.clear();
+    this.labelClip.roundRect(10, this.top + 10, CELL_W - 20, h - 20, 9).fill(0xffffff);
   }
 
   /** Despliegue desde la celda donde cayó: el cuerpo va apareciendo según se abre la columna. */
@@ -87,8 +103,8 @@ export class WildReelView extends Container {
 
   async pulse() {
     for (let i = 0; i < 2; i++) {
-      await tween(this.content, { alpha: 0.6 }, 120);
-      await tween(this.content, { alpha: 1 }, 120);
+      await tween(this, { alpha: 0.75 }, 120);
+      await tween(this, { alpha: 1 }, 120);
     }
   }
 }
@@ -100,12 +116,12 @@ export class DueloBoard extends Board {
   reels: WildReelView[] = [];
 
   constructor() {
-    super({ frame: INK, stroke: GOLD, colA: REEL_A, colB: REEL_B });
+    super({ frame: INK, stroke: GOLD, colA: REEL_A, colB: REEL_B }, CELL_W);
     // Borde de pegatina recortada, como el de las ilustraciones.
     const sticker = new Graphics()
-      .roundRect(-24, -24, BOARD_W + 48, BOARD_H + 48, 32)
+      .roundRect(-24, -24, this.bw + 48, BOARD_H + 48, 32)
       .fill(INK)
-      .roundRect(-20, -20, BOARD_W + 40, BOARD_H + 40, 28)
+      .roundRect(-20, -20, this.bw + 40, BOARD_H + 40, 28)
       .fill(STICKER);
     this.addChildAt(sticker, 0);
     this.addChild(this.reelLayer, this.lineLayer);
@@ -113,7 +129,7 @@ export class DueloBoard extends Board {
     REEL_CHAR.forEach((ch, col) => {
       if (!ch) return;
       const t = label(SYMBOLS[ch].name.toUpperCase(), 15, SYMBOLS[ch].color);
-      t.position.set(cellX(col), -42);
+      t.position.set(this.colX(col), -42);
       this.addChild(t);
       this.headers.set(col, t);
     });
@@ -144,7 +160,7 @@ export class DueloBoard extends Board {
     const existing = this.reels.find((v) => v.wild.col === w.col);
     if (existing) return existing;
     const v = new WildReelView(w);
-    v.x = w.col * CELL;
+    v.x = w.col * CELL_W;
     this.reelLayer.addChild(v);
     this.reels.push(v);
     for (const s of this.cells[w.col]) s?.destroy({ children: true });
@@ -163,8 +179,8 @@ export class DueloBoard extends Board {
         [10, INK],
         [5, YELLOW],
       ] as const) {
-        g.moveTo(cellX(0), cellY(path[0]));
-        path.forEach((r, c) => g.lineTo(cellX(c), cellY(r)));
+        g.moveTo(this.colX(0), cellY(path[0]));
+        path.forEach((r, c) => g.lineTo(this.colX(c), cellY(r)));
         g.stroke({ width, color, cap: 'round', join: 'round' });
       }
     });
