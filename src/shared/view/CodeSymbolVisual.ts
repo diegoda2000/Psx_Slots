@@ -56,34 +56,9 @@ export class CodeSymbolVisual implements SymbolVisual {
         break;
       }
       case 'item': {
-        // Altos provisionales de Duelo: objetos de PlayStation.
-        const c = info.color;
-        g.roundRect(h, h, S, S, 16).fill(0x22263a).stroke({ width: 4, color: c });
-        if (this.sym === 'DISCO') {
-          g.circle(0, -8, 27).fill(0xd8dde8).stroke({ width: 2, color: 0x7d86a0 });
-          g.circle(0, -8, 22).fill({ color: 0x9a7dff, alpha: 0.35 });
-          g.circle(0, -8, 7).fill(0x22263a);
-        }
-        if (this.sym === 'MEMO') {
-          g.poly([-18, -36, 12, -36, 20, -28, 20, 18, -18, 18]).fill(0x5b6fd8).stroke({ width: 2, color: 0xdfe4ff });
-          g.rect(-12, -30, 24, 14).fill(0xdfe4ff);
-          for (let i = 0; i < 5; i++) g.rect(-14 + i * 7, 10, 4, 6).fill(0xffd23e);
-        }
-        if (this.sym === 'MANDO') {
-          g.roundRect(-34, -24, 68, 30, 14).fill(0xb0b8c8).stroke({ width: 2, color: 0x5d6578 });
-          g.roundRect(-30, -6, 18, 22, 8).fill(0xb0b8c8).stroke({ width: 2, color: 0x5d6578 });
-          g.roundRect(12, -6, 18, 22, 8).fill(0xb0b8c8).stroke({ width: 2, color: 0x5d6578 });
-          g.rect(-24, -14, 12, 4).fill(0x3a3f50).rect(-20, -18, 4, 12).fill(0x3a3f50);
-          g.circle(16, -16, 3).fill(0x3ee0a0).circle(23, -10, 3).fill(0xff5868).circle(16, -4, 3).fill(0x6aa8ff).circle(9, -10, 3).fill(0xff7ad9);
-        }
-        if (this.sym === 'CONSOLA') {
-          g.roundRect(-34, -30, 68, 40, 6).fill(0xd6dae3).stroke({ width: 2, color: 0x7d86a0 });
-          g.circle(8, -12, 13).fill(0xc2c7d2).stroke({ width: 2, color: 0x7d86a0 });
-          g.rect(-28, 2, 12, 4).fill(0x6aa8ff).rect(-26, -24, 14, 4).fill(0x3ee0a0);
-        }
-        const t = label(this.sym === 'MEMO' ? 'MEMORY' : info.name.toUpperCase(), 14, 0xffffff);
-        t.y = 32;
-        this.art.addChild(t);
+        // Símbolo de Duelo sin ilustración todavía: solo el nombre.
+        g.roundRect(h + 6, h + 6, S - 12, S - 12, 18).fill(0x15141a).stroke({ width: 3, color: info.color, alpha: 0.7 });
+        this.art.addChild(label(info.name.toUpperCase(), 13, info.color, { wordWrap: true, wordWrapWidth: S - 20 }));
         break;
       }
       case 'cwild': {

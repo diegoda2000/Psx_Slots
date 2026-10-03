@@ -2,7 +2,7 @@
 export const BIG_WIN_PHRASES = [
   '¡APAGA LA PUTA RADIO!',
   '¡IBERRU GORDOFÓBICO!',
-  '¡MAJARIA ES DICTADOR!',
+  '¡MAJARIAS DICTADOR!',
   '¡EL SACARINO!',
 ];
 

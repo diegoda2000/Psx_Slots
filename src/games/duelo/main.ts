@@ -1,32 +1,45 @@
-import '../../shared/ui/style.css';
+import './style.css';
 import { createStage, PAD, SlotShell } from '../../shared/game/shell';
 import type { SlotGame } from '../../shared/game/types';
 import { defaultRng } from '../../shared/rng';
 import { PREMIUMS, SYMBOLS, wildOf, type CharWild } from '../../shared/symbols';
-import { money } from '../../shared/text';
+import { money, theme } from '../../shared/text';
 import { wait } from '../../shared/tween';
 import { BOARD_H, BOARD_W } from '../../shared/view/Board';
 import { Overlay } from '../../shared/view/Overlay';
 import { registerSymbolVisual } from '../../shared/view/SymbolVisual';
-import { loadCharacterArt } from './art';
+import { fsChipUrl, loadDueloArt, symbolTexture } from './art';
 import { CharacterWildVisual } from './CharacterWildVisual';
-import { baseSpin, bonusSpin, createBonus, DUELO, type DueloBonus } from './math';
+import { ImageSymbolVisual } from './ImageSymbolVisual';
+import { baseSpin, bonusSpin, createBonus, DUELO, DUELO_PAYS, type DueloBonus } from './math';
+import { FONT, RED, YELLOW } from './palette';
 import { PITCH, rulesHtml } from './rules';
 import { DueloBoard } from './view';
 
 /** Tablero de reposo: una tirada base con los wilds cambiados por símbolos normales. */
 const idleGrid = () =>
-  baseSpin(defaultRng).grid.map((col) => col.map((c) => (c.sym.startsWith('W_') ? { sym: 'TRI' as const } : c)));
+  baseSpin(defaultRng).grid.map((col) => col.map((c) => (c.sym.startsWith('W_') ? { sym: 'RATA' as const } : c)));
 
+/** Hueco extra arriba para los nombres de los personajes sobre sus rodillos. */
+const TOP = 26;
 const W = BOARD_W + PAD * 2;
-const H = BOARD_H + PAD * 2;
+const H = BOARD_H + PAD * 2 + TOP;
 
 async function main() {
-  const { root } = await createStage(W, H);
-  await loadCharacterArt();
+  Object.assign(theme, { font: FONT, gold: YELLOW, hot: RED, good: YELLOW });
+  const { root } = await createStage(W, H, '40px "Luckiest Guy"');
+  await loadDueloArt();
   for (const p of PREMIUMS) registerSymbolVisual(wildOf(p), (sym, mult) => new CharacterWildVisual(sym as CharWild, mult));
+  for (const s of [...DUELO_PAYS, 'BONUS' as const]) {
+    const tex = symbolTexture(s);
+    if (tex) registerSymbolVisual(s, () => new ImageSymbolVisual(tex, s === 'BONUS' ? 0.96 : 1));
+  }
+  document.querySelectorAll<HTMLImageElement>('img[data-fs]').forEach((img) => {
+    if (fsChipUrl) img.src = fsChipUrl;
+    else img.hidden = true;
+  });
   const board = new DueloBoard();
-  board.position.set(PAD, PAD);
+  board.position.set(PAD, PAD + TOP);
   const overlay = new Overlay(W, H);
   root.addChild(board, overlay);
 

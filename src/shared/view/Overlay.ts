@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js';
-import { label } from '../text';
+import { label, theme } from '../text';
 import { backOut, tween, wait } from '../tween';
 
 /** Capa de pantallas encima del tablero: banners, big wins, textos flotantes. */
@@ -21,7 +21,7 @@ export class Overlay extends Container {
     this.alpha = 1;
   }
 
-  async banner(title: string, sub: string, color = 0xffd23e, ms = 2600) {
+  async banner(title: string, sub: string, color = theme.gold, ms = 2600) {
     const bg = this.dim(0.8);
     bg.eventMode = 'static';
     const t = label(title, 64, color);
@@ -46,11 +46,11 @@ export class Overlay extends Container {
 
   async bigWin(title: string, amount: number, phrase: string, fmt: (v: number) => string) {
     const bg = this.dim(0.75);
-    const t = label(title, 58, 0xffd23e);
+    const t = label(title, 58, theme.gold);
     t.position.set(this.w / 2, this.h / 2 - 70);
     const n = label(fmt(0), 54, 0xffffff);
     n.position.set(this.w / 2, this.h / 2 + 10);
-    const p = label(phrase, 26, 0xff3df2, { wordWrap: true, wordWrapWidth: this.w - 60 });
+    const p = label(phrase, 26, theme.hot, { wordWrap: true, wordWrapWidth: this.w - 60 });
     p.position.set(this.w / 2, this.h / 2 + 90);
     p.alpha = 0;
     t.scale.set(0);

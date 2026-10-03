@@ -5,39 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Duelo PSX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@500;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Barlow+Condensed:wght@500;600;700;800&display=swap" />
 </head>
 <body>
-  <div class="app duelo">
-    <header class="top">
+  <div class="game">
+    <header class="title">
       <h1 class="logo">DUELO<span>PSX</span></h1>
-      <span class="tag">6x5 · 19 líneas · wilds de personaje</span>
+      <div id="fsInfo" class="fs-info" role="status" hidden></div>
     </header>
-    <div id="fsInfo" class="fs-info" hidden></div>
-    <main id="stage" class="stage"></main>
-    <section class="controls">
-      <div class="stat"><span>SALDO</span><b id="balance">-</b></div>
-      <div class="stat"><span>PREMIO</span><b id="win">0.00 €</b></div>
-      <div class="bet">
-        <button id="betDown" aria-label="Bajar apuesta">−</button>
+
+    <main class="play">
+      <div id="stage" class="stage"></div>
+      <button id="buyOpen" class="buy-open" aria-haspopup="dialog">
+        <img data-fs alt="" />
+        <span>COMPRAR <br />BONUS</span>
+      </button>
+    </main>
+
+    <footer class="hud">
+      <div class="hud-stats">
+        <button id="rulesBtn" class="icon" aria-label="Menú: reglas y pagos">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <div class="stat"><span>SALDO</span><b id="balance">-</b></div>
         <div class="stat"><span>APUESTA</span><b id="bet">-</b></div>
-        <button id="betUp" aria-label="Subir apuesta">+</button>
       </div>
-      <button id="spin" class="spin">GIRAR</button>
-      <button id="turbo" class="turbo">TURBO</button>
-    </section>
-    <section class="buy">
-      <span class="buy-label">COMPRAR BONUS</span>
-      <button data-tier="1">BONUS<small>3 scatters</small><span>-</span></button>
-      <button data-tier="2">SEMITOCHO<small>4 scatters</small><span>-</span></button>
-      <button data-tier="3">TOCHO<small>5 scatters</small><span>-</span></button>
-    </section>
-    <footer class="foot">
-      <button id="rulesBtn" class="link">Reglas y pagos</button>
-      <span>Demo con saldo ficticio · arte provisional · espacio = girar</span>
+      <div class="hud-win">
+        <span>PREMIO</span><b id="win">0.00 €</b>
+      </div>
+      <div class="hud-controls">
+        <button id="turbo" class="icon" aria-label="Turbo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" class="fill" /></svg>
+        </button>
+        <button id="betDown" class="round" aria-label="Bajar apuesta">−</button>
+        <button id="spin" class="spin" aria-label="Girar">
+          <svg class="i-spin" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 12a8 8 0 0 1-13.7 5.7" /><path d="M4 12a8 8 0 0 1 13.7-5.7" />
+            <path d="M18 2v5h-5" /><path d="M6 22v-5h5" />
+          </svg>
+          <svg class="i-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" class="fill" /></svg>
+        </button>
+        <button id="betUp" class="round" aria-label="Subir apuesta">+</button>
+        <button id="auto" class="icon" aria-label="Autoplay">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7" /><path d="M20 4v5h-5" /><path d="M10 9v6l5-3z" class="fill" /></svg>
+        </button>
+      </div>
     </footer>
   </div>
-  <dialog id="rules"><div id="rulesBody"></div><button id="rulesClose" class="spin small">CERRAR</button></dialog>
+
+  <dialog id="buyPanel" class="panel buy-panel" aria-labelledby="buyTitle">
+    <header>
+      <h2 id="buyTitle">COMPRAR BONUS</h2>
+      <button id="buyClose" class="icon" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </header>
+    <div class="cards">
+      <button class="card" data-tier="1">
+        <span class="chips"><img data-fs alt="" /><img data-fs alt="" /><img data-fs alt="" /></span>
+        <strong>BONUS</strong>
+        <small>10 tiradas · más wilds</small>
+        <span class="price">-</span>
+      </button>
+      <button class="card" data-tier="2">
+        <span class="chips"><img data-fs alt="" /><img data-fs alt="" /><img data-fs alt="" /><img data-fs alt="" /></span>
+        <strong>SEMITOCHO</strong>
+        <small>10 tiradas · rodillos de la muerte</small>
+        <span class="price">-</span>
+      </button>
+      <button class="card tocho" data-tier="3">
+        <span class="chips"><img data-fs alt="" /><img data-fs alt="" /><img data-fs alt="" /><img data-fs alt="" /><img data-fs alt="" /></span>
+        <strong>TOCHO</strong>
+        <small>10 tiradas · wilds fijos</small>
+        <span class="price">-</span>
+      </button>
+    </div>
+    <div id="buyConfirm" class="confirm" hidden>
+      <p id="buyConfirmText"></p>
+      <div class="confirm-actions">
+        <button id="buyNo" class="btn ghost">CANCELAR</button>
+        <button id="buyYes" class="btn">COMPRAR</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="rules" class="panel rules" aria-label="Reglas y pagos">
+    <div id="rulesBody"></div>
+    <button id="rulesClose" class="btn">CERRAR</button>
+  </dialog>
   <div id="toast" class="toast" role="status"></div>
   <script type="module" src="../src/games/duelo/main.ts"></script>
 </body>

@@ -1,0 +1,238 @@
+/*
+ * Duelo PSX. Estética sacada de las ilustraciones: tinta negra, pegatina blanco hueso,
+ * amarillo "OMG BRO", oro de medallas y rojo de la banda del dictador. Interfaz al estilo Hacksaw:
+ * barra inferior fina y oscura, botón de girar redondo y compra de bonus en un lateral.
+ */
+:root {
+  --ink: #0c0b0e;
+  --ink-2: #17161c;
+  --line: #2c2a33;
+  --sticker: #f4ecdc;
+  --muted: #a8a196;
+  --yellow: #ffd60a;
+  --gold: #f2b81c;
+  --red: #d8342b;
+  --display: 'Luckiest Guy', 'Arial Black', Impact, sans-serif;
+  --ui: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  /* alto que no es tablero (cabecera + barra inferior), para encajar el canvas en pantalla */
+  --reserve: 176px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  color: var(--sticker);
+  font: 500 16px var(--ui);
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(ellipse 60% 50% at 50% 42%, rgba(216, 52, 43, 0.22), transparent 70%),
+    radial-gradient(circle, rgba(244, 236, 220, 0.07) 1.2px, transparent 1.7px);
+  background-size: auto, 16px 16px;
+  overflow: hidden;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+svg .fill { fill: currentColor; stroke: none; }
+
+.game { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+
+/* Cabecera: logo como pegatina; durante el bonus se cambia por el contador */
+.title { display: flex; justify-content: center; align-items: center; min-height: 64px; padding: 8px 16px 0; }
+.logo {
+  margin: 0;
+  font: 400 clamp(30px, 5.5vw, 46px) / 1 var(--display);
+  letter-spacing: 1px;
+  color: var(--yellow);
+  -webkit-text-stroke: 7px var(--ink);
+  paint-order: stroke fill;
+  filter: drop-shadow(2px 0 0 var(--sticker)) drop-shadow(-2px 0 0 var(--sticker)) drop-shadow(0 2px 0 var(--sticker))
+    drop-shadow(0 -2px 0 var(--sticker)) drop-shadow(0 5px 0 var(--ink));
+}
+.logo span { display: inline-block; margin-left: 8px; font-size: 0.55em; color: var(--red); transform: rotate(-8deg) translateY(-4px); }
+.title:has(.fs-info:not([hidden])) .logo { display: none; }
+
+.fs-info {
+  font: 400 clamp(16px, 2.6vw, 22px) / 1.2 var(--display);
+  color: var(--ink);
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 0 0 3px var(--sticker), 0 5px 0 3px var(--ink);
+  padding: 8px 16px 5px;
+  text-align: center;
+  max-width: calc(100vw - 32px);
+}
+
+/* Zona de juego: compra de bonus a la izquierda del tablero */
+.play {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 820px) minmax(0, 1fr);
+  grid-template-areas: 'buy stage .';
+  align-items: center;
+  min-height: 0;
+  padding-inline: 16px;
+}
+.stage { grid-area: stage; display: flex; justify-content: center; min-width: 0; }
+.stage canvas {
+  display: block;
+  width: min(100%, calc((100dvh - var(--reserve)) * 1.122)) !important;
+  height: auto !important;
+}
+
+.buy-open {
+  grid-area: buy;
+  justify-self: end;
+  margin-right: 20px;
+  width: 128px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 10px 12px;
+  background: var(--ink);
+  border: 3px solid var(--sticker);
+  border-radius: 20px;
+  box-shadow: 0 0 0 3px var(--ink), 0 8px 0 3px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s;
+}
+.buy-open img { width: 68px; height: 68px; object-fit: contain; }
+.buy-open span { font: 400 19px / 1.05 var(--display); color: var(--yellow); text-align: center; }
+.buy-open:hover:not(:disabled) { transform: translateY(-2px) rotate(-2deg); }
+.buy-open:disabled { opacity: 0.4; cursor: default; }
+
+/* Barra inferior estilo Hacksaw */
+.hud {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas: 'stats win controls';
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.7));
+  border-top: 1px solid rgba(244, 236, 220, 0.1);
+}
+.hud-stats { grid-area: stats; display: flex; align-items: center; gap: 18px; min-width: 0; }
+.stat { display: flex; flex-direction: column; min-width: 0; }
+.stat span, .hud-win span { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: var(--muted); }
+.stat b { font: 700 20px var(--ui); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hud-win { grid-area: win; display: flex; flex-direction: column; align-items: center; }
+.hud-win b { font: 400 28px / 1.1 var(--display); color: var(--yellow); font-variant-numeric: tabular-nums; -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; }
+.hud-controls { grid-area: controls; justify-self: end; display: flex; align-items: center; gap: 10px; }
+
+.icon {
+  width: 42px; height: 42px; display: grid; place-items: center;
+  background: none; border: 2px solid transparent; border-radius: 50%; color: var(--sticker);
+}
+.icon:hover { border-color: rgba(244, 236, 220, 0.25); }
+.icon.on { color: var(--yellow); border-color: var(--yellow); }
+.round {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: transparent; border: 2px solid var(--sticker);
+  font: 700 24px / 1 var(--ui);
+}
+.round:hover { background: rgba(244, 236, 220, 0.1); }
+.spin {
+  position: relative;
+  width: 78px; height: 78px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--sticker); color: var(--ink);
+  border: 4px solid var(--ink);
+  box-shadow: 0 0 0 3px var(--yellow), 0 6px 0 3px #000, 0 0 26px rgba(255, 214, 10, 0.35);
+}
+.spin svg { width: 38px; height: 38px; stroke-width: 2.8; transition: transform 0.35s; }
+.spin:hover:not(:disabled) .i-spin { transform: rotate(180deg); }
+.spin:active:not(:disabled) { transform: translateY(2px); }
+.spin:disabled { background: #6d685f; box-shadow: 0 0 0 3px #4a4740, 0 6px 0 3px #000; cursor: default; }
+.spin .i-stop { display: none; }
+.spin.auto { background: var(--red); color: var(--sticker); }
+.spin.auto .i-spin { display: none; }
+.spin.auto .i-stop { display: block; }
+
+/* Paneles (compra de bonus y reglas) */
+.panel {
+  width: min(760px, calc(100vw - 32px));
+  max-height: 88vh;
+  overflow: auto;
+  padding: 20px;
+  background: var(--ink-2);
+  color: var(--sticker);
+  border: 3px solid var(--sticker);
+  border-radius: 22px;
+  box-shadow: 0 0 0 4px var(--ink);
+}
+.panel::backdrop { background: rgba(0, 0, 0, 0.75); }
+.panel header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+.panel h2 { margin: 0; font: 400 30px / 1 var(--display); color: var(--yellow); -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 12px 16px;
+  background: var(--ink); border: 3px solid var(--line); border-radius: 16px; text-align: center;
+}
+.card:hover:not(:disabled), .card.selected { border-color: var(--yellow); }
+.card:disabled { opacity: 0.4; cursor: default; }
+.card .chips { display: flex; height: 32px; }
+.card .chips img { width: 32px; height: 32px; margin-left: -10px; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.6)); }
+.card .chips img:first-child { margin-left: 0; }
+.card strong { font: 400 26px / 1.1 var(--display); }
+.card.tocho strong { color: var(--red); -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; }
+.card small { font-size: 15px; color: var(--muted); }
+.card .price { font: 400 24px var(--display); color: var(--yellow); font-variant-numeric: tabular-nums; }
+.confirm { margin-top: 16px; padding: 16px; border-radius: 14px; background: var(--ink); text-align: center; }
+.confirm p { margin: 0 0 12px; font: 700 22px var(--ui); }
+.confirm-actions { display: flex; justify-content: center; gap: 12px; }
+.btn {
+  font: 400 19px / 1 var(--display); padding: 12px 22px 9px;
+  background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 12px;
+  box-shadow: 0 4px 0 #000;
+}
+.btn.ghost { background: transparent; color: var(--sticker); border-color: var(--sticker); }
+.btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #000; }
+
+.rules { font-size: 16px; }
+.rules h3 { margin: 16px 0 6px; font: 400 22px var(--display); color: var(--yellow); }
+.rules p { margin: 6px 0; line-height: 1.45; max-width: 68ch; }
+.rules table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.rules th, .rules td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--line); }
+.rules th { color: var(--muted); font-weight: 600; letter-spacing: 0.06em; }
+.rules .small { font-size: 14px; color: var(--muted); }
+.rules .btn { margin-top: 14px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 120px; transform: translate(-50%, 20px); opacity: 0;
+  max-width: calc(100vw - 32px); padding: 10px 16px 7px;
+  font: 400 18px var(--display); color: var(--ink); background: var(--yellow);
+  border: 3px solid var(--ink); border-radius: 12px; transition: all 0.25s; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Pantallas medianas y móviles: compra de bonus debajo del tablero y barra en dos filas */
+@media (max-width: 1240px) {
+  .play { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'stage' 'buy'; align-content: center; gap: 12px; }
+  .buy-open { justify-self: center; margin: 0; width: auto; flex-direction: row; padding: 8px 18px 8px 10px; border-radius: 999px; }
+  .buy-open img { width: 38px; height: 38px; }
+  .buy-open br { display: none; }
+  :root { --reserve: 250px; }
+}
+@media (max-width: 720px) {
+  .hud { grid-template-columns: 1fr auto; grid-template-areas: 'stats win' 'controls controls'; row-gap: 8px; }
+  .hud-controls { justify-self: center; gap: 12px; }
+  .hud-stats { gap: 12px; }
+  .stat b { font-size: 17px; }
+  .hud-win b { font-size: 24px; }
+  .cards { grid-template-columns: 1fr; gap: 8px; }
+  .card { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: 'chips name price' 'chips desc price'; text-align: left; column-gap: 12px; row-gap: 0; padding: 10px 14px; }
+  .card .chips { grid-area: chips; align-self: center; }
+  .card strong { grid-area: name; font-size: 22px; }
+  .card small { grid-area: desc; font-size: 14px; }
+  .card .price { grid-area: price; align-self: center; font-size: 20px; }
+  .card .chips img { width: 24px; height: 24px; margin-left: -14px; }
+  .panel h2 { font-size: 24px; }
+  .play { padding-inline: 8px; }
+  :root { --reserve: 330px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin svg, .buy-open, .toast { transition: none; }
+}

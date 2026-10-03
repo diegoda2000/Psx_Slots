@@ -11,8 +11,9 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
    multiplicadores**: como mucho uno de cada en pantalla. Pueden caer en cualquier rodillo del 2 al 5; cada uno tiene su
    rodillo (Macaco 2, Elena 3, Iberru 4, Andy 5) y su rango (x2-4, x5-9, x10-25, x30-200). Si cae en su rodillo se
    expande a toda la columna (si así entra en premio); en otro rodillo es un wild normal con su multiplicador. Los
-   multiplicadores de una línea se suman. Pagan los botones PlayStation (bajos) y, de momento, objetos de PlayStation
-   como altos provisionales (disco, memory card, mando, consola).
+   multiplicadores de una línea se suman. Símbolos de pago (ilustraciones del usuario), de más a menos premio:
+   1 Andy the Hutt, 2 Majarias dictador, 3 (por decidir, provisional SIM3), 4 Ternasco, 5 Radio, 6 OMG Bro, 7 Remos,
+   8 Rata. Altos = 1-4, bajos = 5-8. Scatter = ficha FS.
    (Antes era estilo "Wanted" con duelos VS; el usuario lo cambió. Ser fiel a Life and Death.)
 2. **Olimpo** (`olimpo/`, `src/games/olimpo/`): inspirada en "Gates of Olympus" (Pragmatic). Paga con 8 o más iguales en
    cualquier posición, con cascadas y orbes multiplicadores.
@@ -24,10 +25,10 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 - Olimpo: el multiplicador se va acumulando.
 
 ## Lore
-- Frases míticas para ganancias grandes: "¡Apaga la puta radio!", "¡Iberru gordofóbico!", "¡Majaria es dictador!".
+- Frases míticas para ganancias grandes: "¡Apaga la puta radio!", "¡Iberru gordofóbico!", "¡Majarias dictador!" (es MAJARIAS, con S, y sin "es").
 - Personajes, de más a menos: Andy ("el sacarino"), Iberru, Elena, Macaco (hermano pequeño de Andy, "un mantenido del
   pelado"). En Olimpo son los símbolos premium; en Duelo son solo los wilds.
-- Bajos provisionales: botones de PlayStation. Los definitivos los decide el usuario.
+- Olimpo aún usa botones de PlayStation como bajos provisionales.
 - Gesto de Andy pidiendo "los bolos": el usuario ya tiene pensado cómo meterlo. **Preguntarle antes de inventarlo.**
 - Investiga el lore por tu cuenta antes de preguntar cosas que se pueden buscar.
 
@@ -38,9 +39,15 @@ Bonus en las dos: 3 scatters = bonus, 4 = "semitocho", 5 = "tocho". Los tres se 
 - `src/games/<slot>/math.ts`: matemáticas puras, **sin importar PixiJS**, para que las use el simulador.
 - `sim/rtp.ts`: simulador de RTP (`npm run sim`).
 - Arte provisional hecho con código (`src/shared/view/CodeSymbolVisual.ts`). Spine más adelante: ver `docs/SPINE.md`.
-- Ilustraciones de personajes (del usuario): originales en `art/source/`, recorte de fondo con `art/recortar.py`,
-  versión de juego en `src/games/duelo/art/<ID>.webp`. Iberru = pelo rizado, Macaco = barba, Andy = gorra AAA.
-  Elena aún no tiene ilustración (usa arte de código).
+- Ilustraciones (del usuario): originales en `art/source/`. Versión de juego: personajes en
+  `src/games/duelo/art/<ID>.webp` + retrato `<ID>-face.webp`; símbolos en `src/games/duelo/art/symbols/<ID>.webp`
+  (BONUS = ficha FS). Se cargan solos por nombre de archivo (`art.ts`); lo que falte usa arte de código.
+  Iberru = pelo rizado, Macaco = mono calvo, Andy = gorra AAA. Elena y el símbolo 3 aún no tienen ilustración.
+- El chat solo deja ~5 imágenes por mensaje y las que llegan mientras trabajo no se guardan como archivo:
+  pedir que las reenvíe en un mensaje nuevo.
+- Estética de Duelo sacada de los símbolos (`src/games/duelo/palette.ts` y `style.css`): tinta negra, pegatina blanco
+  hueso, amarillo "OMG BRO", rojo; fuentes Luckiest Guy y Barlow Condensed. Interfaz estilo Hacksaw: barra inferior,
+  botón de girar redondo, turbo, autoplay y compra de bonus en panel con confirmación. Olimpo mantiene la interfaz vieja.
 - Wild de personaje en Duelo: en la celda solo el retrato, sin multiplicador. Al desplegarse, el cuerpo completo va
   apareciendo según se abre la columna y el multiplicador sale al terminar. Si no se despliega, el multiplicador sale
   cuando entra en una línea premiada.

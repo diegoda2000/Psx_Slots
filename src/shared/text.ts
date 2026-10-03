@@ -2,11 +2,22 @@ import { Text, type TextStyleOptions } from 'pixi.js';
 
 export const DISPLAY_FONT = 'Bungee, Impact, "Arial Black", sans-serif';
 
+/** Fuente y colores de los textos del canvas. Cada slot puede cambiarlos antes de crear nada. */
+export const theme = {
+  font: DISPLAY_FONT,
+  /** Títulos (big win, bonus, tiradas extra). */
+  gold: 0xffd23e,
+  /** Lo más gordo: tocho y frase del big win. */
+  hot: 0xff3df2,
+  /** Fin del bonus. */
+  good: 0x4dff88,
+};
+
 export function label(text: string, size: number, fill = 0xffffff, extra: TextStyleOptions = {}): Text {
   const t = new Text({
     text,
     style: {
-      fontFamily: DISPLAY_FONT,
+      fontFamily: theme.font,
       fontSize: size,
       fill,
       stroke: { color: 0x000000, width: Math.max(2, size / 7), join: 'round' },
@@ -29,4 +40,4 @@ export function shade(color: number, k: number): number {
   return (r << 16) | (g << 8) | b;
 }
 
-export const money = (v: number) => `${v.toFixed(2)} €`;
+export const money = (v: number) => `${v.toFixed(2)}\u00a0€`;

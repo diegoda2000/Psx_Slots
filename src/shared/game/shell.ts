@@ -1,6 +1,6 @@
 import { Application, Container } from 'pixi.js';
 import { BIG_WIN_PHRASES, BONUS_NAMES, MAX_WIN, bigWinLabel, type BonusTier } from '../lore';
-import { money } from '../text';
+import { money, theme } from '../text';
 import { speed, wait } from '../tween';
 import { Overlay } from '../view/Overlay';
 import type { BonusState, SlotGame } from './types';
@@ -9,11 +9,13 @@ export const BETS = [0.2, 0.5, 1, 2, 5, 10, 20];
 export const PAD = 40;
 
 const $ = (id: string) => document.getElementById(id)!;
+/** Elemento opcional: solo existe en las páginas que lo usan (p. ej. el panel de compra de Duelo). */
+const $opt = (id: string) => document.getElementById(id);
 
 /** Crea la aplicación PixiJS y la mete en #stage. */
-export async function createStage(width: number, height: number) {
+export async function createStage(width: number, height: number, font = '40px Bungee') {
   try {
-    await Promise.race([document.fonts.load('40px Bungee'), wait(2500)]);
+    await Promise.race([document.fonts.load(font), wait(2500)]);
   } catch {
     /* sin fuente: seguimos con la de respaldo */
   }
@@ -41,6 +43,9 @@ export class SlotShell<B extends BonusState> {
   betIdx = 2;
   busy = false;
   bonus: B | null = null;
+  /** Autoplay activo (se para al pulsar girar, al entrar un bonus o sin saldo). */
+  auto = false;
+  private buyTier: BonusTier | null = null;
 
   constructor(private game: SlotGame<B>, private overlay: Overlay) {
     this.bind();
@@ -52,16 +57,38 @@ export class SlotShell<B extends BonusState> {
   }
 
   private bind() {
-    $('spin').onclick = () => this.spin();
+    $('spin').onclick = () => (this.auto ? this.stopAuto() : this.spin());
+    const auto = $opt('auto');
+    if (auto) auto.onclick = () => (this.auto ? this.stopAuto() : this.startAuto());
     $('betDown').onclick = () => this.changeBet(-1);
     $('betUp').onclick = () => this.changeBet(1);
     $('turbo').onclick = () => {
       speed.factor = speed.factor === 1 ? 2.5 : 1;
       $('turbo').classList.toggle('on', speed.factor > 1);
     };
+    const panel = $opt('buyPanel') as HTMLDialogElement | null;
     document.querySelectorAll<HTMLButtonElement>('[data-tier]').forEach((b) => {
-      b.onclick = () => this.buy(Number(b.dataset.tier) as BonusTier);
+      const tier = Number(b.dataset.tier) as BonusTier;
+      b.onclick = () => (panel ? this.askBuy(tier) : this.buy(tier));
     });
+    if (panel) {
+      $('buyOpen').onclick = () => {
+        this.buyTier = null;
+        this.refresh();
+        panel.showModal();
+      };
+      $('buyClose').onclick = () => panel.close();
+      $('buyNo').onclick = () => {
+        this.buyTier = null;
+        this.refresh();
+      };
+      $('buyYes').onclick = () => {
+        const t = this.buyTier;
+        panel.close();
+        this.buyTier = null;
+        if (t) this.buy(t);
+      };
+    }
     const rules = $('rules') as HTMLDialogElement;
     $('rulesBtn').onclick = () => {
       $('rulesBody').innerHTML = this.game.rulesHtml();
@@ -69,11 +96,46 @@ export class SlotShell<B extends BonusState> {
     };
     $('rulesClose').onclick = () => rules.close();
     window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' && !rules.open) {
+      if (e.code === 'Space' && !document.querySelector('dialog[open]')) {
         e.preventDefault();
         this.spin();
       }
     });
+  }
+
+  /** Pide confirmación antes de comprar (panel estilo Hacksaw). */
+  private askBuy(tier: BonusTier) {
+    this.buyTier = tier;
+    this.refresh();
+    $opt('buyConfirm')?.scrollIntoView({ block: 'nearest' });
+  }
+
+  startAuto() {
+    if (this.bonus) return;
+    this.auto = true;
+    this.refresh();
+    void this.autoLoop();
+  }
+
+  stopAuto() {
+    this.auto = false;
+    this.refresh();
+  }
+
+  private async autoLoop() {
+    while (this.auto) {
+      if (this.busy) {
+        await wait(200);
+        continue;
+      }
+      if (this.balance < this.bet) {
+        this.toast('Sin saldo: autoplay detenido');
+        this.stopAuto();
+        break;
+      }
+      await this.spin();
+      await wait(250);
+    }
   }
 
   private changeBet(d: number) {
@@ -87,10 +149,24 @@ export class SlotShell<B extends BonusState> {
     $('bet').textContent = money(this.bet);
     document.querySelectorAll<HTMLButtonElement>('[data-tier]').forEach((b) => {
       const price = this.game.buyPrice[Number(b.dataset.tier) as BonusTier] * this.bet;
-      b.querySelector('span')!.textContent = money(price);
+      (b.querySelector('.price') ?? b.querySelector('span'))!.textContent = money(price);
       b.disabled = this.busy || !!this.bonus || this.balance < price;
+      b.classList.toggle('selected', Number(b.dataset.tier) === this.buyTier);
     });
-    ($('spin') as HTMLButtonElement).disabled = this.busy;
+    const spin = $('spin') as HTMLButtonElement;
+    spin.disabled = this.busy && !this.auto;
+    spin.classList.toggle('auto', this.auto);
+    $opt('auto')?.classList.toggle('on', this.auto);
+    const buyOpen = $opt('buyOpen') as HTMLButtonElement | null;
+    if (buyOpen) buyOpen.disabled = this.busy || !!this.bonus || this.auto;
+    const confirm = $opt('buyConfirm');
+    if (confirm) {
+      confirm.hidden = !this.buyTier;
+      if (this.buyTier) {
+        const price = this.game.buyPrice[this.buyTier] * this.bet;
+        $('buyConfirmText').textContent = `¿Comprar ${BONUS_NAMES[this.buyTier]} por ${money(price)}?`;
+      }
+    }
     const info = $('fsInfo');
     const fs = this.bonus;
     info.hidden = !fs;
@@ -148,6 +224,7 @@ export class SlotShell<B extends BonusState> {
   }
 
   private async runBonus(tier: BonusTier) {
+    if (this.auto) this.stopAuto();
     const fs = this.game.createBonus(tier);
     this.bonus = fs;
     this.refresh();
@@ -156,21 +233,21 @@ export class SlotShell<B extends BonusState> {
     await this.overlay.banner(
       BONUS_NAMES[tier],
       `${fs.left} tiradas gratis\n${this.game.bonusPitch(tier)}`,
-      tier === 3 ? 0xff3df2 : 0xffd23e,
+      tier === 3 ? theme.hot : theme.gold,
     );
     while (fs.left > 0 && fs.total < MAX_WIN) {
       const before = fs.left;
       const { win } = await this.game.spin(fs, { bet: this.bet, showWin: this.showWin });
       this.showWin(fs.total * this.bet);
       const added = fs.left - (before - 1);
-      if (added > 0) await this.overlay.floatText(`+${added} TIRADAS`, w / 2, h / 2, 0xffd23e, 48);
+      if (added > 0) await this.overlay.floatText(`+${added} TIRADAS`, w / 2, h / 2, theme.gold, 48);
       await this.celebrate(win);
       this.refresh();
       await wait(250);
     }
     this.game.endBonus?.();
     const x = Math.min(fs.total, MAX_WIN);
-    await this.overlay.banner('BONUS TERMINADO', `${money(x * this.bet)}  (${x.toFixed(1)}x)`, 0x4dff88, 3500);
+    await this.overlay.banner('BONUS TERMINADO', `${money(x * this.bet)}  (${x.toFixed(1)}x)`, theme.good, 3500);
     this.balance += x * this.bet;
     this.showWin(x * this.bet);
     this.bonus = null;
