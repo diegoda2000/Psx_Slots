@@ -115,6 +115,15 @@ svg .fill { fill: currentColor; stroke: none; }
 }
 .bet-level { position: absolute; left: 10px; right: 10px; bottom: 6px; height: 4px; border-radius: 2px; background: rgba(244, 236, 220, 0.12); }
 .bet-level span { display: block; height: 100%; width: 10%; border-radius: 2px; background: var(--yellow); transition: width 0.2s; }
+/* BonusHunt activo: la caja de apuesta en amarillo con "apuesta / precio de la tirada". */
+.bet-box.hunt { background: var(--yellow); }
+.bet-box.hunt .stat span { color: rgba(14, 12, 16, 0.7); }
+.bet-box.hunt .stat span::after { content: ' / TIRADA'; }
+.bet-box.hunt .stat b { color: var(--ink); }
+.bet-box.hunt .slash { font-style: normal; margin: 0 3px; opacity: 0.55; }
+.bet-box.hunt .cost { font-size: 0.8em; }
+.bet-box.hunt .bet-level { background: rgba(14, 12, 16, 0.2); }
+.bet-box.hunt .bet-level span { background: var(--ink); }
 .bet-arrows { display: flex; flex-direction: column; gap: 2px; margin-left: -10px; }
 .bet-arrows button { width: 40px; height: 34px; display: grid; place-items: center; background: none; border: none; color: var(--sticker); border-radius: 8px; }
 .bet-arrows button:hover:not(:disabled) { background: rgba(244, 236, 220, 0.1); color: var(--yellow); }

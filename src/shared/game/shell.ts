@@ -238,7 +238,11 @@ export class SlotShell<B extends BonusState> {
 
   refresh() {
     $('balance').textContent = money(this.balance);
-    $('bet').textContent = money(this.bet);
+    // Con BonusHunt: la apuesta y, tras una barra, lo que cuesta cada tirada.
+    const betEl = $('bet');
+    if (this.hunt) betEl.innerHTML = `${money(this.bet)}<i class="slash">/</i><small class="cost">${money(this.spinCost)}</small>`;
+    else betEl.textContent = money(this.bet);
+    betEl.closest('.bet-box')?.classList.toggle('hunt', this.hunt);
     const buyBet = $opt('buyBet');
     if (buyBet) buyBet.textContent = money(this.bet);
     for (const [id, edge] of [['buyBetDown', 0], ['buyBetUp', BETS.length - 1]] as const) {
