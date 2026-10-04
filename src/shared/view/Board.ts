@@ -50,6 +50,8 @@ export class Board extends Container {
 
   /** Aviso opcional cuando cada rodillo termina de caer (p. ej. para el sonido de parada). */
   onColumnLand?: (col: number) => void;
+  /** Todos los rodillos (y filas) caen a la vez, sin escalonar (super turbo). */
+  allAtOnce = false;
 
   /** Tira los símbolos actuales hacia abajo y deja caer el nuevo tablero. */
   async dropIn(grid: Grid, keepCols: number[] = []) {
@@ -61,7 +63,7 @@ export class Board extends Container {
         if (!s) continue;
         this.cells[c][r] = null;
         out.push(
-          wait(c * 40)
+          wait(this.allAtOnce ? 0 : c * 40)
             .then(() => tween(s, { y: s.y + BOARD_H + 100 }, 260, easeIn))
             .then(() => s.destroy({ children: true })),
         );
@@ -78,7 +80,7 @@ export class Board extends Container {
         const y = s.y;
         s.y = y - BOARD_H - 100;
         inn.push(
-          wait(c * 70 + (ROWS - r) * 18)
+          wait(this.allAtOnce ? 0 : c * 70 + (ROWS - r) * 18)
             .then(() => tween(s, { y }, 300, backOut))
             .then(() => {
               if (r === ROWS - 1) this.onColumnLand?.(c);

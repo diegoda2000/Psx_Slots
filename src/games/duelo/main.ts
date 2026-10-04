@@ -5,7 +5,7 @@ import { defaultRng } from '../../shared/rng';
 import { DUELO_CHARS, SYMBOLS, wildOf, type CharWild } from '../../shared/symbols';
 import { sfx } from '../../shared/sfx';
 import { money, theme } from '../../shared/text';
-import { wait } from '../../shared/tween';
+import { speed, wait } from '../../shared/tween';
 import { COLS } from '../../shared/symbols';
 import { BOARD_H } from '../../shared/view/Board';
 import { Overlay } from '../../shared/view/Overlay';
@@ -83,8 +83,10 @@ async function main() {
       board.clearReels();
       // Sonidos: giro, golpe de cada rodillo al parar y campanita (cada vez más aguda) por ficha FS.
       let fsSeen = 0;
+      // Super turbo: caen todos los rodillos a la vez (y suena un solo golpe).
+      board.allAtOnce = speed.factor >= 2.5;
       board.onColumnLand = (c) => {
-        sfx.reelStop(c);
+        if (!board.allAtOnce || c === 0) sfx.reelStop(c);
         if (res.grid[c].some((cell) => cell.sym === 'BONUS')) sfx.scatter(++fsSeen);
       };
       sfx.spin();
