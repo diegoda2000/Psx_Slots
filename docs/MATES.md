@@ -15,7 +15,17 @@ Premio máximo: Duelo 15.000x (como Life and Death), Olimpo 10.000x. Simulación
 - Fichas FS solo en los rodillos 2 a 5 (10,3% por rodillo, como mucho una por rodillo).
 - Bonus: 3 fichas FS = BONUS (más wilds), 4 = TOCHO (rodillos de la muerte). 10 tiradas; dentro, 2 fichas +2 y
   3 o más +4. Compra: BONUS 100x, TOCHO 200x. Premio máximo 15.000x.
-- El RTP se ajusta solo con la frecuencia de wilds por rodillo central: base 0,01686, BONUS 0,1367, TOCHO 0,1559.
+- Frecuencia de cada personaje: cuanto mejor, más raro (pesos Macaco 8, Majarias 4, Iberru 2, Andy 1). Cada uno sale
+  o no por separado; cae en su rodillo con un 60% si está libre y, si no, en otro central. No hay datos públicos de
+  Life and Death sobre esto: es una decisión de diseño.
+- El RTP se ajusta solo con la frecuencia media de wilds por rodillo central: base 0,02185, BONUS 0,1622, TOCHO 0,1978.
+
+| Aparece en pantalla (1 de cada N tiradas) | Macaco | Majarias | Iberru | Andy |
+|---|---|---|---|---|
+| Juego base | 21 | 43 | 86 | 171 |
+| Juego base, desplegado | 45 | 84 | 485 | 4.500 |
+| Tirada de BONUS | 2,9 | 5,8 | 11,5 | 23 |
+| Tirada de TOCHO (sin contar rodillos de la muerte) | 2,4 | 4,7 | 9,4 | 19 |
 - Pesos de símbolos (rata → Hutt) 34/32/32/30/22/20/17/14, elegidos para copiar la frecuencia de premio pública de
   Life and Death (27,93%).
 
@@ -29,30 +39,26 @@ Premio máximo: Duelo 15.000x (como Life and Death), Olimpo 10.000x. Simulación
 
 | | |
 |---|---|
-| **RTP total** | **93,7% ± 1,5%** (objetivo 93,6%): juego base 54,8% + bonus 38,9% |
-| Frecuencia de premio | 28,3% (1 de cada 3,54 tiradas; Life and Death 27,93%) |
-| Volatilidad | muy alta: desviación típica 23,4x por tirada; tope de 15.000x alcanzado 2 veces |
-| BONUS | 1 de cada ~253 tiradas, media 93x; 1 de cada ~28.000 llega a 15.000x |
-| TOCHO | 1 de cada ~8.800 tiradas (hacen falta las 4 fichas), media 192x; 1 de cada ~8.400 llega a 15.000x |
+| **RTP total** | **93,5% ± 1,2%** (objetivo 93,6%): juego base 54,9% + bonus 38,6% |
+| Frecuencia de premio | 29,4% (1 de cada 3,4 tiradas; Life and Death 27,93%) |
+| Volatilidad | muy alta: desviación típica 19,2x por tirada; tope de 15.000x alcanzado 1 vez |
+| BONUS | 1 de cada ~256 tiradas, media 93x |
+| TOCHO | 1 de cada ~8.500 tiradas (hacen falta las 4 fichas), media 182x |
 
 Reparto de premios por tirada (incluido el bonus que se abre en ella):
 
 | 0x | <1x | 1-5x | 5-20x | 20-100x | 100-1.000x | 1.000x+ |
 |---|---|---|---|---|---|---|
-| 71,7% | 20,7% | 5,8% | 1,2% | 0,5% | 0,15% | 0,01% |
+| 70,6% | 20,6% | 6,6% | 1,6% | 0,5% | 0,15% | <0,01% |
 
 Compra de bonus (la media se cumple solo a muy largo plazo; cada bonus por separado es puro azar):
 
 | | Precio | RTP | Mediana | 10% peores | 10% mejores | 1% mejores | Pierde dinero |
 |---|---|---|---|---|---|---|---|
-| BONUS | 100x | 93,8% ± 1,4% | 25x | < 2,1x | > 209x | > 1.019x | 78% de las veces |
-| TOCHO | 200x | 94,0% ± 1,2% | 50x | < 3,8x | > 434x | > 2.049x | 79% de las veces |
+| BONUS | 100x | 93,7% ± 1,2% | 32x | < 4,6x | > 208x | > 922x | 75% de las veces |
+| TOCHO | 200x | 94,1% ± 1,0% | 77x | < 9,4x | > 407x | > 1.701x | 76% de las veces |
 
-Con 2,4 millones de compras de cada uno, la media sale 93,7x ± 0,4x el BONUS y 187x ± 0,7x el TOCHO.
-### BonusHunt FeatureSpins (como Hacksaw)
-Cada tirada cuesta 3x la apuesta; la ficha FS sale en cada rodillo central con un 18,89% (en vez de 10,3%). Lo demás
-igual. Calibrado con 20M tiradas para el mismo RTP de diseño (93,6%); la simulación de 10M da 94,6% ± 1,1%.
-BONUS 1 de cada ~46 tiradas (5,5 veces más) y TOCHO 1 de cada ~790 (11 veces más). Con él activo no se compran bonus.
+BonusHunt (10M tiradas a 3x): RTP 93,7% ± 0,9%; BONUS 1 de cada 46, TOCHO 1 de cada 778.
 
 El ± es el margen de error al 95% de la propia simulación: el RTP real de diseño es el mismo para los tres (≈93,6%).
 

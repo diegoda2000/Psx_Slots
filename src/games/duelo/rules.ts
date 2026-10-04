@@ -56,6 +56,8 @@ export function rulesHtml(bet: number) {
   <p>Pueden caer en los rodillos 2 a 5 y como mucho sale uno de cada en pantalla. Cada uno tiene su rodillo: si cae en él
   y así entra en algún premio, se expande siempre a todo el rodillo. En otro rodillo hace de wild normal con su
   multiplicador.</p>
+  <p>Cuanto mejor es el personaje, menos sale: Macaco es el más frecuente, después Majarias, luego Iberru, y Andy es el
+  más raro (cada uno sale más o menos la mitad de veces que el anterior).</p>
   <div class="wild-grid">
     ${chars
       .map((c) => {

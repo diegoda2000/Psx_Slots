@@ -63,9 +63,16 @@ export const DUELO = {
   /** Premio máximo en veces la apuesta (el de Life and Death). */
   maxWin: 15_000,
   weights: { RATA: 34, REMOS: 32, OMG: 32, RADIO: 30, TERNASCO: 22, SIM3: 20, DORMIDO: 17, HUTT: 14 } as Record<DueloPay, number>,
-  /** Probabilidad de wild en cada rodillo central (juego base). */
-  wildChance: 0.01686,
-  /** Probabilidad de que el wild que cae sea el del dueño del rodillo (si no está ya en pantalla). */
+  /**
+   * Wilds por rodillo central en media (juego base): 4 × wildChance personajes por tirada, repartidos según charWeights.
+   */
+  wildChance: 0.02185,
+  /**
+   * Frecuencia relativa de cada personaje: cuanto mejor, más raro. Cada uno sale la mitad de veces que el anterior
+   * (Macaco 8 veces más que Andy).
+   */
+  charWeights: { MAC: 8, MAJ: 4, IBE: 2, AND: 1 } as Record<DueloChar, number>,
+  /** Probabilidad de que un personaje caiga en su propio rodillo (si está libre); si no, en otro rodillo central. */
   ownChance: 0.6,
   /** [multiplicador, peso] de cada personaje (valores de Life and Death). */
   wildMults: {
@@ -93,9 +100,9 @@ export const DUELO = {
   payScale: 1,
   tiers: {
     // BONUS (como Devastation): más wilds.
-    1: { spins: 10, wildChance: 0.1367, deathReels: false },
+    1: { spins: 10, wildChance: 0.1622, deathReels: false },
     // TOCHO (antes semitocho; como Reckoning): rodillos de la muerte.
-    2: { spins: 10, wildChance: 0.1559, deathReels: true },
+    2: { spins: 10, wildChance: 0.1978, deathReels: true },
   } as Record<DueloTier, { spins: number; wildChance: number; deathReels: boolean }>,
   /** Tiradas extra dentro del bonus por número de fichas FS. */
   retrigger: { 2: 2, 3: 4 } as Record<number, number>,
@@ -167,23 +174,28 @@ export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
       scatters++;
     }
 
-  // Como mucho un wild por rodillo central y uno de cada personaje en pantalla.
+  // Cada personaje sale (o no) por separado, los flojos más que los buenos; como mucho uno de cada y un wild por rodillo.
+  // Se colocan del más raro al más común para que el bueno no se quede sin su rodillo.
   const candidates: WildReel[] = [];
   const newDeath: DueloChar[] = [];
   const death = new Set(opts.death ?? []);
-  const available = [...DUELO_CHARS];
-  for (let c = 1; c <= 4; c++) {
-    if (rng() >= opts.wildChance) continue;
+  const totalW = DUELO_CHARS.reduce((t, p) => t + DUELO.charWeights[p], 0);
+  const taken = new Set<number>();
+  const order = [...DUELO_CHARS].sort((a, b) => DUELO.charWeights[a] - DUELO.charWeights[b]);
+  for (const char of order) {
+    const p = Math.min(1, (4 * opts.wildChance * DUELO.charWeights[char]) / totalW);
+    if (rng() >= p) continue;
+    const ownCol = CHAR_REEL[char];
+    const free = [1, 2, 3, 4].filter((c) => !taken.has(c));
+    if (!free.length) continue;
+    const others = free.filter((c) => c !== ownCol);
+    const c =
+      free.includes(ownCol) && (others.length === 0 || rng() < DUELO.ownChance) ? ownCol : others[randInt(rng, others.length)];
+    taken.add(c);
     const own = REEL_CHAR[c]!;
-    const others = available.filter((p) => p !== own);
-    const char =
-      available.includes(own) && (others.length === 0 || rng() < DUELO.ownChance)
-        ? own
-        : others[randInt(rng, others.length)];
-    available.splice(available.indexOf(char), 1);
     const mult = weightedPick(rng, DUELO.wildMults[char]);
-    const free = grid[c].map((cell, r) => (cell.sym === 'BONUS' ? -1 : r)).filter((r) => r >= 0);
-    const row = free[randInt(rng, free.length)];
+    const rows = grid[c].map((cell, r) => (cell.sym === 'BONUS' ? -1 : r)).filter((r) => r >= 0);
+    const row = rows[randInt(rng, rows.length)];
     grid[c][row] = { sym: wildOf(char), mult };
     if (opts.death && char === own && !death.has(char)) {
       death.add(char);
@@ -193,6 +205,7 @@ export function spinDuelo(rng: Rng, opts: SpinOpts): DueloSpin {
     // Una ficha FS en el mismo rodillo no lo impide: sigue contando y se ve encima del rodillo desplegado.
     if (char === own || death.has(char)) candidates.push({ col: c, char, mult, row });
   }
+  candidates.sort((a, b) => a.col - b.col);
 
   // Solo se expanden los que entran en algún premio una vez expandidos (regla de Life and Death).
   let expanded = candidates;

@@ -9,7 +9,8 @@ slots que hace bonus hunts y sorteos para su comunidad. Son **dos slots separada
 1. **Duelo** (`duelo/`, `src/games/duelo/`): copia la mecánica de "Life and Death" (Hacksaw). 19 líneas, 3 o más
    iguales seguidos desde la izquierda. Los 4 personajes son los 4 jinetes y **NO son símbolos de pago, solo wilds
    multiplicadores**: como mucho uno de cada en pantalla. Pueden caer en cualquier rodillo del 2 al 5; cada uno tiene su
-   rodillo (Macaco 2, Majarias 3, Iberru 4, Andy 5; Majarias sustituye a Elena) y su rango (x2-4, x5-9, x10-25, x30-200). Si cae en su rodillo se
+   rodillo (Macaco 2, Majarias 3, Iberru 4, Andy 5; Majarias sustituye a Elena) y su rango (x2-4, x5-9, x10-25, x30-200).
+   Cuanto mejor, más raro: pesos de aparición Macaco 8, Majarias 4, Iberru 2, Andy 1 (`charWeights`). Si cae en su rodillo se
    expande a toda la columna (si así entra en premio); en otro rodillo es un wild normal con su multiplicador. Los
    multiplicadores de una línea se suman. Símbolos de pago (ilustraciones del usuario), de más a menos premio:
    1 Andy the Hutt, 2 Dormilón (DORMIDO, chico dormido con cascos; antes era Majarias dictador, que pasó a wild), 3 (por decidir, SIM3), 4 Ternasco, 5 Radio, 6 OMG Bro, 7 Remos,
