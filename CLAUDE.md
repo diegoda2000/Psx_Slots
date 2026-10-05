@@ -74,7 +74,8 @@ Bonus (se pueden comprar):
   Toda animación nueva de símbolos debe pasar por la interfaz `SymbolVisual` para poder cambiarla por Spine.
 - Tirada de Duelo: los rodillos GIRAN (tira de símbolos bajando, opacos, sin deformar) y paran uno a uno con frenada
   suave y sin rebote; ritmo medido en una grabación de Hacksaw del usuario: primero a los 0,80 s del clic y luego uno
-  cada 0,33 s (`DueloBoard.dropIn`). Turbo x1,6; super turbo: todo cae a la vez. El usuario se enfada muchísimo si se
+  cada 0,33 s (`DueloBoard.dropIn`). Turbo medido en otra grabación (Death Becomes You): primero a los 0,70 s y
+  luego uno cada 0,16 s; el resto de animaciones del turbo siguen a x1,6. Super turbo: todo cae a la vez. El usuario se enfada muchísimo si se
   cambia algo que no ha pedido: tocar solo lo que pida.
 
 ## Comandos

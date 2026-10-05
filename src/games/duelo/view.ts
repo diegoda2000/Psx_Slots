@@ -1,7 +1,7 @@
 import { Container, Graphics, Sprite, Text } from 'pixi.js';
 import { COLS, ROWS, SYMBOLS, type Cell, type DueloChar, type Grid } from '../../shared/symbols';
 import { label, multColor } from '../../shared/text';
-import { backOut, easeOut, tween } from '../../shared/tween';
+import { backOut, easeOut, speed, tween } from '../../shared/tween';
 import { Board, BOARD_H, cellY } from '../../shared/view/Board';
 import { CELL } from '../../shared/view/CodeSymbolVisual';
 import { SymbolView } from '../../shared/view/SymbolView';
@@ -148,7 +148,10 @@ export class DueloBoard extends Board {
   async dropIn(grid: Grid, keepCols: number[] = [], spin = false) {
     if (!spin || this.allAtOnce) return super.dropIn(grid, keepCols);
     const reels: Promise<void>[] = [];
-    for (let c = 0; c < COLS; c++) if (!keepCols.includes(c)) reels.push(this.spinReel(c, grid[c], 800 + c * 330));
+    // Turbo con su propio ritmo, medido en otra grabación de Hacksaw: primero a los 0,70 s y luego uno cada 0,16 s.
+    // (los tiempos se multiplican por speed.factor porque tween ya los divide entre él).
+    const [first, gap] = speed.factor > 1 ? [700 * speed.factor, 160 * speed.factor] : [800, 330];
+    for (let c = 0; c < COLS; c++) if (!keepCols.includes(c)) reels.push(this.spinReel(c, grid[c], first + c * gap));
     await Promise.all(reels);
   }
 
