@@ -134,15 +134,14 @@ export class DueloBoard extends Board {
   }
 
   /**
-   * Misma animación de siempre, solo con el ritmo de Hacksaw (medido en la grabación del usuario): en una tirada cada
-   * rodillo se vacía y se llena igual que antes, pero el primero para a los 0,80 s y luego uno cada 0,33 s.
+   * Misma animación de siempre (el tablero se vacía a la vez y caen los rodillos nuevos), solo con el ritmo de Hacksaw
+   * medido en la grabación del usuario: el primer rodillo para a los 0,80 s y luego uno cada 0,33 s.
    */
   async dropIn(grid: Grid, keepCols: number[] = [], spin = false) {
     const hacksaw = spin && !this.allAtOnce;
     // Para la fila de abajo: firstDelay + c·colDelay + 120 + 18 + 300 = 800 + c·330.
     this.firstDelay = hacksaw ? 362 : 0;
     this.colDelay = hacksaw ? 330 : 70;
-    this.outColDelay = hacksaw ? 330 : 40;
     return super.dropIn(grid, keepCols);
   }
 
