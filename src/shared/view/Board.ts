@@ -55,6 +55,8 @@ export class Board extends Container {
   /** Ritmo de caída en ms: espera antes del primer rodillo y separación entre rodillos. */
   firstDelay = 0;
   colDelay = 70;
+  /** Separación entre rodillos al vaciarse (por defecto 40 ms). */
+  outColDelay = 40;
 
   /** Tira los símbolos actuales hacia abajo y deja caer el nuevo tablero. */
   async dropIn(grid: Grid, keepCols: number[] = []) {
@@ -66,7 +68,7 @@ export class Board extends Container {
         if (!s) continue;
         this.cells[c][r] = null;
         out.push(
-          wait(this.allAtOnce ? 0 : c * 40)
+          wait(this.allAtOnce ? 0 : this.firstDelay + c * this.outColDelay)
             .then(() => tween(s, { y: s.y + BOARD_H + 100 }, 260, easeIn))
             .then(() => s.destroy({ children: true })),
         );

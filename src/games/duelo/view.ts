@@ -1,17 +1,16 @@
-import { Container, Graphics, Sprite, Text, Ticker } from 'pixi.js';
-import { COLS, ROWS, SYMBOLS, type DueloChar, type Grid } from '../../shared/symbols';
+import { Container, Graphics, Sprite, Text } from 'pixi.js';
+import { SYMBOLS, type DueloChar, type Grid } from '../../shared/symbols';
 import { label, multColor } from '../../shared/text';
-import { backOut, easeOut, speed, tween, wait } from '../../shared/tween';
+import { backOut, easeOut, tween } from '../../shared/tween';
 import { Board, BOARD_H, cellY } from '../../shared/view/Board';
 import { CELL } from '../../shared/view/CodeSymbolVisual';
-import { SymbolView } from '../../shared/view/SymbolView';
 
 /** Rodillos de Duelo un 18% más anchos que altos, para que quepan los personajes desplegados. */
 export const CELL_W = 118;
 
 import { sfx } from '../../shared/sfx';
 import { bodyTexture } from './art';
-import { DUELO_PAYS, LINES, REEL_CHAR, type WildReel } from './math';
+import { LINES, REEL_CHAR, type WildReel } from './math';
 import { GOLD, INK, REEL_A, REEL_B, STICKER, YELLOW } from './palette';
 
 /** Rodillo wild expandido: el personaje de cuerpo completo; el multiplicador sale al terminar de desplegarse. */
@@ -135,51 +134,16 @@ export class DueloBoard extends Board {
   }
 
   /**
-   * Tirada con el ritmo de Hacksaw (medido en una grabación de referencia): el primer rodillo para a los 0,80 s de
-   * pulsar y luego uno cada 0,33 s; mientras tanto se ven girando. Sin `spin` (tablero de reposo) cae de golpe.
+   * Misma animación de siempre, solo con el ritmo de Hacksaw (medido en la grabación del usuario): en una tirada cada
+   * rodillo se vacía y se llena igual que antes, pero el primero para a los 0,80 s y luego uno cada 0,33 s.
    */
   async dropIn(grid: Grid, keepCols: number[] = [], spin = false) {
-    if (!spin || this.allAtOnce) {
-      this.firstDelay = 0;
-      this.colDelay = 70;
-      return super.dropIn(grid, keepCols);
-    }
-    // Para la fila de abajo: 120 (salida) + firstDelay + c·colDelay + 18 + 300 (caída) = 800 + c·330.
-    this.firstDelay = 362;
-    this.colDelay = 330;
-    const strips: Container[] = [];
-    for (let c = 0; c < COLS; c++) {
-      if (keepCols.includes(c)) continue;
-      const strip = this.spinStrip(c);
-      strips.push(strip);
-      // La tira sigue girando detrás mientras caen los símbolos definitivos y se quita al parar el rodillo.
-      void wait(120 + this.firstDelay + c * this.colDelay + 260).then(() => strip.destroy({ children: true }));
-    }
-    await super.dropIn(grid, keepCols);
-  }
-
-  /** Rodillo girando: una tira de símbolos medio transparentes que baja deprisa en bucle. */
-  private spinStrip(col: number) {
-    const strip = new Container();
-    strip.x = this.colX(col);
-    const n = ROWS + 2;
-    for (let i = 0; i < n; i++) {
-      const s = new SymbolView(DUELO_PAYS[Math.floor(Math.random() * DUELO_PAYS.length)]);
-      s.y = cellY(i) - CELL;
-      s.alpha = 0.45;
-      s.scale.set(0.9, 1.15);
-      strip.addChild(s);
-    }
-    this.layer.addChild(strip);
-    const tick = (t: Ticker) => {
-      if (strip.destroyed) return Ticker.shared.remove(tick);
-      for (const s of strip.children) {
-        s.y += 2.4 * t.deltaMS * speed.factor;
-        if (s.y > BOARD_H + CELL / 2) s.y -= n * CELL;
-      }
-    };
-    Ticker.shared.add(tick);
-    return strip;
+    const hacksaw = spin && !this.allAtOnce;
+    // Para la fila de abajo: firstDelay + c·colDelay + 120 + 18 + 300 = 800 + c·330.
+    this.firstDelay = hacksaw ? 362 : 0;
+    this.colDelay = hacksaw ? 330 : 70;
+    this.outColDelay = hacksaw ? 330 : 40;
+    return super.dropIn(grid, keepCols);
   }
 
   /** Quita los rodillos expandidos. */

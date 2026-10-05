@@ -73,7 +73,8 @@ Bonus (se pueden comprar):
   nada (ni WILD ni nombre: el nombre ya está encima del rodillo). Rodillos de Duelo de 118 px de ancho; los cuerpos están centrados en sus imágenes.
   Toda animación nueva de símbolos debe pasar por la interfaz `SymbolVisual` para poder cambiarla por Spine.
 - Ritmo de tirada de Duelo medido en una grabación de Hacksaw del usuario: en velocidad normal el primer rodillo para a
-  los 0,80 s del clic y luego uno cada 0,33 s (rodillos girando mientras). Turbo x1,6; super turbo todo a la vez.
+  los 0,80 s del clic y luego uno cada 0,33 s. Misma animación de caída de siempre: el usuario solo quiere que se
+  cambie lo que pide (nada de tiras giratorias ni otros añadidos). Turbo x1,6; super turbo todo a la vez.
 
 ## Comandos
 - `npm run dev`, `npm run build`, `npm run typecheck`, `npm run sim -- --spins 3000000 --buys 30000 --game duelo`
