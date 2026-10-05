@@ -72,10 +72,10 @@ Bonus (se pueden comprar):
   cuerpo completo va apareciendo según se abre la columna y el multiplicador sale arriba al terminar; abajo no va
   nada (ni WILD ni nombre: el nombre ya está encima del rodillo). Rodillos de Duelo de 118 px de ancho; los cuerpos están centrados en sus imágenes.
   Toda animación nueva de símbolos debe pasar por la interfaz `SymbolVisual` para poder cambiarla por Spine.
-- Ritmo de tirada de Duelo medido en una grabación de Hacksaw del usuario: en velocidad normal el primer rodillo para a
-  los 0,80 s del clic y luego uno cada 0,33 s. Misma animación de siempre (el tablero se vacía a la vez y caen los
-  rodillos nuevos; solo cambian los tiempos `firstDelay`/`colDelay`): el usuario solo quiere que se
-  cambie lo que pide (nada de tiras giratorias ni otros añadidos). Turbo x1,6; super turbo todo a la vez.
+- Tirada de Duelo: los rodillos GIRAN (tira de símbolos bajando, opacos, sin deformar) y paran uno a uno con frenada
+  suave y sin rebote; ritmo medido en una grabación de Hacksaw del usuario: primero a los 0,80 s del clic y luego uno
+  cada 0,33 s (`DueloBoard.dropIn`). Turbo x1,6; super turbo: todo cae a la vez. El usuario se enfada muchísimo si se
+  cambia algo que no ha pedido: tocar solo lo que pida.
 
 ## Comandos
 - `npm run dev`, `npm run build`, `npm run typecheck`, `npm run sim -- --spins 3000000 --buys 30000 --game duelo`

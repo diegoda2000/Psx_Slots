@@ -1,17 +1,24 @@
 import { Container, Graphics, Sprite, Text } from 'pixi.js';
-import { SYMBOLS, type DueloChar, type Grid } from '../../shared/symbols';
+import { COLS, ROWS, SYMBOLS, type Cell, type DueloChar, type Grid } from '../../shared/symbols';
 import { label, multColor } from '../../shared/text';
 import { backOut, easeOut, tween } from '../../shared/tween';
 import { Board, BOARD_H, cellY } from '../../shared/view/Board';
 import { CELL } from '../../shared/view/CodeSymbolVisual';
+import { SymbolView } from '../../shared/view/SymbolView';
 
 /** Rodillos de Duelo un 18% más anchos que altos, para que quepan los personajes desplegados. */
 export const CELL_W = 118;
 
 import { sfx } from '../../shared/sfx';
 import { bodyTexture } from './art';
-import { LINES, REEL_CHAR, type WildReel } from './math';
+import { DUELO_PAYS, LINES, REEL_CHAR, type WildReel } from './math';
 import { GOLD, INK, REEL_A, REEL_B, STICKER, YELLOW } from './palette';
+
+/** Giro de rodillo: velocidad constante y frenada suave al final (sin rebote). */
+const SPIN_K = 0.8;
+const SPIN_V = 2 / (1 + SPIN_K);
+const spinEase = (p: number) =>
+  p < SPIN_K ? SPIN_V * p : SPIN_V * SPIN_K + (1 - SPIN_V * SPIN_K) * (1 - (1 - (p - SPIN_K) / (1 - SPIN_K)) ** 2);
 
 /** Rodillo wild expandido: el personaje de cuerpo completo; el multiplicador sale al terminar de desplegarse. */
 export class WildReelView extends Container {
@@ -134,15 +141,49 @@ export class DueloBoard extends Board {
   }
 
   /**
-   * Misma animación de siempre (el tablero se vacía a la vez y caen los rodillos nuevos), solo con el ritmo de Hacksaw
-   * medido en la grabación del usuario: el primer rodillo para a los 0,80 s y luego uno cada 0,33 s.
+   * Tirada: los rodillos giran (la tira de símbolos baja sin parar) y se paran uno a uno, con el ritmo de Hacksaw
+   * medido en la grabación del usuario: el primero a los 0,80 s y luego uno cada 0,33 s. Sin rebote al parar.
+   * Sin `spin` (tablero de reposo) o en super turbo, la caída de siempre.
    */
   async dropIn(grid: Grid, keepCols: number[] = [], spin = false) {
-    const hacksaw = spin && !this.allAtOnce;
-    // Para la fila de abajo: firstDelay + c·colDelay + 120 + 18 + 300 = 800 + c·330.
-    this.firstDelay = hacksaw ? 362 : 0;
-    this.colDelay = hacksaw ? 330 : 70;
-    return super.dropIn(grid, keepCols);
+    if (!spin || this.allAtOnce) return super.dropIn(grid, keepCols);
+    const reels: Promise<void>[] = [];
+    for (let c = 0; c < COLS; c++) if (!keepCols.includes(c)) reels.push(this.spinReel(c, grid[c], 800 + c * 330));
+    await Promise.all(reels);
+  }
+
+  /** Un rodillo: abajo los símbolos que había, encima relleno al azar y arriba del todo los finales; la tira baja entera. */
+  private async spinReel(c: number, col: Cell[], ms: number) {
+    const strip = new Container();
+    this.layer.addChild(strip);
+    for (let r = 0; r < ROWS; r++) {
+      const s = this.cells[c][r];
+      this.cells[c][r] = null;
+      if (s) strip.addChild(s);
+      else {
+        // Rodillo que estaba desplegado (sus celdas ya no existen): se rellena para que no gire vacío.
+        const f = new SymbolView(DUELO_PAYS[Math.floor(Math.random() * DUELO_PAYS.length)]);
+        f.position.set(this.colX(c), cellY(r));
+        strip.addChild(f);
+      }
+    }
+    // Relleno para que la velocidad sea la misma en todos los rodillos (~2,5 px/ms en la parte constante).
+    const fill = Math.max(3, Math.round((2.5 * ms) / (SPIN_V * CELL)) - ROWS);
+    for (let i = 1; i <= fill; i++) {
+      const s = new SymbolView(DUELO_PAYS[Math.floor(Math.random() * DUELO_PAYS.length)]);
+      s.position.set(this.colX(c), cellY(0) - i * CELL);
+      strip.addChild(s);
+    }
+    const finals = col.map((cell, r) => {
+      const s = new SymbolView(cell.sym, cell.mult);
+      s.position.set(this.colX(c), cellY(r) - (fill + ROWS) * CELL);
+      strip.addChild(s);
+      return s;
+    });
+    await tween(strip, { y: (fill + ROWS) * CELL }, ms, spinEase);
+    finals.forEach((s, r) => this.place(s, c, r));
+    strip.destroy({ children: true });
+    this.onColumnLand?.(c);
   }
 
   /** Quita los rodillos expandidos. */
