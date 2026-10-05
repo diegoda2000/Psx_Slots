@@ -1,0 +1,310 @@
+{
+ "skeleton": {
+  "spine": "4.2.00",
+  "x": -512,
+  "y": 0,
+  "width": 1024,
+  "height": 1515,
+  "images": "./images/",
+  "audio": ""
+ },
+ "bones": [
+  {
+   "name": "root"
+  },
+  {
+   "name": "hip",
+   "parent": "root",
+   "x": 0,
+   "y": 565
+  },
+  {
+   "name": "torso",
+   "parent": "hip",
+   "x": 0,
+   "y": 0
+  },
+  {
+   "name": "neck",
+   "parent": "torso",
+   "x": 0,
+   "y": 415
+  },
+  {
+   "name": "shoulderL",
+   "parent": "torso",
+   "x": -180,
+   "y": 260
+  },
+  {
+   "name": "elbowL",
+   "parent": "shoulderL",
+   "x": -100,
+   "y": -108
+  },
+  {
+   "name": "wristL",
+   "parent": "elbowL",
+   "x": -67,
+   "y": -116
+  },
+  {
+   "name": "shoulderR",
+   "parent": "torso",
+   "x": 180,
+   "y": 260
+  },
+  {
+   "name": "elbowR",
+   "parent": "shoulderR",
+   "x": 97,
+   "y": -104
+  },
+  {
+   "name": "wristR",
+   "parent": "elbowR",
+   "x": 69,
+   "y": -120
+  },
+  {
+   "name": "thighL",
+   "parent": "hip",
+   "x": -97,
+   "y": -10
+  },
+  {
+   "name": "kneeL",
+   "parent": "thighL",
+   "x": -32,
+   "y": -252
+  },
+  {
+   "name": "ankleL",
+   "parent": "kneeL",
+   "x": -23,
+   "y": -165
+  },
+  {
+   "name": "thighR",
+   "parent": "hip",
+   "x": 96,
+   "y": -10
+  },
+  {
+   "name": "kneeR",
+   "parent": "thighR",
+   "x": 31,
+   "y": -252
+  },
+  {
+   "name": "ankleR",
+   "parent": "kneeR",
+   "x": 20,
+   "y": -180
+  }
+ ],
+ "slots": [
+  {
+   "name": "thighL",
+   "bone": "thighL",
+   "attachment": "thighL"
+  },
+  {
+   "name": "thighR",
+   "bone": "thighR",
+   "attachment": "thighR"
+  },
+  {
+   "name": "shinL",
+   "bone": "kneeL",
+   "attachment": "shinL"
+  },
+  {
+   "name": "shinR",
+   "bone": "kneeR",
+   "attachment": "shinR"
+  },
+  {
+   "name": "footL",
+   "bone": "ankleL",
+   "attachment": "footL"
+  },
+  {
+   "name": "footR",
+   "bone": "ankleR",
+   "attachment": "footR"
+  },
+  {
+   "name": "torso",
+   "bone": "torso",
+   "attachment": "torso"
+  },
+  {
+   "name": "head",
+   "bone": "neck",
+   "attachment": "head"
+  },
+  {
+   "name": "upperArmL",
+   "bone": "shoulderL",
+   "attachment": "upperArmL"
+  },
+  {
+   "name": "forearmL",
+   "bone": "elbowL",
+   "attachment": "forearmL"
+  },
+  {
+   "name": "handL",
+   "bone": "wristL",
+   "attachment": "handL"
+  },
+  {
+   "name": "upperArmR",
+   "bone": "shoulderR",
+   "attachment": "upperArmR"
+  },
+  {
+   "name": "forearmR",
+   "bone": "elbowR",
+   "attachment": "forearmR"
+  },
+  {
+   "name": "handR",
+   "bone": "wristR",
+   "attachment": "handR"
+  }
+ ],
+ "skins": [
+  {
+   "name": "default",
+   "attachments": {
+    "thighL": {
+     "thighL": {
+      "x": -24.0,
+      "y": -153.5,
+      "width": 242,
+      "height": 399
+     }
+    },
+    "thighR": {
+     "thighR": {
+      "x": 24.5,
+      "y": -154.0,
+      "width": 241,
+      "height": 400
+     }
+    },
+    "shinL": {
+     "shinL": {
+      "x": -22.0,
+      "y": -119.5,
+      "width": 244,
+      "height": 283
+     }
+    },
+    "shinR": {
+     "shinR": {
+      "x": 21.0,
+      "y": -127.5,
+      "width": 240,
+      "height": 299
+     }
+    },
+    "footL": {
+     "footL": {
+      "x": -40.5,
+      "y": -80.0,
+      "width": 263,
+      "height": 124
+     }
+    },
+    "footR": {
+     "footR": {
+      "x": 38.0,
+      "y": -64.5,
+      "width": 268,
+      "height": 123
+     }
+    },
+    "torso": {
+     "torso": {
+      "x": 0.5,
+      "y": 217.0,
+      "width": 489,
+      "height": 434
+     }
+    },
+    "head": {
+     "head": {
+      "x": 0.5,
+      "y": 255.0,
+      "width": 509,
+      "height": 520
+     },
+     "head_blink": {
+      "x": -0.5,
+      "y": 256.5,
+      "width": 509,
+      "height": 523
+     },
+     "head_shout": {
+      "x": -0.5,
+      "y": 256.5,
+      "width": 509,
+      "height": 523
+     }
+    },
+    "upperArmL": {
+     "upperArmL": {
+      "x": -75.5,
+      "y": -50.0,
+      "width": 177,
+      "height": 246
+     }
+    },
+    "forearmL": {
+     "forearmL": {
+      "x": -38.5,
+      "y": -77.0,
+      "width": 167,
+      "height": 190
+     }
+    },
+    "handL": {
+     "handL": {
+      "x": -24.0,
+      "y": -47.0,
+      "width": 178,
+      "height": 174
+     }
+    },
+    "upperArmR": {
+     "upperArmR": {
+      "x": 76.5,
+      "y": -48.0,
+      "width": 177,
+      "height": 242
+     }
+    },
+    "forearmR": {
+     "forearmR": {
+      "x": 42.0,
+      "y": -81.0,
+      "width": 166,
+      "height": 190
+     }
+    },
+    "handR": {
+     "handR": {
+      "x": 26.0,
+      "y": -48.0,
+      "width": 178,
+      "height": 174
+     }
+    }
+   }
+  }
+ ],
+ "animations": {}
+}
