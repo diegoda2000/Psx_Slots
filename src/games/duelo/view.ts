@@ -148,9 +148,9 @@ export class DueloBoard extends Board {
   async dropIn(grid: Grid, keepCols: number[] = [], spin = false) {
     if (!spin || this.allAtOnce) return super.dropIn(grid, keepCols);
     const reels: Promise<void>[] = [];
-    // Turbo con su propio ritmo, medido en otra grabación de Hacksaw: primero a los 0,70 s y luego uno cada 0,16 s.
+    // Turbo con su propio ritmo (lo pidió el usuario): primero a los 0,60 s y luego uno cada 0,18 s.
     // (los tiempos se multiplican por speed.factor porque tween ya los divide entre él).
-    const [first, gap] = speed.factor > 1 ? [700 * speed.factor, 160 * speed.factor] : [800, 330];
+    const [first, gap] = speed.factor > 1 ? [600 * speed.factor, 180 * speed.factor] : [800, 330];
     for (let c = 0; c < COLS; c++) if (!keepCols.includes(c)) reels.push(this.spinReel(c, grid[c], first + c * gap));
     await Promise.all(reels);
   }
