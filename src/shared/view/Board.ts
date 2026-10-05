@@ -52,6 +52,9 @@ export class Board extends Container {
   onColumnLand?: (col: number) => void;
   /** Todos los rodillos (y filas) caen a la vez, sin escalonar (super turbo). */
   allAtOnce = false;
+  /** Ritmo de caída en ms: espera antes del primer rodillo y separación entre rodillos. */
+  firstDelay = 0;
+  colDelay = 70;
 
   /** Tira los símbolos actuales hacia abajo y deja caer el nuevo tablero. */
   async dropIn(grid: Grid, keepCols: number[] = []) {
@@ -80,7 +83,7 @@ export class Board extends Container {
         const y = s.y;
         s.y = y - BOARD_H - 100;
         inn.push(
-          wait(this.allAtOnce ? 0 : c * 70 + (ROWS - r) * 18)
+          wait(this.allAtOnce ? 0 : this.firstDelay + c * this.colDelay + (ROWS - r) * 18)
             .then(() => tween(s, { y }, 300, backOut))
             .then(() => {
               if (r === ROWS - 1) this.onColumnLand?.(c);

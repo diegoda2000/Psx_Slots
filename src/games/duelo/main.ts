@@ -90,7 +90,7 @@ async function main() {
         if (res.grid[c].some((cell) => cell.sym === 'BONUS')) sfx.scatter(++fsSeen);
       };
       sfx.spin();
-      await board.dropIn(res.grid);
+      await board.dropIn(res.grid, [], true);
       board.onColumnLand = undefined;
       // Primero se enseñan las fichas FS (bonus o tiradas extra); luego los despliegues pueden taparlas.
       const extra = bonus ? (DUELO.retrigger[Math.min(res.scatters, 3)] ?? 0) : 0;
