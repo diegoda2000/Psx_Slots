@@ -16,91 +16,157 @@
    "name": "hip",
    "parent": "root",
    "x": 0,
-   "y": 565
+   "y": 560
   },
   {
    "name": "torso",
    "parent": "hip",
    "x": 0,
-   "y": 0
+   "y": 10
   },
   {
    "name": "neck",
    "parent": "torso",
    "x": 0,
-   "y": 415
+   "y": 385
+  },
+  {
+   "name": "head",
+   "parent": "neck",
+   "x": 0,
+   "y": 40
+  },
+  {
+   "name": "earL",
+   "parent": "head",
+   "x": -182.0,
+   "y": 158.0
+  },
+  {
+   "name": "earR",
+   "parent": "head",
+   "x": 173.0,
+   "y": 162.0
+  },
+  {
+   "name": "cap",
+   "parent": "head",
+   "x": -12.0,
+   "y": 350.0
+  },
+  {
+   "name": "browL",
+   "parent": "head",
+   "x": -89.7,
+   "y": 284.4
+  },
+  {
+   "name": "browR",
+   "parent": "head",
+   "x": 90.9,
+   "y": 285.4
+  },
+  {
+   "name": "eyeL",
+   "parent": "head",
+   "x": -90.2,
+   "y": 199.0
+  },
+  {
+   "name": "eyeR",
+   "parent": "head",
+   "x": 87.7,
+   "y": 199.5
+  },
+  {
+   "name": "irisL",
+   "parent": "eyeL",
+   "x": 8.2,
+   "y": -2.6
+  },
+  {
+   "name": "irisR",
+   "parent": "eyeR",
+   "x": -10.1,
+   "y": -3.0
+  },
+  {
+   "name": "mouth",
+   "parent": "head",
+   "x": -12.0,
+   "y": 65.0
   },
   {
    "name": "shoulderL",
    "parent": "torso",
-   "x": -180,
-   "y": 260
+   "x": -180.0,
+   "y": 255.0
   },
   {
    "name": "elbowL",
    "parent": "shoulderL",
-   "x": -100,
-   "y": -108
+   "x": -97.5,
+   "y": -105.7
   },
   {
    "name": "wristL",
    "parent": "elbowL",
-   "x": -67,
-   "y": -116
+   "x": -55.9,
+   "y": -79.4
   },
   {
    "name": "shoulderR",
    "parent": "torso",
-   "x": 180,
-   "y": 260
+   "x": 180.0,
+   "y": 255.0
   },
   {
    "name": "elbowR",
    "parent": "shoulderR",
-   "x": 97,
-   "y": -104
+   "x": 100.6,
+   "y": -108.9
   },
   {
    "name": "wristR",
    "parent": "elbowR",
-   "x": 69,
-   "y": -120
+   "x": 53.6,
+   "y": -76.5
   },
   {
    "name": "thighL",
    "parent": "hip",
    "x": -97,
-   "y": -10
-  },
-  {
-   "name": "kneeL",
-   "parent": "thighL",
-   "x": -32,
-   "y": -252
-  },
-  {
-   "name": "ankleL",
-   "parent": "kneeL",
-   "x": -23,
-   "y": -165
+   "y": -5
   },
   {
    "name": "thighR",
    "parent": "hip",
    "x": 96,
-   "y": -10
+   "y": -5
   },
   {
-   "name": "kneeR",
+   "name": "shinL",
+   "parent": "thighL",
+   "x": -32,
+   "y": -259
+  },
+  {
+   "name": "shinR",
    "parent": "thighR",
    "x": 31,
-   "y": -252
+   "y": -259
   },
   {
-   "name": "ankleR",
-   "parent": "kneeR",
-   "x": 20,
-   "y": -180
+   "name": "footL",
+   "parent": "shinL",
+   "x": -23,
+   "y": -158
+  },
+  {
+   "name": "footR",
+   "parent": "shinR",
+   "x": 15,
+   "y": -151
   }
  ],
  "slots": [
@@ -115,24 +181,34 @@
    "attachment": "thighR"
   },
   {
-   "name": "shinL",
-   "bone": "kneeL",
-   "attachment": "shinL"
-  },
-  {
-   "name": "shinR",
-   "bone": "kneeR",
-   "attachment": "shinR"
-  },
-  {
    "name": "footL",
-   "bone": "ankleL",
+   "bone": "footL",
    "attachment": "footL"
   },
   {
    "name": "footR",
-   "bone": "ankleR",
+   "bone": "footR",
    "attachment": "footR"
+  },
+  {
+   "name": "shinL",
+   "bone": "shinL",
+   "attachment": "shinL"
+  },
+  {
+   "name": "shinR",
+   "bone": "shinR",
+   "attachment": "shinR"
+  },
+  {
+   "name": "torsoBack",
+   "bone": "torso",
+   "attachment": "torsoBack"
+  },
+  {
+   "name": "neck",
+   "bone": "neck",
+   "attachment": "neck"
   },
   {
    "name": "torso",
@@ -140,9 +216,9 @@
    "attachment": "torso"
   },
   {
-   "name": "head",
-   "bone": "neck",
-   "attachment": "head"
+   "name": "collar",
+   "bone": "torso",
+   "attachment": "collar"
   },
   {
    "name": "upperArmL",
@@ -173,6 +249,86 @@
    "name": "handR",
    "bone": "wristR",
    "attachment": "handR"
+  },
+  {
+   "name": "sleeveL",
+   "bone": "shoulderL",
+   "attachment": "sleeveL"
+  },
+  {
+   "name": "sleeveR",
+   "bone": "shoulderR",
+   "attachment": "sleeveR"
+  },
+  {
+   "name": "headBack",
+   "bone": "head",
+   "attachment": "headBack"
+  },
+  {
+   "name": "earL",
+   "bone": "earL",
+   "attachment": "earL"
+  },
+  {
+   "name": "earR",
+   "bone": "earR",
+   "attachment": "earR"
+  },
+  {
+   "name": "head",
+   "bone": "head",
+   "attachment": "head"
+  },
+  {
+   "name": "mouth",
+   "bone": "mouth",
+   "attachment": "mouth"
+  },
+  {
+   "name": "eyeL",
+   "bone": "eyeL",
+   "attachment": "eyeL"
+  },
+  {
+   "name": "eyeR",
+   "bone": "eyeR",
+   "attachment": "eyeR"
+  },
+  {
+   "name": "clip_irisL",
+   "bone": "eyeL",
+   "attachment": "clip_irisL"
+  },
+  {
+   "name": "irisL",
+   "bone": "irisL",
+   "attachment": "irisL"
+  },
+  {
+   "name": "clip_irisR",
+   "bone": "eyeR",
+   "attachment": "clip_irisR"
+  },
+  {
+   "name": "irisR",
+   "bone": "irisR",
+   "attachment": "irisR"
+  },
+  {
+   "name": "browL",
+   "bone": "browL",
+   "attachment": "browL"
+  },
+  {
+   "name": "browR",
+   "bone": "browR",
+   "attachment": "browR"
+  },
+  {
+   "name": "cap",
+   "bone": "cap",
+   "attachment": "cap"
   }
  ],
  "skins": [
@@ -182,129 +338,428 @@
     "thighL": {
      "thighL": {
       "x": -24.0,
-      "y": -153.5,
-      "width": 242,
-      "height": 399
+      "y": -154.0,
+      "width": 246,
+      "height": 412
      }
     },
     "thighR": {
      "thighR": {
       "x": 24.5,
-      "y": -154.0,
-      "width": 241,
-      "height": 400
-     }
-    },
-    "shinL": {
-     "shinL": {
-      "x": -22.0,
-      "y": -119.5,
-      "width": 244,
-      "height": 283
-     }
-    },
-    "shinR": {
-     "shinR": {
-      "x": 21.0,
-      "y": -127.5,
-      "width": 240,
-      "height": 299
+      "y": -160.5,
+      "width": 245,
+      "height": 401
      }
     },
     "footL": {
      "footL": {
-      "x": -40.5,
-      "y": -80.0,
-      "width": 263,
-      "height": 124
+      "x": -38.5,
+      "y": -69.0,
+      "width": 271,
+      "height": 150
      }
     },
     "footR": {
      "footR": {
-      "x": 38.0,
-      "y": -64.5,
-      "width": 268,
-      "height": 123
+      "x": 40.5,
+      "y": -72.0,
+      "width": 277,
+      "height": 156
+     }
+    },
+    "shinL": {
+     "shinL": {
+      "x": -16.0,
+      "y": -88.0,
+      "width": 236,
+      "height": 180
+     }
+    },
+    "shinR": {
+     "shinR": {
+      "x": 11.5,
+      "y": -84.5,
+      "width": 225,
+      "height": 173
+     }
+    },
+    "torsoBack": {
+     "torsoBack": {
+      "x": -4.0,
+      "y": 403.0,
+      "width": 160,
+      "height": 78
+     }
+    },
+    "neck": {
+     "neck": {
+      "x": -4.5,
+      "y": 23.5,
+      "width": 151,
+      "height": 165
      }
     },
     "torso": {
      "torso": {
-      "x": 0.5,
-      "y": 217.0,
-      "width": 489,
-      "height": 434
+      "x": 0.0,
+      "y": 204.5,
+      "width": 540,
+      "height": 429
      }
     },
-    "head": {
-     "head": {
-      "x": 0.5,
-      "y": 255.0,
-      "width": 509,
-      "height": 520
-     },
-     "head_blink": {
-      "x": -0.5,
-      "y": 256.5,
-      "width": 509,
-      "height": 523
-     },
-     "head_shout": {
-      "x": -0.5,
-      "y": 256.5,
-      "width": 509,
-      "height": 523
+    "collar": {
+     "collar": {
+      "x": 5.0,
+      "y": 403.0,
+      "width": 226,
+      "height": 72
      }
     },
     "upperArmL": {
      "upperArmL": {
-      "x": -75.5,
-      "y": -50.0,
-      "width": 177,
-      "height": 246
+      "x": -72.5,
+      "y": -69.5,
+      "width": 173,
+      "height": 195
      }
     },
     "forearmL": {
      "forearmL": {
-      "x": -38.5,
-      "y": -77.0,
-      "width": 167,
-      "height": 190
+      "x": -20.5,
+      "y": -35.3,
+      "width": 162,
+      "height": 180
      }
     },
     "handL": {
      "handL": {
-      "x": -24.0,
-      "y": -47.0,
-      "width": 178,
-      "height": 174
+      "x": -38.1,
+      "y": -69.4,
+      "width": 185,
+      "height": 215
      }
     },
     "upperArmR": {
      "upperArmR": {
-      "x": 76.5,
-      "y": -48.0,
-      "width": 177,
-      "height": 242
+      "x": 74.5,
+      "y": -71.0,
+      "width": 175,
+      "height": 198
      }
     },
     "forearmR": {
      "forearmR": {
-      "x": 42.0,
-      "y": -81.0,
-      "width": 166,
-      "height": 190
+      "x": 18.9,
+      "y": -33.6,
+      "width": 159,
+      "height": 177
      }
     },
     "handR": {
      "handR": {
-      "x": 26.0,
-      "y": -48.0,
-      "width": 178,
-      "height": 174
+      "x": 6.8,
+      "y": -133.6,
+      "width": 246,
+      "height": 342
+     }
+    },
+    "sleeveL": {
+     "sleeveL": {
+      "x": -52.0,
+      "y": -3.5,
+      "width": 150,
+      "height": 175
+     }
+    },
+    "sleeveR": {
+     "sleeveR": {
+      "x": 53.0,
+      "y": -3.5,
+      "width": 150,
+      "height": 175
+     }
+    },
+    "headBack": {
+     "headBack": {
+      "x": -182.0,
+      "y": 159.0,
+      "width": 56,
+      "height": 194
+     }
+    },
+    "earL": {
+     "earL": {
+      "x": -18.0,
+      "y": 1.5,
+      "width": 112,
+      "height": 155
+     }
+    },
+    "earR": {
+     "earR": {
+      "x": 14.0,
+      "y": -4.0,
+      "width": 90,
+      "height": 152
+     }
+    },
+    "head": {
+     "head": {
+      "x": -13.5,
+      "y": 205.0,
+      "width": 399,
+      "height": 456
+     }
+    },
+    "mouth": {
+     "mouth": {
+      "x": -19.5,
+      "y": -3.0,
+      "width": 121,
+      "height": 54
+     },
+     "mouth_shout": {
+      "x": 2.0,
+      "y": -12.0,
+      "width": 184,
+      "height": 130
+     }
+    },
+    "eyeL": {
+     "eyeL": {
+      "x": -0.3,
+      "y": 0.0,
+      "width": 137,
+      "height": 122
+     },
+     "eyeL_closed": {
+      "x": 0.2,
+      "y": 0.5,
+      "width": 140,
+      "height": 125
+     }
+    },
+    "eyeR": {
+     "eyeR": {
+      "x": 1.3,
+      "y": 0.0,
+      "width": 130,
+      "height": 123
+     },
+     "eyeR_closed": {
+      "x": 1.3,
+      "y": 0.0,
+      "width": 134,
+      "height": 125
+     }
+    },
+    "clip_irisL": {
+     "clip_irisL": {
+      "type": "clipping",
+      "end": "irisL",
+      "vertexCount": 39,
+      "vertices": [
+       -61.85,
+       0.04,
+       -59.73,
+       11.93,
+       -57.36,
+       19.53,
+       -51.55,
+       29.83,
+       -43.6,
+       38.31,
+       -34.34,
+       44.85,
+       -20.94,
+       50.69,
+       -10.53,
+       53.15,
+       0.04,
+       54.46,
+       7.2,
+       54.47,
+       21.71,
+       52.37,
+       29.08,
+       50.35,
+       32.61,
+       48.78,
+       36.14,
+       47.09,
+       42.67,
+       42.67,
+       50.77,
+       33.94,
+       56.32,
+       23.35,
+       59.41,
+       11.85,
+       60.73,
+       0.04,
+       60.43,
+       -11.97,
+       59.23,
+       -20.05,
+       56.64,
+       -27.87,
+       54.71,
+       -31.52,
+       52.32,
+       -34.89,
+       46.49,
+       -40.69,
+       39.72,
+       -45.2,
+       32.23,
+       -48.13,
+       21.34,
+       -51.38,
+       7.08,
+       -53.46,
+       0.04,
+       -53.52,
+       -14.0,
+       -52.37,
+       -24.85,
+       -50.43,
+       -35.87,
+       -46.76,
+       -43.03,
+       -43.03,
+       -46.3,
+       -40.6,
+       -52.02,
+       -34.74,
+       -56.45,
+       -27.82,
+       -60.49,
+       -16.18,
+       -62.26,
+       -4.04
+      ],
+      "color": "ce3a3aff"
+     }
+    },
+    "irisL": {
+     "irisL": {
+      "x": 0.0,
+      "y": -0.4,
+      "width": 108,
+      "height": 102
+     }
+    },
+    "clip_irisR": {
+     "clip_irisR": {
+      "type": "clipping",
+      "end": "irisR",
+      "vertexCount": 34,
+      "vertices": [
+       -58.15,
+       0.01,
+       -56.4,
+       15.11,
+       -52.49,
+       25.88,
+       -47.0,
+       36.06,
+       -41.67,
+       41.66,
+       -35.4,
+       46.11,
+       -24.99,
+       50.65,
+       -10.71,
+       53.75,
+       -0.02,
+       54.03,
+       14.0,
+       52.33,
+       24.25,
+       49.22,
+       34.11,
+       44.48,
+       43.09,
+       37.82,
+       50.22,
+       29.02,
+       55.18,
+       18.75,
+       57.44,
+       11.44,
+       58.71,
+       3.86,
+       58.72,
+       -7.73,
+       56.36,
+       -19.13,
+       51.63,
+       -29.81,
+       47.35,
+       -36.34,
+       38.4,
+       -43.81,
+       35.13,
+       -45.8,
+       28.12,
+       -48.73,
+       17.49,
+       -51.57,
+       6.96,
+       -53.0,
+       -14.23,
+       -53.01,
+       -25.0,
+       -50.65,
+       -32.22,
+       -48.19,
+       -42.44,
+       -42.41,
+       -48.33,
+       -37.06,
+       -52.7,
+       -30.41,
+       -55.71,
+       -23.06,
+       -57.92,
+       -7.61
+      ],
+      "color": "ce3a3aff"
+     }
+    },
+    "irisR": {
+     "irisR": {
+      "x": 1.9,
+      "y": 0.0,
+      "width": 101,
+      "height": 103
+     }
+    },
+    "browL": {
+     "browL": {
+      "x": -1.8,
+      "y": -3.4,
+      "width": 143,
+      "height": 66
+     }
+    },
+    "browR": {
+     "browR": {
+      "x": 1.6,
+      "y": -3.4,
+      "width": 137,
+      "height": 62
+     }
+    },
+    "cap": {
+     "cap": {
+      "x": 24.0,
+      "y": 23.5,
+      "width": 490,
+      "height": 257
      }
     }
    }
   }
- ],
- "animations": {}
+ ]
 }
