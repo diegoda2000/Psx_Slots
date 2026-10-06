@@ -171,6 +171,11 @@
  ],
  "slots": [
   {
+   "name": "pelvis",
+   "bone": "hip",
+   "attachment": "pelvis"
+  },
+  {
    "name": "thighL",
    "bone": "thighL",
    "attachment": "thighL"
@@ -335,6 +340,14 @@
   {
    "name": "default",
    "attachments": {
+    "pelvis": {
+     "pelvis": {
+      "x": 1.0,
+      "y": 17.5,
+      "width": 412,
+      "height": 169
+     }
+    },
     "thighL": {
      "thighL": {
       "x": -24.0,

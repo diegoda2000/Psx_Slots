@@ -10,7 +10,7 @@ Abrir: Spine → **Import Data** → `andy.json` (con la carpeta `images/` al la
   Para cerrar los ojos: cambia el ojo a `_closed` y oculta el iris.
 - Camiseta: `torso`, `torsoBack` (interior del cuello) y mangas (`sleeveL/R`, en los huesos de los hombros).
 - Brazos: `upperArmL/R`, `forearmL/R`, `handL/R`.
-- Piernas: `thighL/R`, `shinL/R`, `footL/R`.
+- Piernas: `pelvis` (por debajo de los muslos y de la camiseta, para que la cadera no se abra), `thighL/R`, `shinL/R`, `footL/R`.
 
 Las zonas tapadas (cráneo bajo la gorra, piel bajo cejas y boca, blanco del ojo bajo el iris, hombros bajo las
 mangas, interior del cuello, partes ocultas de brazos y piernas) están pintadas para que al moverse no salgan huecos.
