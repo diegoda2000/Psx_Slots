@@ -46,4 +46,4 @@ espaldas. Así un hueso es siempre la misma mano o la misma pierna en todas las 
 - Las cabezas de la hoja no traen ojos, cejas ni boca por separado: cada expresión es una cabeza entera.
 - No se usan los 9 brazos sueltos de la hoja (esas posturas ya salen doblando los huesos) ni la segunda fila de
   manos (repite la primera).
-- `prueba-poses.png`: poses de prueba montadas con el runtime de Spine (brazos, piernas, expresiones y manos nuevas).
+- `prueba-poses.png`: poses de prueba con el runtime de Spine. `prueba-articulaciones.png`: hombros, codos, caderas y rodillas con giros fuertes en las 6 vistas. Brazos y piernas son mallas con pesos: se doblan en las articulaciones sin partirse.
