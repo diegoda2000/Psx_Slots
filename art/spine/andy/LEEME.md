@@ -26,7 +26,7 @@ tobillo funciona igual en cualquier vista.
 espaldas. Así un hueso es siempre la misma mano o la misma pierna en todas las vistas.
 
 ## Slots y adjuntos
-16 slots: `pelvis`, `thighL/R`, `shinL/R`, `footL/R`, `neck`, `torso`, `upperArmL/R` (brazo con la manga),
+18 slots: `sleeveL/R` (manga, en el hueso del hombro, encima del brazo), `pelvis`, `thighL/R`, `shinL/R`, `footL/R`, `neck`, `torso`, `upperArmL/R` (brazo con la manga),
 `forearmL/R`, `handL/R` y `head`. Los adjuntos se llaman `<slot>_<vista>`, por ejemplo `torso_perfilDer`.
 
 - **Cabezas** (slot `head`): `cabeza_<vista>_<expresión>`, con las expresiones `normal`, `ojosCerrados`, `boca`,
